@@ -1,19 +1,8 @@
-# Ignore Visual Studio temporary files, build results, and
-# other system-generated files
-*.user
-*.suo
-*.log
-*.obj
-*.bin
-*.exe
-*.dll
-*.pdb
-*.cache
-*.zip
-*.gz
-*.tar
-*.vs/
-/.vscode/
-/bin/
-/obj/
-/compressed/
+# Ignore Visual Studio files
+.vs/
+.vscode/
+.idea/
+
+# Ignore build directories and other common IDE files
+bin/
+obj/
