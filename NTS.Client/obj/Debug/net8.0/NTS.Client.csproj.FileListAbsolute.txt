@@ -7,6 +7,7 @@ D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\NTS.Client.deps.json
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\NTS.Client.runtimeconfig.json
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\NTS.Client.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\NTS.Client.pdb
+D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Blazored.LocalStorage.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.AspNetCore.Authorization.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.AspNetCore.Components.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.AspNetCore.Components.Forms.dll
@@ -17,8 +18,10 @@ D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.Extensions.L
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.Extensions.Localization.Abstractions.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\Microsoft.JSInterop.dll
 D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\MudBlazor.dll
+D:\Projects\NotesTakingSystem\NTS.Client\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.csproj.AssemblyReference.cache
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.GeneratedMSBuildEditorConfig.editorconfig
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.AssemblyInfoInputs.cache
@@ -27,6 +30,7 @@ D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.csproj.Core
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.MvcApplicationPartsAssemblyInfo.cache
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.RazorAssemblyInfo.cache
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.RazorAssemblyInfo.cs
+D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\NTS.Client.sourcelink.json
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
 D:\Projects\NotesTakingSystem\NTS.Client\obj\Debug\net8.0\scopedcss\bundle\NTS.Client.styles.css

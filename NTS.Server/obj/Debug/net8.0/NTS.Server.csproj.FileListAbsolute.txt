@@ -153,6 +153,7 @@ D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\NTS.Server.AssemblyInf
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\NTS.Server.csproj.CoreCompileInputs.cache
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\NTS.Server.MvcApplicationPartsAssemblyInfo.cs
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\NTS.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\NTS.Server.sourcelink.json
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\scopedcss\bundle\NTS.Server.styles.css
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\staticwebassets.build.json
 D:\Projects\NotesTakingSystem\NTS.Server\obj\Debug\net8.0\staticwebassets.development.json

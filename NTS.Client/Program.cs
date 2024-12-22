@@ -1,20 +1,23 @@
 global using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.LocalStorage;
+global using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using NTS.Client.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using MudBlazor.Services;
+using NTS.Client.Securities;
+using NTS.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ( "https://localhost:7172;http://localhost:5018" ) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ( "https://localhost:7172; http://localhost:5018" ) });
 
 builder.Services.AddMudServices();
 builder.Services.AddOptions();
@@ -40,4 +43,4 @@ app.MapBlazorHub();
 
 app.MapFallbackToPage("/_Host");
 
-app.Run();
+await app.RunAsync();

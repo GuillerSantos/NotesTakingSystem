@@ -2,19 +2,19 @@
 
 <MudThemeProvider />
 <MudDialogProvider />
-<MudSnackbarProvider/>
+<MudSnackbarProvider />
 <MudPopoverProvider />
 
 
 <MudContainer class="page">
-    <div class="sidebar">
+    <MudContainer class="sidebar">
         <NavMenu />
-    </div>
+    </MudContainer>
 
     <main>
-        <div class="top-row px-4">
+        <MudContainer class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+        </MudContainer>
 
         <article class="content px-4">
             @Body
