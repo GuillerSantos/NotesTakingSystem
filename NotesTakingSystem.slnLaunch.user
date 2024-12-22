@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Client and Server Start",
+    "Projects": [
+      {
+        "Path": "NTS.Client\\NTS.Client.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "NTS.Server\\NTS.Server.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
