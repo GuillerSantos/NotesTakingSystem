@@ -13,7 +13,7 @@ builder.Services.AddCors(policy =>
     policy.AddPolicy("AllowAllOrigins", policy =>
     {
         policy
-        .WithOrigins("https://localhost:7222")
+        .WithOrigins("https://localhost:7222","http://localhost:5128")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -27,6 +27,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 

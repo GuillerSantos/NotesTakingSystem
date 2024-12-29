@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj": {}
+    "E:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj": {
+    "E:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj",
+        "projectUniqueName": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj",
         "projectName": "NTS.Server",
-        "projectPath": "D:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj",
-        "packagesPath": "C:\\Users\\win10\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\NotesTakingSystem\\NTS.Server\\obj\\",
+        "projectPath": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\NTS.Server.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\win10\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

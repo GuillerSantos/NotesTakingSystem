@@ -17,7 +17,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ( "https://localhost:7172; http://localhost:5018" ) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri ("https://localhost:7172") });
 
 builder.Services.AddMudServices();
 builder.Services.AddOptions();
