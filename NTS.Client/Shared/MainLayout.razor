@@ -1,23 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
-<MudPopoverProvider />
+<PageTitle>NTS.Client</PageTitle>
 
-
-<MudContainer class="page">
-    <MudContainer class="sidebar">
+<div class="page">
+    <div class="sidebar">
         <NavMenu />
-    </MudContainer>
+    </div>
 
     <main>
-        <MudContainer class="top-row px-4">
+        <div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </MudContainer>
+        </div>
 
         <article class="content px-4">
             @Body
         </article>
     </main>
-</MudContainer>
+</div>

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NTS.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c50dbf72f4dabc1019cf6ac015e5b77c1d27f76d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2339e4342ec6d2e5b888bd3c3c3e1eb4e0c87324")]
 [assembly: System.Reflection.AssemblyProductAttribute("NTS.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NTS.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

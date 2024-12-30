@@ -6,10 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.0" />
-    <PackageReference Include="MudBlazor" Version="6.21.0" />
-  </ItemGroup>
-
 </Project>

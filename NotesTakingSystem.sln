@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTS.Client", "NTS.Client\NTS.Client.csproj", "{E1E5A914-FAEF-4567-AF32-A931E64AC471}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTS.Server", "NTS.Server\NTS.Server.csproj", "{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTS.Client", "NTS.Client\NTS.Client.csproj", "{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1E5A914-FAEF-4567-AF32-A931E64AC471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1E5A914-FAEF-4567-AF32-A931E64AC471}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1E5A914-FAEF-4567-AF32-A931E64AC471}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1E5A914-FAEF-4567-AF32-A931E64AC471}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

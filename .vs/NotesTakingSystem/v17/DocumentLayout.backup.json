@@ -3,12 +3,8 @@
   "WorkspaceRootPath": "E:\\Projects\\NotesTakingSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\shared\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -19,12 +15,8 @@
       "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E1E5A914-FAEF-4567-AF32-A931E64AC471}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -39,79 +31,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MainLayout.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\MainLayout.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\Shared\\MainLayout.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\MainLayout.razor",
-              "RelativeToolTip": "NTS.Client\\Shared\\MainLayout.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-29T11:16:01.406Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\NavMenu.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\Shared\\NavMenu.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\NavMenu.razor",
-              "RelativeToolTip": "NTS.Client\\Shared\\NavMenu.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-29T11:15:55.949Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "NTS.Server\\Properties\\launchSettings.json",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Properties\\launchSettings.json",
-              "RelativeToolTip": "NTS.Server\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-12-29T11:09:32.021Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Program.cs",
               "RelativeDocumentMoniker": "NTS.Client\\Program.cs",
               "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Program.cs",
               "RelativeToolTip": "NTS.Client\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-29T11:09:19.101Z",
+              "WhenOpened": "2024-12-30T02:00:10.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "launchSettings.json",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "NTS.Client\\Properties\\launchSettings.json",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Properties\\launchSettings.json",
-              "RelativeToolTip": "NTS.Client\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAZAAAAAAAAAA==",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "NTS.Server\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Properties\\launchSettings.json",
+              "RelativeToolTip": "NTS.Server\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABoAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-12-29T11:08:18.308Z",
+              "WhenOpened": "2024-12-30T01:59:59.149Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "NTS.Client\\Properties\\launchSettings.json",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Properties\\launchSettings.json",
+              "RelativeToolTip": "NTS.Client\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-30T01:59:27.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Program.cs",
               "RelativeDocumentMoniker": "NTS.Server\\Program.cs",
               "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Program.cs",
               "RelativeToolTip": "NTS.Server\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-29T11:07:57.217Z",
+              "WhenOpened": "2024-12-29T11:22:40.282Z",
               "EditorCaption": ""
             }
           ]
