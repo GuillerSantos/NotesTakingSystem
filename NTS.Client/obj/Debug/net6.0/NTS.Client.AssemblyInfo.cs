@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NTS.Client")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2339e4342ec6d2e5b888bd3c3c3e1eb4e0c87324")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c9bbbc484172fb5cb8f24d0d3c04381285cad7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("NTS.Client")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NTS.Client")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
