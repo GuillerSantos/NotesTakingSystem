@@ -10,6 +10,7 @@ namespace NTS.Client.Securities
     {
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
+        private string token;
 
         public CustomAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorageService)
         {
@@ -19,9 +20,7 @@ namespace NTS.Client.Securities
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string token = await localStorageService.GetItemAsStringAsync("token");
-
-
+            // Initial state with no token
             var identity = new ClaimsIdentity();
             httpClient.DefaultRequestHeaders.Authorization = null;
 
@@ -47,6 +46,11 @@ namespace NTS.Client.Securities
             return state;
         }
 
+        // Call this from a component to fetch the token from localStorage
+        public async Task SetTokenFromLocalStorageAsync()
+        {
+            token = await localStorageService.GetItemAsStringAsync("token");
+        }
 
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
