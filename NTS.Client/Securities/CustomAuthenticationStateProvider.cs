@@ -20,7 +20,6 @@ namespace NTS.Client.Securities
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            // Initial state with no token
             var identity = new ClaimsIdentity();
             httpClient.DefaultRequestHeaders.Authorization = null;
 
@@ -46,7 +45,6 @@ namespace NTS.Client.Securities
             return state;
         }
 
-        // Call this from a component to fetch the token from localStorage
         public async Task SetTokenFromLocalStorageAsync()
         {
             token = await localStorageService.GetItemAsStringAsync("token");
