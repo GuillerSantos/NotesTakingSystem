@@ -2,7 +2,5 @@
 .vs/
 .vscode/
 .idea/
-
-# Ignore build directories and other common IDE files
 bin/
 obj/
