@@ -12,7 +12,7 @@ using NTS.Server.Database.DatabaseContext;
 namespace NTS.Server.Migrations
 {
     [DbContext(typeof(WebAppDBContext))]
-    [Migration("20250101073314_AddUsers")]
+    [Migration("20250102015409_AddUsers")]
     partial class AddUsers
     {
         /// <inheritdoc />
@@ -39,6 +39,11 @@ namespace NTS.Server.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -55,10 +60,9 @@ namespace NTS.Server.Migrations
                     b.Property<string>("RecoveryEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 

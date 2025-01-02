@@ -11,7 +11,7 @@ namespace NTS.Server.Database.Configurations
         {
             builder.HasKey(user => user.UserId);
 
-            builder.Property(user => user.Username)
+            builder.Property(user => user.FullName)
                 .IsRequired()
                 .HasMaxLength(255);
 
@@ -30,6 +30,8 @@ namespace NTS.Server.Database.Configurations
             builder.Property(user => user.PhoneNumber);
 
             builder.Property(user => user.RecoveryEmail);
+
+            builder.Property(user => user.Role);
         }
     }
 }
