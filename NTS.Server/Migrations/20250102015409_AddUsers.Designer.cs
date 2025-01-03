@@ -11,7 +11,7 @@ using NTS.Server.Database.DatabaseContext;
 
 namespace NTS.Server.Migrations
 {
-    [DbContext(typeof(WebAppDBContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250102015409_AddUsers")]
     partial class AddUsers
     {

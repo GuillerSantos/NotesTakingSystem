@@ -10,7 +10,7 @@ namespace NTS.Client.Securities
     {
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
-        private string token;
+        private string? token;
 
         public CustomAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorageService)
         {
@@ -21,51 +21,68 @@ namespace NTS.Client.Securities
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var identity = new ClaimsIdentity();
-            httpClient.DefaultRequestHeaders.Authorization = null;
 
-            if (!string.IsNullOrEmpty(token))
+            try
             {
-                try
+                token = await localStorageService.GetItemAsStringAsync("token");
+
+                if (!string.IsNullOrEmpty(token))
                 {
                     identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
                     httpClient.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
                 }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine($"Error parsing token: {ex.Message}");
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error During Authentication State Retrieval: {ex.Message}");
             }
 
-            var user = new ClaimsPrincipal(identity);
-            var state = new AuthenticationState(user);
-
-            NotifyAuthenticationStateChanged(Task.FromResult(state));
-
-            return state;
+            return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
-        public async Task SetTokenFromLocalStorageAsync()
+
+        public async Task RefreshAuthenticationStateAsync()
         {
-            token = await localStorageService.GetItemAsStringAsync("token");
+            try
+            {
+                var state = await GetAuthenticationStateAsync();
+                NotifyAuthenticationStateChanged(Task.FromResult(state));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error Refreshing Authentication State: {ex.Message}");
+            }
         }
 
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+            try
+            {
+                var parts = jwt.Split('.');
+                if (parts.Length != 3) throw new FormatException("Invalid JWT Format");
+
+                var payload = parts[1];
+                var jsonBytes = Convert.FromBase64String(AddPadding(payload));
+                var claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+
+                return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())) ?? Enumerable.Empty<Claim>();
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"Invalid Token Format: {ex.Message}");
+                return Enumerable.Empty<Claim>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error parsing claims from JWT: {ex.Message}");
+                return Enumerable.Empty<Claim>();
+            }
         }
 
-        private static byte[] ParseBase64WithoutPadding(string base64)
+        private static string AddPadding(string base64)
         {
-            switch (base64.Length % 4)
-            {
-                case 2: base64 += "=="; break;
-                case 3: base64 += "="; break;
-            }
-            return Convert.FromBase64String(base64);
+            return base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
         }
     }
 }

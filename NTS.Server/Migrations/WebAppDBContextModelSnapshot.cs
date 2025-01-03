@@ -10,7 +10,7 @@ using NTS.Server.Database.DatabaseContext;
 
 namespace NTS.Server.Migrations
 {
-    [DbContext(typeof(WebAppDBContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class WebAppDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

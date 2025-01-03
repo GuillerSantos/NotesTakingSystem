@@ -5,15 +5,18 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using NTS.Server.Database.DatabaseContext;
-using NTS.Server.Securities;
+using NTS.Server.Services;
+using NTS.Server.Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<WebAppDBContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
@@ -44,8 +47,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddSingleton(new TokenAndPasswordHash(secretKey));
-
+builder.Services.AddAuthorization();
 
 builder.Services.AddSignalR();
 

@@ -4,10 +4,10 @@ using NTS.Server.Domain.Entities;
 
 namespace NTS.Server.Database.Configurations
 {
-    public class UsersConfiguration : IEntityTypeConfiguration<Users>
+    public class UsersConfiguration : IEntityTypeConfiguration<ApplicationUsers>
     {
 
-        public void Configure(EntityTypeBuilder<Users> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUsers> builder)
         {
             builder.HasKey(user => user.UserId);
 
