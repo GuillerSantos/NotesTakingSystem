@@ -18,7 +18,7 @@ namespace NTS.Server.Controller
         }
 
 
-        [HttpGet("get-all-users")]
+        [HttpGet("get-all-users"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts()
         {
             try
