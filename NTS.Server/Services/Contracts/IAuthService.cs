@@ -5,7 +5,7 @@ namespace NTS.Server.Services.Contracts
 {
     public interface IAuthService
     {
-        Task<IEnumerable<UsersDto>> GetAllUsersAccounts();
+        Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize);
 
         Task<ApplicationUsers> RegisterUsersAsync(SignUpDto request, string role = "Role");
 

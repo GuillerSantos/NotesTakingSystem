@@ -1,29 +1,32 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NTS.Server.Domain.DTOs;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Controller
 {
-    [Route("api/Authentication")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
+        private readonly IEmailService emailService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IEmailService emailService)
         {
             this.authService = authService;
+            this.emailService = emailService;
         }
 
 
         [HttpGet("get-all-users"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts()
+        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
-                var accounts = await authService.GetAllUsersAccounts();
+                var accounts = await authService.GetAllUsersAccounts(page, pageSize);
                 return Ok(accounts);
             }
             catch (Exception ex)
@@ -33,7 +36,7 @@ namespace NTS.Server.Controller
         }
 
 
-        [HttpPost("register-user"), Authorize (Roles = "User")]
+        [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUserAsync([FromBody] SignUpDto request)
         {
             try
@@ -43,10 +46,10 @@ namespace NTS.Server.Controller
                 return Ok(new
                 {
                     message = "User Registered Successfully",
-                    userId = user.UserId,
-                    fullName = user.FullName,
-                    email = user.Email,
-                    role = user.Role
+                    user.UserId,
+                    user.FullName,
+                    user.Email,
+                    user.Role
                 });
             }
             catch (Exception ex)
@@ -55,7 +58,7 @@ namespace NTS.Server.Controller
             }
         }
 
-        [HttpPost("register-admin"), Authorize (Roles = "Admin")]
+        [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdminAsync([FromBody] SignUpDto request)
         {
             try
@@ -65,10 +68,10 @@ namespace NTS.Server.Controller
                 return Ok(new
                 {
                     message = "Admin Registered Successfully",
-                    userId = user.UserId,
-                    fullName = user.FullName,
-                    email = user.Email,
-                    role = user.Role
+                    user.UserId,
+                    user.FullName,
+                    user.Email,
+                    user.Role
                 });
             }
             catch(Exception ex)
@@ -90,6 +93,16 @@ namespace NTS.Server.Controller
             {
                 return BadRequest(new { message = "An Error Occured During Login", details = ex.Message });
             }
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
+        {
+            string resetToken = Guid.NewGuid().ToString();
+
+            await emailService.SendPasswordResetEmailAsync(request.Email, resetToken);
+
+            return Ok(new { message = "Password Reset Send" });
         }
     }
 }

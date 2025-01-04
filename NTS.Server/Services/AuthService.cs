@@ -22,12 +22,13 @@ namespace NTS.Server.Services
             this.configuration = configuration;
         }
 
-
-        public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts()
+        public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
         {
             try
             {
-                var accounts = await dbContext.Users
+                return await dbContext.Users
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .Select(u => new UsersDto
                     {
                         UserId = u.UserId,
@@ -37,82 +38,107 @@ namespace NTS.Server.Services
                         DateJoined = u.DateJoined,
                     })
                     .ToListAsync();
-
-                return accounts;
-
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error Retrieving All Users: {ex.Message}");
+                throw new Exception($"Error Retrieving All Users: {ex.Message}", ex);
             }
         }
 
+
         public async Task<ApplicationUsers> RegisterUsersAsync(SignUpDto request, string role = "User")
         {
-            if (request.Password != request.ConfirmPassword) throw new Exception("Password Do Not Match");
-
-            var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-
-            if (existingUser != null) throw new Exception("User With This Email Already Exists");
-
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            var user = new ApplicationUsers
+            try
             {
-                FullName = request.FullName,
-                Email = request.Email,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                PhoneNumber = request.PhoneNumber,
-                RecoveryEmail = request.RecoveryEmail,
-                DateJoined = DateTime.UtcNow,
-                Role = role
-            };
+                if (request.Password != request.ConfirmPassword)
+                    throw new Exception("Password Do Not Match");
 
-            dbContext.Users.Add(user);
-            await dbContext.SaveChangesAsync();
+                var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            return user;
+                if (existingUser != null)
+                    throw new Exception("User With This Email Already Exists");
+
+                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+                var user = new ApplicationUsers
+                {
+                    FullName = request.FullName,
+                    Email = request.Email,
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt,
+                    PhoneNumber = request.PhoneNumber,
+                    RecoveryEmail = request.RecoveryEmail,
+                    DateJoined = DateTime.UtcNow,
+                    Role = role
+                };
+
+                dbContext.Users.Add(user);
+                await dbContext.SaveChangesAsync();
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Registering User: {ex.Message}", ex);
+            }
         }
+
 
         public async Task<string> LoginUsersAsync(LoginDto request)
         {
-            var users = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (users == null) throw new Exception("User With this Email Not Found");
+            try
+            {
+                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (user == null)
+                    throw new Exception("User With this Email Not Found");
 
-            if (!VerifyPasswordHash(request.Password, users.PasswordHash, users.PasswordSalt))
-                throw new Exception("Incorrect Password");
+                if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+                    throw new Exception("Incorrect Password");
 
-            var token = CreateToken(users.UserId, users.Email);
+                var token = CreateToken(user.UserId, user.Email, user.Role);
 
-            return token;
+                return token;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Logging In User: {ex.Message}", ex);
+            }
         }
 
 
-        public string CreateToken(Guid userId, string username)
+        public string CreateToken(Guid userId, string username, string role)
         {
-            var claims = new[]
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                    new Claim(JwtRegisteredClaimNames.UniqueName, username),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, role)
+                };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]!));
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = credentials
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                return tokenHandler.WriteToken(token);
+            }
+            catch (Exception ex)
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = credentials
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
+                throw new Exception($"Error Creating Token: {ex.Message}", ex);
+            }
         }
+
 
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -124,9 +150,16 @@ namespace NTS.Server.Services
 
         public bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
-            using var hmac = new HMACSHA512(storedSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return computedHash.SequenceEqual(storedHash);
+            try
+            {
+                using var hmac = new HMACSHA512(storedSalt);
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(storedHash);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Verifying Password Hash: {ex.Message}", ex);
+            }
         }
     }
 }

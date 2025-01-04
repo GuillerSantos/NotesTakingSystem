@@ -5,6 +5,38 @@
     {
       "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\controller\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\controller\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\services\\contracts\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\contracts\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\services\\contracts\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\contracts\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\domain\\dtos\\forgotpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\domain\\dtos\\forgotpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\domain\\models\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\domain\\models\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +46,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\AuthService.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\AuthService.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAAD4AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T02:00:50.159Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Controller\\AuthController.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Controller\\AuthController.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Controller\\AuthController.cs",
+              "RelativeToolTip": "NTS.Server\\Controller\\AuthController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAADMAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T02:07:14.647Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Program.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Program.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Program.cs",
+              "RelativeToolTip": "NTS.Server\\Program.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAAAAE4AAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T02:10:44.003Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,10 +98,78 @@
               "RelativeDocumentMoniker": "NTS.Server\\appsettings.json",
               "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\appsettings.json",
               "RelativeToolTip": "NTS.Server\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-01-03T06:44:43.789Z",
+              "WhenOpened": "2025-01-04T02:11:18.533Z",
+              "IsPinned": true,
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\EmailService.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\EmailService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\EmailService.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAQwDcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T03:53:10.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\Contracts\\IAuthService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\Contracts\\IAuthService.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\Contracts\\IAuthService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\Contracts\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T02:35:22.544Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IEmailService.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\Contracts\\IEmailService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\Contracts\\IEmailService.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\Contracts\\IEmailService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\Contracts\\IEmailService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T03:52:04.526Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ForgotPasswordDto.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Domain\\DTOs\\ForgotPasswordDto.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Domain\\DTOs\\ForgotPasswordDto.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Domain\\DTOs\\ForgotPasswordDto.cs",
+              "RelativeToolTip": "NTS.Server\\Domain\\DTOs\\ForgotPasswordDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T04:10:16.763Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EmailSettings.cs",
+              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Domain\\Models\\EmailSettings.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Domain\\Models\\EmailSettings.cs",
+              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Domain\\Models\\EmailSettings.cs",
+              "RelativeToolTip": "NTS.Server\\Domain\\Models\\EmailSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-04T03:49:18.287Z"
             }
           ]
         }
