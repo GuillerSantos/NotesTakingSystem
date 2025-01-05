@@ -20,7 +20,7 @@ namespace NTS.Client.Services
             this.authenticationState = authenticationState;
 
         }
-        public async Task<Response> LoginAsync(LoginDtos request)
+        public async Task<Response> LoginAsync(LoginDto request)
         {
             try
             {
@@ -42,6 +42,27 @@ namespace NTS.Client.Services
             catch (Exception ex)
             {
                 return new Response { IsSuccess = false, Message = "An Error Occurred: " + ex.Message };
+            }
+        }
+
+
+        public async Task<Response> ForgotPasswordAsync(ForgotPasswordDto request)
+        {
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync("/api/Auth/forgot-password", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Response>();
+                    return result;
+                }
+
+                throw new Exception("Failed To Send Forgot Password Request");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An Error Occurred: " + ex.Message);
             }
         }
     }

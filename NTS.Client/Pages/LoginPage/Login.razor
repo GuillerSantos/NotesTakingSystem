@@ -1,11 +1,47 @@
-﻿@page "/login"
+﻿@page "/"
+@page "/login"
 @inherits LoginBase
 
 <MudLayout>
     <MudContainer>
-        <MudPaper Class="" Elevation="5">
+        <MudCard Class="w-full" Elevation="5">
+            <MudContainer>
+                <MudTextField T="string" 
+                Label="Email"
+                @bind-Value="loginDtos.Email" 
+                Variant="Variant.Outlined"
+                FullWidth
+                For="@(() => loginDtos.Email)"
+                InputType="InputType.Text">
+                </MudTextField>
 
-        </MudPaper>
+                <MudTextField T="string"
+                Label="Password"
+                @bind-Value="loginDtos.Password"
+                Variant="Variant.Outlined"
+                FullWidth
+                For="@(() => loginDtos.Password)"
+                InputType="@showPasswordUtil.InputType"
+                Adornment="Adornment.End"
+                AdornmentAriaLabel="Show Password"
+                AdornmentIcon="@showPasswordUtil.Icon"
+                OnAdornmentClick="ShowPasswordClick">
+                </MudTextField>
+
+                @if (!string.IsNullOrEmpty(responseMessage))
+                { 
+                    <MudAlert Severity="Severity.Error" Dense="true">@responseMessage</MudAlert>
+                }
+
+                <MudButton Class="mt-4"
+                Variant="Variant.Filled"
+                Color="Color.Primary"
+                FullWidth 
+                OnClick="HandleLoginClick">Login</MudButton>
+
+                <MudLink OnClick="() => OpenForgotPasswordDialog()">Forgot Password?</MudLink>
+            </MudContainer>
+        </MudCard>
     </MudContainer>
 </MudLayout>
 

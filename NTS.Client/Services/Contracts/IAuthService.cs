@@ -5,6 +5,8 @@ namespace NTS.Client.Services.Contracts
 {
     public interface IAuthService
     {
-        Task<Response> LoginAsync(LoginDtos request);
+        Task<Response> LoginAsync(LoginDto request);
+
+        Task<Response> ForgotPasswordAsync(ForgotPasswordDto request);
     }
 }
