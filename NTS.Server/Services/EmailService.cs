@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using NTS.Server.Database.DatabaseContext;
+using NTS.Server.Domain.DTOs;
 using NTS.Server.Domain.Models;
 using NTS.Server.Services.Contracts;
 using System.Net;
@@ -8,15 +12,27 @@ namespace NTS.Server.Services
 {
     public class EmailService : IEmailService
     {
+        private readonly ApplicationDbContext dbContext;
         private readonly EmailSettings emailSettings;
+        private readonly ILogger<EmailService> logger;
 
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
         {
+            this.dbContext = dbContext;
             this.emailSettings = emailSettings.Value;
+            this.logger = logger;
         }
 
-        public async Task SendPasswordResetEmailAsync(string userEmail, string resetToken)
+        public async Task<bool> SendPasswordResetEmailAsync(string userEmail, string resetToken)
         {
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+            if (user == null)
+            {
+                logger.LogWarning($"No User Found With This Email {userEmail}");
+                return false;
+            }
+
             var fromEmail = emailSettings.FromEmail;
             var senderPassword = emailSettings.AppPassword;
 
@@ -44,11 +60,13 @@ namespace NTS.Server.Services
             try
             {
                 await smtpClient.SendMailAsync(mailMessage);
+                logger.LogInformation($"Password Reset Email Sent Successfully To: {toEmail}");
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error Sending Email: {ex.Message}");
-                throw;
+                logger.LogError($"Error Sending Password Reset Email To: {toEmail}: {ex.Message}", ex);
+                return false;
             }
         }
     }

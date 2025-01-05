@@ -13,24 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
 // Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 builder.Services.AddControllers();
 
 // learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => 
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -56,20 +51,11 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
-
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    if (File.Exists(xmlPath))
-    {
-        options.IncludeXmlComments(xmlPath);
-    }
-
-    options.TagActionsBy(api => new[] { api.GroupName });
-
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 var secretKey = builder.Configuration.GetValue<string>("AppSettings:Token");
+
+// JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -82,22 +68,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddLogging(options => options.AddConsole());
-
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddSignalR();
 
 builder.Services.AddCors(policy =>
 {
-    policy.AddPolicy("AllowAllOrigins", policy =>
-    {
-        policy
-        .WithOrigins("https://localhost:7095", "http://localhost:5022")
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
+    policy.AddPolicy("AllowBlazorApp",
+        policy =>
+        {
+            policy
+            .WithOrigins("https://localhost:5000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
 });
 
 
@@ -110,14 +91,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAllOrigins");
-
 app.UseHttpsRedirection();
-
+app.UseCors("AllowBlazorApp");
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

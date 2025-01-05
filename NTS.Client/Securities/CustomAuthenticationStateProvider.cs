@@ -66,7 +66,7 @@ namespace NTS.Client.Securities
                 var jsonBytes = Convert.FromBase64String(AddPadding(payload));
                 var claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-                return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())) ?? Enumerable.Empty<Claim>();
+                return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!)) ?? Enumerable.Empty<Claim>();
             }
             catch (FormatException ex)
             {

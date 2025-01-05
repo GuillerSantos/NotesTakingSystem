@@ -13,11 +13,13 @@ namespace NTS.Server.Controller
     {
         private readonly IAuthService authService;
         private readonly IEmailService emailService;
+        private readonly ILogger<AuthController> logger;
 
-        public AuthController(IAuthService authService, IEmailService emailService)
+        public AuthController(IAuthService authService, IEmailService emailService, ILogger<AuthController> logger)
         {
             this.authService = authService;
             this.emailService = emailService;
+            this.logger = logger;
         }
 
 
@@ -26,8 +28,8 @@ namespace NTS.Server.Controller
         {
             try
             {
-                var accounts = await authService.GetAllUsersAccounts(page, pageSize);
-                return Ok(accounts);
+                var usersAccounts = await authService.GetAllUsersAccounts(page, pageSize);
+                return Ok(usersAccounts);
             }
             catch (Exception ex)
             {
@@ -57,6 +59,7 @@ namespace NTS.Server.Controller
                 return BadRequest(new { message = "An Error Occurred During Registration", details = ex.Message });
             }
         }
+
 
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdminAsync([FromBody] SignUpDto request)
@@ -91,18 +94,32 @@ namespace NTS.Server.Controller
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "An Error Occured During Login", details = ex.Message });
+                return BadRequest(new { message = "An Error Occurred During Login", details = ex.Message });
             }
         }
+
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
         {
-            string resetToken = Guid.NewGuid().ToString();
+            try
+            {
+                string resetToken = Guid.NewGuid().ToString();
 
-            await emailService.SendPasswordResetEmailAsync(request.Email, resetToken);
+                bool emailSent = await emailService.SendPasswordResetEmailAsync(request.Email, resetToken);
 
-            return Ok(new { message = "Password Reset Send" });
+                if (!emailSent)
+                {
+                    return BadRequest(new { message = "This Email Address Is Not Registered Or There Was An Error Sending The Email" });
+                }
+
+                return Ok(new { message = "Password Reset Email Has Been Sent" });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"An Error Occurred While Handling Forgot Password Request: {ex.Message}", ex);
+                return BadRequest(new { message = "An Error Occurred During Forgot Password", details = ex.Message });
+            }
         }
     }
 }

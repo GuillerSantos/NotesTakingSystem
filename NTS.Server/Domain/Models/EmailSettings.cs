@@ -2,10 +2,10 @@
 {
     public class EmailSettings
     {
-        public string SMTPServer { get; set; }
+        public string SMTPServer { get; set; } = string.Empty;
         public int SMTPPort { get; set; }
-        public string FromEmail { get; set; }
-        public string AppPassword { get; set; }
-        public string FromName { get; set; }
+        public string FromEmail { get; set; } = string.Empty;
+        public string AppPassword { get; set; } = string.Empty;
+        public string FromName { get; set; } = string.Empty;
     }
 }
