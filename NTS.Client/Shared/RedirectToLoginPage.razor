@@ -1,0 +1,9 @@
+﻿@inject NavigationManager navigationManager
+@inherits LayoutComponentBase
+
+@code {
+    protected override void OnInitialized()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}
