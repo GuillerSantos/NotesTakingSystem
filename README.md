@@ -5,6 +5,8 @@ Currently working on this personal project
 Notes Taking System Features
 
 * [] Auhentication-Authorization
+* Google Email SMTP Forgot Password
+* JWT Authentication
 
 Admin Features
 * [] Manage Users
