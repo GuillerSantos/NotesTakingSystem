@@ -90,12 +90,12 @@ namespace NTS.Server.Services
             {
                 var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
                 if (user == null)
-                    throw new Exception("User With this Email Not Found");
+                    throw new InvalidOperationException("User With this Email Not Found");
 
                 if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-                    throw new Exception("Incorrect Password");
+                    throw new InvalidOperationException("Incorrect Password");
 
-                var token = CreateToken(user.UserId, user.Email, user.Role);
+                var token = GenerateJwtToken(user.UserId, user.Email, user.FullName, user.Role);
 
                 return token;
             }
@@ -106,17 +106,19 @@ namespace NTS.Server.Services
         }
 
 
-        public string CreateToken(Guid userId, string username, string role)
+        public string GenerateJwtToken(Guid userId, string email, string fullName, string role)
         {
             try
             {
                 var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                    new Claim(JwtRegisteredClaimNames.UniqueName, username),
+                    new Claim(JwtRegisteredClaimNames.Name, fullName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, email),
                     new Claim(ClaimTypes.Role, role)
                 };
+
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]!));
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -124,7 +126,7 @@ namespace NTS.Server.Services
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.UtcNow.AddSeconds(5),
                     SigningCredentials = credentials
                 };
 
