@@ -1,5 +1,5 @@
-﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -24,7 +24,7 @@ namespace NTS.Client.Securities
 
             try
             {
-                token = await localStorageService.GetItemAsStringAsync("token");
+                token = await localStorageService.GetItemAsStringAsync("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -41,6 +41,8 @@ namespace NTS.Client.Securities
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
+
+        // RefreshJwtToken need to Fix Tomorrow
 
         public async Task RefreshAuthenticationStateAsync()
         {
@@ -66,6 +68,12 @@ namespace NTS.Client.Securities
                 var jsonBytes = Convert.FromBase64String(AddPadding(payload));
                 var claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
+                var roleClaim = claims?.FirstOrDefault(c => c.Key == "role");
+                if (roleClaim.HasValue) // Check if the Key exists
+                {
+                    Console.WriteLine("Role: " + roleClaim.Value);
+                }
+
                 return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!)) ?? Enumerable.Empty<Claim>();
             }
             catch (FormatException ex)
@@ -79,6 +87,8 @@ namespace NTS.Client.Securities
                 return Enumerable.Empty<Claim>();
             }
         }
+
+
 
         private static string AddPadding(string base64)
         {

@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.Domain.DTOs;
 using NTS.Client.Domain.Models;
+using NTS.Client.Securities;
 using NTS.Client.Services.Contracts;
 using NTS.Client.Utilities;
+using System.Security.Claims;
 
 namespace NTS.Client.Pages.LoginPage
 {
@@ -16,41 +20,34 @@ namespace NTS.Client.Pages.LoginPage
         [Inject] public NavigationManager navigationManager { get; set; }
         [Inject] public IDialogService dialogService { get; set; }
         [Inject] public ISnackbar snackbar { get; set; }
+        [Inject] public ILocalStorageService localStorageService { get; set; }
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
         public Response response { get; set; } = new Response();
-        public LoginDto loginDtos = new LoginDto();
+        public LoginDto loginDto = new LoginDto();
         public string responseMessage = string.Empty;
 
         public async Task HandleLoginClick()
         {
-            var result = await authService.LoginAsync(loginDtos);
+            var response = await authService.LoginAsync(loginDto);
 
-            if (result.IsSuccess)
+            if (response.IsSuccess)
             {
-                Console.WriteLine($"Role: {response.Role}");
-                var role = result.Role;
-
-                if (role == "Admin")
+                if (response.Role == "Admin")
                 {
                     navigationManager.NavigateTo("/adminhome");
                 }
-                else if (role == "User")
+                else
                 {
                     navigationManager.NavigateTo("/userhome");
                 }
-                else
-                {
-                    responseMessage = "Unknown Role Detected. Please Contact Support";
-                }
-
-                StateHasChanged();
             }
             else
             {
-                responseMessage = result.Message;
+                snackbar.Add(response.ErrorMessage ?? "Login failed. Please try again.", Severity.Error);
             }
         }
+
 
 
         public async Task OpenForgotPasswordDialog()

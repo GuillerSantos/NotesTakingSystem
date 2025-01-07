@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using NTS.Client.Domain.DTOs;
 using NTS.Client.Domain.Models;
+using NTS.Client.Securities;
 using NTS.Client.Services.Contracts;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -11,15 +13,15 @@ namespace NTS.Client.Services
     {
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
-        private readonly AuthenticationStateProvider authenticationState;
+        private readonly CustomAuthenticationStateProvider authenticationState;
 
-        public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, AuthenticationStateProvider authenticationState)
+        public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
             this.httpClient = httpClient;
             this.localStorageService = localStorageService;
             this.authenticationState = authenticationState;
-
         }
+
         public async Task<Response> LoginAsync(LoginDto request)
         {
             try
@@ -29,8 +31,9 @@ namespace NTS.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    await localStorageService.SetItemAsync("Token", token);
-                    await authenticationState.GetAuthenticationStateAsync();
+                    await localStorageService.SetItemAsync("Token", token); // Token stored under 'Token'
+                    await authenticationState.GetAuthenticationStateAsync(); // Refresh state
+
                     return new Response { IsSuccess = true, Message = "User Logged In Successfully" };
                 }
                 else
@@ -54,16 +57,17 @@ namespace NTS.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = await response.Content.ReadFromJsonAsync<Response>();
-                    return result;
+                    var result = await response.Content.ReadFromJsonAsync<Response>().ConfigureAwait(false);
+                    return result ?? new Response { IsSuccess = false, Message = "Empty response received." };
                 }
 
-                throw new Exception("Failed To Send Forgot Password Request");
+                return new Response { IsSuccess = false, Message = "Failed To Send Forgot Password Request" };
             }
             catch (Exception ex)
             {
-                throw new Exception("An Error Occurred: " + ex.Message);
+                return new Response { IsSuccess = false, Message = "An Error Occurred: " + ex.Message };
             }
         }
     }
+
 }
