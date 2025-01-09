@@ -7,8 +7,10 @@ namespace NTS.Server.Services.Contracts
     {
         Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize);
 
-        Task<ApplicationUsers> RegisterUsersAsync(SignUpDto request, string role = "Role");
+        Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request);
 
-        Task<string> LoginUsersAsync(LoginDto request);
+        Task<TokenResponseDto?> LoginUsersAsync(LoginDto request);
+
+        Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
     }
 }

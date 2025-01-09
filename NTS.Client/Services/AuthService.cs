@@ -1,11 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using NTS.Client.Domain.DTOs;
 using NTS.Client.Domain.Models;
-using NTS.Client.Securities;
 using NTS.Client.Services.Contracts;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
+using YourApp.Client.Securities;
 
 namespace NTS.Client.Services
 {
@@ -14,6 +11,7 @@ namespace NTS.Client.Services
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
+        private ResponseToken responseToken = new ResponseToken();
 
         public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -22,29 +20,28 @@ namespace NTS.Client.Services
             this.authenticationState = authenticationState;
         }
 
-        public async Task<Response> LoginAsync(LoginDto request)
+        public async Task<bool> LoginAsync(LoginDto request)
         {
             try
             {
-                var response = await httpClient.PostAsJsonAsync("/api/Auth/login-users", request);
-                var token = await response.Content.ReadAsStringAsync();
+                var response = await httpClient.PostAsJsonAsync("/api/Auth/login", request);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    await localStorageService.SetItemAsync("Token", token); // Token stored under 'Token'
-                    await authenticationState.GetAuthenticationStateAsync(); // Refresh state
+                    var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponseDto>();
+                    if (tokenResponse != null)
+                    {
+                        await localStorageService.SetItemAsync("Token", tokenResponse!.AccessToken);
+                        await authenticationState.RefreshAuthenticationStateAsync();
+                        return true;
+                    }
+                }
 
-                    return new Response { IsSuccess = true, Message = "User Logged In Successfully" };
-                }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    return new Response { IsSuccess = false, Message = error };
-                }
+                return false;
             }
             catch (Exception ex)
             {
-                return new Response { IsSuccess = false, Message = "An Error Occurred: " + ex.Message };
+                throw new Exception($"An Error Occurred: {ex.Message}");
             }
         }
 

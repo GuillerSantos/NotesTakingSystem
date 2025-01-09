@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Domain.DTOs;
 using NTS.Server.Domain.Entities;
 using NTS.Server.Services.Contracts;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -21,6 +23,75 @@ namespace NTS.Server.Services
             this.dbContext = dbContext;
             this.configuration = configuration;
         }
+
+
+        public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
+        {
+            try
+            {
+                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (user is null)
+                {
+                    return null;
+                }
+
+                if (new PasswordHasher<ApplicationUsers>().VerifyHashedPassword(user, user.PasswordHash, request.Password)
+                    == PasswordVerificationResult.Failed)
+                {
+                    return null;
+                }
+
+                return await CreateTokenResponse(user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Logging In User: {ex.Message}", ex);
+            }
+        }
+
+
+        private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
+        {
+            return new TokenResponseDto()
+            {
+                AccessToken = CreateToken(user!),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
+            };
+        }
+
+
+        public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request)
+        {
+            try
+            {
+                if (await dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                {
+                    return null;
+                }
+
+                var user = new ApplicationUsers();
+                var hashPassword = new PasswordHasher<ApplicationUsers>()
+                    .HashPassword(user, request.Password);
+
+                user.FullName = request.FullName;
+                user.Email = request.Email;
+                user.PasswordHash = hashPassword;
+                user.Role = request.Role;
+                user.PhoneNumber = request.PhoneNumber;
+                user.RecoveryEmail = request.RecoveryEmail;
+                user.DateJoined = DateTime.UtcNow;
+
+                dbContext.Users.Add(user);
+                await dbContext.SaveChangesAsync();
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Registering User: {ex.Message}", ex);
+            }
+        }
+
 
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
         {
@@ -46,121 +117,76 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<ApplicationUsers> RegisterUsersAsync(SignUpDto request, string role = "User")
+        public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
-            try
-            {
-                if (request.Password != request.ConfirmPassword)
-                    throw new Exception("Password Do Not Match");
+            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            if (user is null) return null;
 
-                var existingUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-
-                if (existingUser != null)
-                    throw new Exception("User With This Email Already Exists");
-
-                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-                var user = new ApplicationUsers
-                {
-                    FullName = request.FullName,
-                    Email = request.Email,
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt,
-                    PhoneNumber = request.PhoneNumber,
-                    RecoveryEmail = request.RecoveryEmail,
-                    DateJoined = DateTime.UtcNow,
-                    Role = role
-                };
-
-                dbContext.Users.Add(user);
-                await dbContext.SaveChangesAsync();
-
-                return user;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error Registering User: {ex.Message}", ex);
-            }
+            return await CreateTokenResponse(user);
         }
 
 
-        public async Task<string> LoginUsersAsync(LoginDto request)
+        private async Task<ApplicationUsers?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
         {
-            try
+            var user = await dbContext.Users.FindAsync(userId);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
-                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-                if (user == null)
-                    throw new InvalidOperationException("User With this Email Not Found");
-
-                if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-                    throw new InvalidOperationException("Incorrect Password");
-
-                var token = GenerateJwtToken(user.UserId, user.Email, user.FullName, user.Role);
-
-                return token;
+                return null;
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error Logging In User: {ex.Message}", ex);
-            }
+
+            return user;
         }
 
 
-        public string GenerateJwtToken(Guid userId, string email, string fullName, string role)
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+
+        private async Task<string> GenerateAndSaveRefreshTokenAsync(ApplicationUsers user)
+        {
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await dbContext.SaveChangesAsync();
+            return refreshToken;
+        }
+
+
+        private string CreateToken(ApplicationUsers user)
         {
             try
             {
-                var claims = new[]
+                var claims = new List<Claim>
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Name, fullName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, email),
-                    new Claim(ClaimTypes.Role, role)
-                };
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.FullName),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
+                 };
+                var securityKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
 
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]!));
-                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var tokenDescriptor = new JwtSecurityToken
+                (
+                    issuer: configuration.GetValue<string>("AppSettings:Issuer"),
+                    audience: configuration.GetValue<string>("AppSettings:Audience"),
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddDays(1),
+                    signingCredentials: credentials
+                );
 
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.UtcNow.AddSeconds(5),
-                    SigningCredentials = credentials
-                };
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-
-                return tokenHandler.WriteToken(token);
+                return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error Creating Token: {ex.Message}", ex);
-            }
-        }
-
-
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using var hmac = new HMACSHA512();
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            passwordSalt = hmac.Key;
-        }
-
-
-        public bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            try
-            {
-                using var hmac = new HMACSHA512(storedSalt);
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(storedHash);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error Verifying Password Hash: {ex.Message}", ex);
             }
         }
     }

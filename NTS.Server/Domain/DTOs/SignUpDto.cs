@@ -17,9 +17,12 @@ namespace NTS.Server.Domain.DTOs
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Required]
-        public string? PhoneNumber { get; set; }
+        public string Role { get; set; } = string.Empty;
 
         [Required]
-        public string? RecoveryEmail { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Required]
+        public string RecoveryEmail { get; set; } = string.Empty;
     }
 }

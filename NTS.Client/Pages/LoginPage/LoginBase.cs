@@ -1,53 +1,64 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.Domain.DTOs;
 using NTS.Client.Domain.Models;
-using NTS.Client.Securities;
 using NTS.Client.Services.Contracts;
 using NTS.Client.Utilities;
-using System.Security.Claims;
+using YourApp.Client.Securities;
 
 namespace NTS.Client.Pages.LoginPage
 {
     public class LoginBase : ComponentBase
     {
-        public readonly DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, NoHeader = true };
+        public readonly DialogOptions dialogOptions = new DialogOptions() 
+        {
+            MaxWidth = MaxWidth.Medium, 
+            FullWidth = true, 
+            NoHeader = true 
+        };
 
         [Inject] public IAuthService authService { get; set; }
         [Inject] public NavigationManager navigationManager { get; set; }
         [Inject] public IDialogService dialogService { get; set; }
         [Inject] public ISnackbar snackbar { get; set; }
         [Inject] public ILocalStorageService localStorageService { get; set; }
+        [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
         public Response response { get; set; } = new Response();
-        public LoginDto loginDto = new LoginDto();
-        public string responseMessage = string.Empty;
+        public LoginDto loginDto = new();
 
         public async Task HandleLoginClick()
         {
-            var response = await authService.LoginAsync(loginDto);
-
-            if (response.IsSuccess)
+            try
             {
-                if (response.Role == "Admin")
+                var response = await authService.LoginAsync(loginDto);
+
+                if (response)
                 {
-                    navigationManager.NavigateTo("/adminhome");
+                    var role = await localStorageService.GetItemAsync<string>("Role");
+
+                    if (role == "Admin")
+                    {
+                        navigationManager.NavigateTo("/adminhome");
+                    }
+                    else if (role == "User")
+                    {
+                        navigationManager.NavigateTo("/userhome");
+                    }
                 }
                 else
                 {
-                    navigationManager.NavigateTo("/userhome");
+                    snackbar.Add("Invalid email or password", Severity.Error);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                snackbar.Add(response.ErrorMessage ?? "Login failed. Please try again.", Severity.Error);
+                snackbar.Add($"An error occurred while logging in: {ex.Message}", Severity.Error);
             }
         }
-
 
 
         public async Task OpenForgotPasswordDialog()

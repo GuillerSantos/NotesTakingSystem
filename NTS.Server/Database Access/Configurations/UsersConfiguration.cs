@@ -6,32 +6,48 @@ namespace NTS.Server.Database.Configurations
 {
     public class UsersConfiguration : IEntityTypeConfiguration<ApplicationUsers>
     {
-
-        public void Configure(EntityTypeBuilder<ApplicationUsers> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUsers> entityBuilder)
         {
-            builder.HasKey(user => user.UserId);
+            entityBuilder.ToTable("ApplicationUsers");
 
-            builder.Property(user => user.FullName)
+            entityBuilder.HasKey(user => user.UserId);
+
+            entityBuilder.Property(user => user.FullName)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .HasColumnName("FullName");
 
-            builder.Property (user => user.Email)
+            entityBuilder.Property(user => user.Email)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasMaxLength(255)
+                .HasColumnName("Email");
 
-            builder.Property (user => user.PasswordHash)
-                .HasMaxLength(255);
+            entityBuilder.Property(user => user.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("PasswordHash");
 
-            builder.Property(user => user.PasswordSalt)
-                .HasMaxLength(255);
+            entityBuilder.Property(user => user.DateJoined)
+                .IsRequired()
+                .HasColumnType("datetime");
 
-            builder.Property(user => user.DateJoined);
+            entityBuilder.Property(user => user.PhoneNumber)
+                .HasMaxLength(11)
+                .HasColumnName("PhoneNumber");
 
-            builder.Property(user => user.PhoneNumber);
+            entityBuilder.Property(user => user.RecoveryEmail)
+                .HasMaxLength(255)
+                .HasColumnName("RecoveryEmail");
 
-            builder.Property(user => user.RecoveryEmail);
+            entityBuilder.Property(user => user.Role)
+                .IsRequired()
+                .HasMaxLength(50);
 
-            builder.Property(user => user.Role);
+            entityBuilder.Property(user => user.RefreshToken)
+                .HasMaxLength(500);
+
+            entityBuilder.Property(user => user.RefreshTokenExpiryTime)
+                .HasColumnType("datetime");
         }
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Domain.DTOs;
-using NTS.Server.Domain.Models;
 using NTS.Server.Services.Contracts;
 using System.Net;
 using System.Net.Mail;
@@ -13,23 +12,23 @@ namespace NTS.Server.Services
     public class EmailService : IEmailService
     {
         private readonly ApplicationDbContext dbContext;
-        private readonly EmailSettings emailSettings;
+        private readonly EmailSettingsDto emailSettings;
         private readonly ILogger<EmailService> logger;
 
-        public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettings> emailSettings, ILogger<EmailService> logger)
+        public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettingsDto> emailSettings, ILogger<EmailService> logger)
         {
             this.dbContext = dbContext;
             this.emailSettings = emailSettings.Value;
             this.logger = logger;
         }
 
-        public async Task<bool> SendPasswordResetEmailAsync(string userEmail, string resetToken)
+        public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userEmail, string resetToken)
         {
-            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.RecoveryEmail == userEmail);
 
             if (user == null)
             {
-                logger.LogWarning($"No User Found With This Email {userEmail}");
+                logger.LogWarning($"No User Found With This Recovery Email {userEmail}");
                 return false;
             }
 
