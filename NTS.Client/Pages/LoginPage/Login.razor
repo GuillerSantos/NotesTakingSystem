@@ -1,6 +1,8 @@
 ﻿@page "/"
 @page "/login"
 @inherits LoginBase
+@layout LoginLayout
+
 
 <MudLayout>
     <MudContainer>
@@ -22,9 +24,9 @@
                               AdornmentIcon="@showPasswordUtil.Icon"
                               OnAdornmentClick="ShowPasswordClick" />
 
-                @if (!string.IsNullOrEmpty(response.ErrorMessage))
+                @if (!string.IsNullOrEmpty(responseDto.ErrorMessage))
                 {
-                    <MudAlert Severity="Severity.Error" Dense="true">@response.ErrorMessage</MudAlert>
+                    <MudAlert Severity="Severity.Error" Dense="true">@responseDto.ErrorMessage</MudAlert>
                 }
 
                 <MudButton Class="mt-4"

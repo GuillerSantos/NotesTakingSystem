@@ -2,8 +2,9 @@
 @inherits LayoutComponentBase
 
 @code {
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        navigationManager.NavigateTo("/login");
+        navigationManager.NavigateTo("/", true);
+        await base.OnInitializedAsync();
     }
 }

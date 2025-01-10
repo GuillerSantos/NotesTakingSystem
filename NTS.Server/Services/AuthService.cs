@@ -168,6 +168,7 @@ namespace NTS.Server.Services
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role)
                  };
+
                 var securityKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
 

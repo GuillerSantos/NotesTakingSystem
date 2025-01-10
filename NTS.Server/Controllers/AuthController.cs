@@ -86,6 +86,19 @@ namespace NTS.Server.Controller
         }
 
 
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        {
+            var result = await authService.RefreshTokensAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null)
+            {
+                return Unauthorized("Invalid Refresh Token");
+            }
+
+            return Ok(result);
+        }
+
+
         [Authorize(Roles = "Admin")]
         [HttpGet("get-all-users")]
         public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -99,19 +112,6 @@ namespace NTS.Server.Controller
             {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
-        }
-
-
-        [HttpPost("refresh-token")]
-        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
-        {
-            var result = await authService.RefreshTokensAsync(request);
-            if (result is null || result.AccessToken is null || result.RefreshToken is null)
-            {
-                return Unauthorized("Invalid Refresh Token");
-            }
-
-            return Ok(result);
         }
     }
 }

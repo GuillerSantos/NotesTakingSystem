@@ -8,16 +8,15 @@
 <PageTitle>NTS.Client</PageTitle>
 
 <MudContainer class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <MudAppBar>
+    </MudAppBar>
 
     <main>
         <div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
-        <MudContainer Class="content px-4">
+        <MudContainer Class="content px-4 pt-20">
             @Body
         </MudContainer>
     </main>

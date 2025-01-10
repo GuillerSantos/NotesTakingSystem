@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NTS.Client.Domain.DTOs;
-using NTS.Client.Domain.Models;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Components
@@ -14,7 +13,7 @@ namespace NTS.Client.Components
         [Parameter] public ForgotPasswordDto forgotPasswordDto { get; set; } = new ForgotPasswordDto();
         [Inject] IAuthService authService { get; set; }
 
-        public Response response { get; set; } = new Response();
+        public ResponseDto response { get; set; } = new ResponseDto();
         public string ResetToken { get; set; }
 
         public async Task Submit()

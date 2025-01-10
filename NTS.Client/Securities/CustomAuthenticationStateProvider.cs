@@ -9,8 +9,6 @@ namespace YourApp.Client.Securities
     {
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
-        private string? token;
-        private string? role;
 
         public CustomAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorageService)
         {
@@ -18,46 +16,53 @@ namespace YourApp.Client.Securities
             this.localStorageService = localStorageService;
         }
 
-        // Get authentication state asynchronously
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var identity = new ClaimsIdentity();
+            ClaimsIdentity identity = new ClaimsIdentity();
 
             try
             {
-                // Retrieve the token and role from localStorage
-                token = await localStorageService.GetItemAsStringAsync("Token");
+                // Retrieve token from localStorage
+                var token = await localStorageService.GetItemAsync<string>("Token");
 
                 if (!string.IsNullOrEmpty(token))
                 {
                     identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
                     httpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                        new AuthenticationHeaderValue("Bearer", token);
                 }
+            }
+            catch (JsonException jsonEx)
+            {
+                Console.WriteLine($"JSON parsing error during authentication state: {jsonEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during authentication state retrieval: {ex.Message}");
+                Console.WriteLine($"Error retrieving authentication state: {ex.Message}");
             }
 
-            var claimsPrincipal = new ClaimsPrincipal(identity);
-
-            return new AuthenticationState(claimsPrincipal);
+            return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
-        // Parse JWT to extract claims
         public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             try
             {
                 var parts = jwt.Split('.');
-                if (parts.Length != 3) throw new FormatException("Invalid JWT format");
+                if (parts.Length != 3)
+                    throw new FormatException("Invalid JWT format");
 
                 var payload = parts[1];
                 var jsonBytes = Convert.FromBase64String(AddPadding(payload));
                 var claims = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-                return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!)) ?? Enumerable.Empty<Claim>();
+                return claims?.Select(kvp => new Claim(kvp.Key, kvp.Value?.ToString() ?? string.Empty))
+                       ?? Enumerable.Empty<Claim>();
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine($"Invalid JWT format: {formatEx.Message}");
+                return Enumerable.Empty<Claim>();
             }
             catch (Exception ex)
             {
@@ -66,13 +71,11 @@ namespace YourApp.Client.Securities
             }
         }
 
-        // Add padding for Base64 string
         private static string AddPadding(string base64)
         {
             return base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
         }
 
-        // Refresh the authentication state
         public async Task RefreshAuthenticationStateAsync()
         {
             try
@@ -84,6 +87,12 @@ namespace YourApp.Client.Securities
             {
                 Console.WriteLine($"Error refreshing authentication state: {ex.Message}");
             }
+        }
+
+        public async Task LogoutAsync()
+        {
+            await localStorageService.RemoveItemAsync("Token");
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
         }
     }
 }

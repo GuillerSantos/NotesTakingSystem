@@ -1,24 +1,18 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.Domain.DTOs;
-using NTS.Client.Domain.Models;
 using NTS.Client.Services.Contracts;
 using NTS.Client.Utilities;
+using System.Security.Claims;
 using YourApp.Client.Securities;
 
 namespace NTS.Client.Pages.LoginPage
 {
     public class LoginBase : ComponentBase
     {
-        public readonly DialogOptions dialogOptions = new DialogOptions() 
-        {
-            MaxWidth = MaxWidth.Medium, 
-            FullWidth = true, 
-            NoHeader = true 
-        };
-
         [Inject] public IAuthService authService { get; set; }
         [Inject] public NavigationManager navigationManager { get; set; }
         [Inject] public IDialogService dialogService { get; set; }
@@ -27,8 +21,15 @@ namespace NTS.Client.Pages.LoginPage
         [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
-        public Response response { get; set; } = new Response();
-        public LoginDto loginDto = new();
+        public ResponseDto responseDto { get; set; } = new ResponseDto();
+        public LoginDto loginDto { get; set; } = new LoginDto();
+
+        public readonly DialogOptions dialogOptions = new DialogOptions()
+        {
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+            NoHeader = true
+        };
 
         public async Task HandleLoginClick()
         {
@@ -38,20 +39,29 @@ namespace NTS.Client.Pages.LoginPage
 
                 if (response)
                 {
-                    var role = await localStorageService.GetItemAsync<string>("Role");
+                    var token = await localStorageService.GetItemAsStringAsync("Token");
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        var claims = CustomAuthenticationStateProvider.ParseClaimsFromJwt(token);
+                        var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
 
-                    if (role == "Admin")
-                    {
-                        navigationManager.NavigateTo("/adminhome");
+                        if (roleClaim?.Value == "Admin")
+                        {
+                            navigationManager.NavigateTo("/adminhome");
+                        }
+                        else
+                        {
+                            navigationManager.NavigateTo("/userhome");
+                        }
                     }
-                    else if (role == "User")
+                    else
                     {
-                        navigationManager.NavigateTo("/userhome");
+                        snackbar.Add("Token not found.", Severity.Error);
                     }
                 }
                 else
                 {
-                    snackbar.Add("Invalid email or password", Severity.Error);
+                    snackbar.Add("Invalid credentials.", Severity.Error);
                 }
             }
             catch (Exception ex)
@@ -59,7 +69,6 @@ namespace NTS.Client.Pages.LoginPage
                 snackbar.Add($"An error occurred while logging in: {ex.Message}", Severity.Error);
             }
         }
-
 
         public async Task OpenForgotPasswordDialog()
         {
@@ -69,12 +78,11 @@ namespace NTS.Client.Pages.LoginPage
 
             var result = await dialog.Result;
 
-            if (!result.Canceled && result.Data is string resetToken)
+            if (result!.Canceled && result.Data is string resetToken)
             {
                 snackbar.Add($"Password Reset Email Has Been Sent To Your Email: {resetToken}", Severity.Info);
             }
         }
-
 
         public void ShowPasswordClick()
         {

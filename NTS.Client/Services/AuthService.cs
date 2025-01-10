@@ -1,6 +1,5 @@
 ﻿using Blazored.LocalStorage;
 using NTS.Client.Domain.DTOs;
-using NTS.Client.Domain.Models;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
 
@@ -11,7 +10,6 @@ namespace NTS.Client.Services
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
-        private ResponseToken responseToken = new ResponseToken();
 
         public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -29,9 +27,9 @@ namespace NTS.Client.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponseDto>();
-                    if (tokenResponse != null)
+                    if (tokenResponse?.AccessToken != null)
                     {
-                        await localStorageService.SetItemAsync("Token", tokenResponse!.AccessToken);
+                        await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
                         await authenticationState.RefreshAuthenticationStateAsync();
                         return true;
                     }
@@ -39,14 +37,17 @@ namespace NTS.Client.Services
 
                 return false;
             }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Network error occurred: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                throw new Exception($"An Error Occurred: {ex.Message}");
+                throw new Exception($"An unexpected error occurred: {ex.Message}");
             }
         }
 
-
-        public async Task<Response> ForgotPasswordAsync(ForgotPasswordDto request)
+        public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
         {
             try
             {
@@ -54,17 +55,20 @@ namespace NTS.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = await response.Content.ReadFromJsonAsync<Response>().ConfigureAwait(false);
-                    return result ?? new Response { IsSuccess = false, Message = "Empty response received." };
+                    var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
+                    return result ?? new ResponseDto { IsSuccess = false, Message = "Empty response received." };
                 }
 
-                return new Response { IsSuccess = false, Message = "Failed To Send Forgot Password Request" };
+                return new ResponseDto { IsSuccess = false, Message = "Failed To Send Forgot Password Request" };
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ResponseDto { IsSuccess = false, Message = $"Network error: {ex.Message}" };
             }
             catch (Exception ex)
             {
-                return new Response { IsSuccess = false, Message = "An Error Occurred: " + ex.Message };
+                return new ResponseDto { IsSuccess = false, Message = "An unexpected error occurred: " + ex.Message };
             }
         }
     }
-
 }
