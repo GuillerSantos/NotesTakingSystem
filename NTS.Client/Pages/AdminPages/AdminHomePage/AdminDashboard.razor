@@ -1,0 +1,10 @@
+﻿@page "/admindashboard"
+@inherits AdminDashboardBase
+@attribute [Authorize(Roles = "Admin")]
+@layout AdminLayout
+
+<MudGrid Class="" Justify="Justify.Center">
+    <MudText>
+        Admin Home Page
+    </MudText>
+</MudGrid>
