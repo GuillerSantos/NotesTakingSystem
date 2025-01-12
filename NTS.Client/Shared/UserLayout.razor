@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+@attribute [Authorize(Roles = "User")]
+
+<MudThemeProvider />
+<MudSnackbarProvider />
+<MudDialogProvider />
+<MudPopoverProvider />
+
+<PageTitle>NTS.Client</PageTitle>
+
+<MudContainer Class="">
+    <MudAppBar>
+        <MudContainer>
+            <MudText>NTS</MudText>
+        </MudContainer>
+
+        <MudContainer >
+            <MudButton Class="text-4xl font-semibold text-gray-900 text-white-600">
+                Home
+            </MudButton>
+            <MudButton Class="text-4xl font-semibold text-gray-900 text-white">
+                Notes
+            </MudButton>
+        </MudContainer>
+    </MudAppBar>
+
+    <MudContainer>
+        <MudText>
+           You Are Authorized - User Home Page
+        </MudText>
+    </MudContainer>
+
+    <MudMainContent>
+        <MudContainer Class="content px-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudContainer>
