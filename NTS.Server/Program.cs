@@ -82,6 +82,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Dependency Injection for services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotesService, NotesService>();
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 
@@ -92,8 +93,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline in development
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseSwagger();
 }
 
 app.UseHttpsRedirection();

@@ -1,6 +1,7 @@
-﻿@page "/userhome"
+﻿@page "/userdashboard"
+@inherits UserDashboardBase
 @attribute [Authorize(Roles = "User")]
-@layout MainLayout
+@layout UserLayout
 
 
 <MudLayout>
@@ -9,7 +10,3 @@
     </MudText>
 </MudLayout>
 
-
-@code {
-
-}

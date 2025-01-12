@@ -47,11 +47,11 @@ namespace NTS.Client.Pages.LoginPage
 
                         if (roleClaim?.Value == "Admin")
                         {
-                            navigationManager.NavigateTo("/adminhome");
+                            navigationManager.NavigateTo("/admindashboard");
                         }
                         else
                         {
-                            navigationManager.NavigateTo("/userhome");
+                            navigationManager.NavigateTo("/userdashboard");
                         }
                     }
                     else

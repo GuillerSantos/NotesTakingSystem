@@ -1,10 +1,11 @@
-﻿@inject NavigationManager navigationManager
-@inherits LayoutComponentBase
+﻿@inject NavigationManager NavigationManager
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override void OnAfterRender(bool firstRender)
     {
-        navigationManager.NavigateTo("/", true);
-        await base.OnInitializedAsync();
+        if (firstRender)
+        {
+            NavigationManager.NavigateTo("/login", true);
+        }
     }
 }

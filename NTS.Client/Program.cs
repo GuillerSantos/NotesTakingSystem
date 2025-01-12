@@ -4,6 +4,7 @@ using Blazored.LocalStorage;
 using NTS.Client.Services.Contracts;
 using NTS.Client.Services;
 using YourApp.Client.Securities;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();

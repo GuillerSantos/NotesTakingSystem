@@ -1,42 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\Projects\\NotesTakingSystem\\",
+  "WorkspaceRootPath": "D:\\PersonalProjects\\NotesTakingSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\shared\\redirecttologinpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\shared\\redirecttologinpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|e:\\projects\\notestakingsystem\\nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\pages\\userpages\\userhomepage\\userhome.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\pages\\userpages\\userhomepage\\userhome.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\shared\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\securities\\customauthenticationstateprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\securities\\customauthenticationstateprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\pages\\loginpage\\loginbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\pages\\loginpage\\loginbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|e:\\projects\\notestakingsystem\\nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,113 +26,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "NTS.Server\\Services\\AuthService.cs",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
-              "RelativeToolTip": "NTS.Server\\Services\\AuthService.cs",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAAAGYAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T12:26:03.796Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UserHome.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Pages\\UserPages\\UserHomePage\\UserHome.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\Pages\\UserPages\\UserHomePage\\UserHome.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Pages\\UserPages\\UserHomePage\\UserHome.razor",
-              "RelativeToolTip": "NTS.Client\\Pages\\UserPages\\UserHomePage\\UserHome.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-10T12:15:43.892Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "RedirectToLoginPage.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\RedirectToLoginPage.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\Shared\\RedirectToLoginPage.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\RedirectToLoginPage.razor",
-              "RelativeToolTip": "NTS.Client\\Shared\\RedirectToLoginPage.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-10T12:08:47.269Z",
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "NTS.Server\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-12T14:19:12.625Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "App.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\App.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\App.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\App.razor",
-              "RelativeToolTip": "NTS.Client\\App.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-10T12:08:40.636Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Program.cs",
-              "RelativeDocumentMoniker": "NTS.Client\\Program.cs",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Program.cs",
-              "RelativeToolTip": "NTS.Client\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T12:00:46.845Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "NavMenu.razor",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\NavMenu.razor",
-              "RelativeDocumentMoniker": "NTS.Client\\Shared\\NavMenu.razor",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Shared\\NavMenu.razor",
-              "RelativeToolTip": "NTS.Client\\Shared\\NavMenu.razor",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAADcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-01-10T11:58:14.924Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "LoginBase.cs",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Pages\\LoginPage\\LoginBase.cs",
-              "RelativeDocumentMoniker": "NTS.Client\\Pages\\LoginPage\\LoginBase.cs",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Pages\\LoginPage\\LoginBase.cs",
-              "RelativeToolTip": "NTS.Client\\Pages\\LoginPage\\LoginBase.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFAAAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T11:57:17.181Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CustomAuthenticationStateProvider.cs",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Securities\\CustomAuthenticationStateProvider.cs",
-              "RelativeDocumentMoniker": "NTS.Client\\Securities\\CustomAuthenticationStateProvider.cs",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Securities\\CustomAuthenticationStateProvider.cs",
-              "RelativeToolTip": "NTS.Client\\Securities\\CustomAuthenticationStateProvider.cs",
-              "ViewState": "AgIAABwAAAAAAAAAAAAAAGIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T11:56:43.892Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "NTS.Client\\Services\\AuthService.cs",
-              "ToolTip": "E:\\Projects\\NotesTakingSystem\\NTS.Client\\Services\\AuthService.cs",
-              "RelativeToolTip": "NTS.Client\\Services\\AuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T11:56:40.757Z"
             }
           ]
         }

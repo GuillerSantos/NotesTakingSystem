@@ -1,7 +1,10 @@
-﻿namespace NTS.Server.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NTS.Server.Domain.Entities
 {
     public class ApplicationUsers
     {
+        [Key]
         public Guid UserId { get; set; } = Guid.NewGuid();
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
@@ -12,5 +15,7 @@
         public string  Role { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        public ICollection<Notes> Notes { get; set; }
     }
 }
