@@ -10,12 +10,17 @@ namespace NTS.Server.Domain.Entities
 
         [ForeignKey("UserId")]
         public Guid UserId { get; set; }
+
         public string Title { get; set; } = string.Empty;
+
         public string Content { get; set; }= string.Empty;
+
         public string Priority { get; set; } = string.Empty;
-        public bool IsPublic { get; set; }
+
         public DateTime? CreatedAt { get; set; }
+
         public bool FavoriteNote { get; set; }
+
 
         public ApplicationUsers Users { get; set; }
     }
