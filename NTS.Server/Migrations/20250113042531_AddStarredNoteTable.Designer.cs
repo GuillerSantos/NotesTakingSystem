@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NTS.Server.Database.DatabaseContext;
 
@@ -11,9 +12,11 @@ using NTS.Server.Database.DatabaseContext;
 namespace NTS.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250113042531_AddStarredNoteTable")]
+    partial class AddStarredNoteTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,6 +149,11 @@ namespace NTS.Server.Migrations
 
                     b.Property<bool>("FavoriteNote")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasMaxLength(255)
+                        .HasColumnType("bit")
+                        .HasColumnName("IsPublic");
 
                     b.Property<string>("Priority")
                         .IsRequired()

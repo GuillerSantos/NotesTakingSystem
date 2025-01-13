@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\PersonalProjects\\NotesTakingSystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -14,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,15 +30,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "NTS.Server\\Controllers\\AuthController.cs",
               "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
               "RelativeToolTip": "NTS.Server\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-12T14:19:12.625Z",
+              "WhenOpened": "2025-01-13T11:44:45.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\AuthService.cs",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\AuthService.cs",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAAAMEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-13T11:40:49.014Z",
               "EditorCaption": ""
             }
           ]

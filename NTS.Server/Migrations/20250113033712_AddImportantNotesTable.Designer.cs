@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NTS.Server.Database.DatabaseContext;
 
@@ -11,9 +12,11 @@ using NTS.Server.Database.DatabaseContext;
 namespace NTS.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250113033712_AddImportantNotesTable")]
+    partial class AddImportantNotesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +102,7 @@ namespace NTS.Server.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("IX_FavoriteNotes_UserId");
 
-                    b.ToTable("FavoriteNotes", (string)null);
+                    b.ToTable("FavoriteNote", (string)null);
                 });
 
             modelBuilder.Entity("NTS.Server.Domain.Entities.ImportantNotes", b =>
@@ -147,6 +150,11 @@ namespace NTS.Server.Migrations
                     b.Property<bool>("FavoriteNote")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPublic")
+                        .HasMaxLength(255)
+                        .HasColumnType("bit")
+                        .HasColumnName("IsPublic");
+
                     b.Property<string>("Priority")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -170,64 +178,12 @@ namespace NTS.Server.Migrations
                     b.ToTable("Notes", (string)null);
                 });
 
-            modelBuilder.Entity("NTS.Server.Domain.Entities.SharedNotes", b =>
-                {
-                    b.Property<Guid>("SharedNoteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("NoteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("SharedNoteId");
-
-                    b.HasIndex("NoteId")
-                        .HasDatabaseName("IX_FavoriteNotes_NoteId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_FavoriteNotes_UserId");
-
-                    b.ToTable("SharedNotes", (string)null);
-                });
-
-            modelBuilder.Entity("NTS.Server.Domain.Entities.StarredNotes", b =>
-                {
-                    b.Property<Guid>("StarredNotesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("NoteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("StarredNotesId");
-
-                    b.HasIndex("NoteId")
-                        .HasDatabaseName("IX_FavoriteNotes_NoteId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_FavoriteNotes_UserId");
-
-                    b.ToTable("StarredNotes", (string)null);
-                });
-
             modelBuilder.Entity("NTS.Server.Domain.Entities.FavoriteNotes", b =>
                 {
                     b.HasOne("NTS.Server.Domain.Entities.Notes", "Note")
                         .WithMany()
                         .HasForeignKey("NoteId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NTS.Server.Domain.Entities.ApplicationUsers", "User")
@@ -267,44 +223,6 @@ namespace NTS.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("NTS.Server.Domain.Entities.SharedNotes", b =>
-                {
-                    b.HasOne("NTS.Server.Domain.Entities.Notes", "Notes")
-                        .WithMany()
-                        .HasForeignKey("NoteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("NTS.Server.Domain.Entities.ApplicationUsers", "Users")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Notes");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("NTS.Server.Domain.Entities.StarredNotes", b =>
-                {
-                    b.HasOne("NTS.Server.Domain.Entities.Notes", "Notes")
-                        .WithMany()
-                        .HasForeignKey("NoteId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("NTS.Server.Domain.Entities.ApplicationUsers", "Users")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Notes");
 
                     b.Navigation("Users");
                 });
