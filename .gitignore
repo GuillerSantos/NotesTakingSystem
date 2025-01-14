@@ -1,6 +1,0 @@
-# Ignore Visual Studio files
-.vs/
-.vscode/
-.idea/
-bin/
-obj/
