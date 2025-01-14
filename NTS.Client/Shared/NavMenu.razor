@@ -1,0 +1,56 @@
+﻿@using YourApp.Client.Securities
+
+<MudContainer Class="top-row ps-3 navbar navbar-dark">
+    <MudContainer Class="container-fluid">
+        <a class="navbar-brand" href="">NTS.Client</a>
+        <MudButton title="Navigation menu" Class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span Class="navbar-toggler-icon"></span>
+        </MudButton>
+    </MudContainer>
+</MudContainer>
+
+<MudContainer Class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <MudContainer Class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            </NavLink>
+        </MudContainer>
+
+        <MudContainer Class="nav-item px-3">
+            <NavLink class="nav-link" href="">
+            </NavLink>
+        </MudContainer>
+
+        <MudContainer Class="nav-item px-3">
+            <NavLink Class="nav-link" href="">
+            </NavLink>
+        </MudContainer>
+
+        <MudContainer Class="nav-item px-3">
+            <MudButton Class="nav-link" Onclick="Logout">
+                Logout
+            </MudButton>
+        </MudContainer>
+    </nav>
+</MudContainer>
+
+@code {
+    [Inject] CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
+    [Inject] ILocalStorageService localStorageService { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public async Task Logout()
+    {
+        await localStorageService.RemoveItemAsync("Token");
+        await authenticationStateProvider.RefreshAuthenticationStateAsync();
+
+        navigationManager.NavigateTo("/", true);
+    }
+}
