@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using NTS.Client.Domain.DTOs;
+using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Components

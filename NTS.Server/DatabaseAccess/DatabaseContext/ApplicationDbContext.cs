@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NTS.Server.Database.Configurations;
-using NTS.Server.Database_Access.Configurations;
-using NTS.Server.Domain.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using NTS.Server.Entities;
 
 namespace NTS.Server.Database.DatabaseContext
 {
@@ -19,12 +18,107 @@ namespace NTS.Server.Database.DatabaseContext
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new UsersConfiguration());
-            builder.ApplyConfiguration(new NotesConfiguration());
-            builder.ApplyConfiguration(new FavoriteNotesConfiguration());
-            builder.ApplyConfiguration(new ImportantNotesConfiguration());
-            builder.ApplyConfiguration(new SharedNotesConfiguration());
-            builder.ApplyConfiguration(new StarredNotesConfiguration());
+
+            // ApplicationUsers
+            builder.Entity<ApplicationUsers>()
+             .ToTable("ApplicationUsers");
+
+            builder.Entity<ApplicationUsers>()
+                .HasKey(user => user.UserId);
+
+
+            // Notes
+            builder.Entity<Notes>()
+                .ToTable("Notes");
+
+            builder.Entity<Notes>()
+                .HasKey(n => n.NoteId);
+
+            builder.Entity<Notes>()
+                .HasOne(n => n.Users)
+                .WithMany(u => u.Notes)
+                .HasForeignKey(n => n.UserId);
+
+
+            // FavoriteNotes
+            builder.Entity<FavoriteNotes>()
+                .HasKey(f => f.FavoriteNoteId);
+
+            builder.Entity<FavoriteNotes>()
+                .ToTable("FavoriteNotes");
+
+            builder.Entity<FavoriteNotes>()
+                .HasOne(f => f.Note)
+                .WithMany()
+                .HasForeignKey(f => f.NoteId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<FavoriteNotes>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // ImportantNotes
+            builder.Entity<ImportantNotes>()
+                .ToTable("ImportantNotes");
+
+            builder.Entity<ImportantNotes>()
+                .HasKey(i => i.ImportantNoteId);
+
+            builder.Entity<ImportantNotes>()
+                .HasOne(i => i.Notes)
+                .WithMany()
+                .HasForeignKey(i => i.NoteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ImportantNotes>()
+                .HasOne(i => i.Users)
+                .WithMany()
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // SharedNotes
+            builder.Entity<SharedNotes>()
+                .ToTable("SharedNotes");
+
+            builder.Entity<SharedNotes>()
+                .HasKey(s => s.SharedNoteId);
+
+            builder.Entity<SharedNotes>()
+                .HasOne(s => s.Notes)
+                .WithMany()
+                .HasForeignKey(s => s.NoteId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<SharedNotes>()
+                .HasOne(s => s.Users)
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            //StarredNotes
+            builder.Entity<StarredNotes>()
+                .ToTable("StarredNotes");
+
+            builder.Entity<StarredNotes>()
+                .HasKey(s => s.StarredNotesId);
+
+            builder.Entity<StarredNotes>()
+                .HasOne(s => s.Notes)
+                .WithMany()
+                .HasForeignKey(s => s.NoteId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<StarredNotes>()
+                .HasOne(s => s.Users)
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

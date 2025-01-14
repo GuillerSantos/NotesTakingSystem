@@ -1,5 +1,5 @@
-﻿using NTS.Server.Domain.DTOs;
-using NTS.Server.Domain.Entities;
+﻿using NTS.Server.Entities;
+using NTS.Server.Entities.DTOs;
 
 namespace NTS.Server.Services.Contracts
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NTS.Server.Database.DatabaseContext;
-using NTS.Server.Domain.DTOs;
-using NTS.Server.Domain.Entities;
+using NTS.Server.Entities;
+using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Services

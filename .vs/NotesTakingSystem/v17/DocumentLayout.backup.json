@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "D:\\PersonalProjects\\NotesTakingSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|d:\\personalprojects\\notestakingsystem\\nts.client\\pages\\adminpages\\admindashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\pages\\adminpages\\admindashboard.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|d:\\personalprojects\\notestakingsystem\\nts.client\\pages\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8E9C185-5480-4441-9AC4-CBC3AD780CB6}|NTS.Client\\NTS.Client.csproj|solutionrelative:nts.client\\pages\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\services\\notesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\services\\notesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\controllers\\notescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|d:\\personalprojects\\notestakingsystem\\nts.server\\databaseaccess\\databasecontext\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F1CCC96E-2E03-4AD8-9B92-DCBEF7126048}|NTS.Server\\NTS.Server.csproj|solutionrelative:nts.server\\databaseaccess\\databasecontext\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,28 +42,67 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "NTS.Server\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "NTS.Server\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T11:44:45.941Z",
+              "DocumentIndex": 0,
+              "Title": "AdminDashboard.razor",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Client\\Pages\\AdminPages\\AdminDashboard.razor",
+              "RelativeDocumentMoniker": "NTS.Client\\Pages\\AdminPages\\AdminDashboard.razor",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Client\\Pages\\AdminPages\\AdminDashboard.razor*",
+              "RelativeToolTip": "NTS.Client\\Pages\\AdminPages\\AdminDashboard.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-01-14T03:25:36.38Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "NTS.Server\\Services\\AuthService.cs",
-              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\AuthService.cs",
-              "RelativeToolTip": "NTS.Server\\Services\\AuthService.cs",
-              "ViewState": "AgIAAJwAAAAAAAAAAAAAAMEAAAABAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Client\\Pages\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "NTS.Client\\Pages\\_Layout.cshtml",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Client\\Pages\\_Layout.cshtml",
+              "RelativeToolTip": "NTS.Client\\Pages\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-01-14T03:23:11.163Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NotesService.cs",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\NotesService.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Services\\NotesService.cs",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Services\\NotesService.cs",
+              "RelativeToolTip": "NTS.Server\\Services\\NotesService.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-13T11:40:49.014Z",
+              "WhenOpened": "2025-01-14T03:11:02.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NotesController.cs",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\NotesController.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\Controllers\\NotesController.cs",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\Controllers\\NotesController.cs",
+              "RelativeToolTip": "NTS.Server\\Controllers\\NotesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T03:10:56.882Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\DatabaseAccess\\DatabaseContext\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "NTS.Server\\DatabaseAccess\\DatabaseContext\\ApplicationDbContext.cs",
+              "ToolTip": "D:\\PersonalProjects\\NotesTakingSystem\\NTS.Server\\DatabaseAccess\\DatabaseContext\\ApplicationDbContext.cs",
+              "RelativeToolTip": "NTS.Server\\DatabaseAccess\\DatabaseContext\\ApplicationDbContext.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T03:00:48.456Z",
               "EditorCaption": ""
             }
           ]

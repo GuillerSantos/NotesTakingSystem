@@ -6,8 +6,7 @@ using System.Text;
 using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
-using NTS.Server.Domain.DTOs;
-using Scalar.AspNetCore;
+using NTS.Server.Entities.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 

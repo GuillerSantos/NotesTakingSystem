@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using NTS.Client.Domain.DTOs;
+using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
 
