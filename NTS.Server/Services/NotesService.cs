@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Entities;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NTS.Server.Services
 {
@@ -20,7 +23,7 @@ namespace NTS.Server.Services
         {
             try
             {
-                var note = new Notes 
+                var note = new Notes
                 {
                     UserId = userId,
                     Title = request.Title,
@@ -39,12 +42,11 @@ namespace NTS.Server.Services
             }
         }
 
-
-        public async Task<Notes> EditNotesAsync( EditNotesDto editNotesDto, Guid noteId, Guid userId)
+        public async Task<Notes> EditNotesAsync(EditNotesDto editNotesDto, Guid noteId, Guid userId)
         {
             try
             {
-                var existingNote = await dbContext.Notes.FindAsync(editNotesDto.NoteId);
+                var existingNote = await dbContext.Notes.FindAsync(noteId);
                 if (existingNote == null || existingNote.UserId != userId) return null;
 
                 existingNote.Title = editNotesDto.Title;
@@ -60,7 +62,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Editing Note: {ex.Message}");
             }
         }
-
 
         public async Task<bool> RemoveNoteAsync(Guid noteId)
         {
@@ -85,6 +86,7 @@ namespace NTS.Server.Services
             return await dbContext.Notes.Where(n => n.UserId == userId).ToListAsync();
         }
 
+
         public async Task<Notes> GetNoteByIdAsync(Guid noteId, Guid userId)
         {
             var note = await dbContext.Notes.FindAsync(noteId);
@@ -94,13 +96,11 @@ namespace NTS.Server.Services
             return note;
         }
 
-
         public async Task<IQueryable<Notes>> SearchNotesAsync(string searchTerm)
         {
             var notes = dbContext.Notes.Where(n => n.Title.Contains(searchTerm) || n.Content.Contains(searchTerm));
             return notes;
         }
-
 
         public async Task<bool> MarkNoteAsFavoriteAsync(Guid noteId, Guid userId)
         {
@@ -119,7 +119,6 @@ namespace NTS.Server.Services
             await dbContext.SaveChangesAsync();
             return true;
         }
-
 
         public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
         {
@@ -147,7 +146,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId, Guid sharedWithUserId)
         {
             try
@@ -173,7 +171,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Marking Note: {ex.Message}");
             }
         }
-
 
         public async Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId)
         {
