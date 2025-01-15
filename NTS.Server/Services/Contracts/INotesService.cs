@@ -9,6 +9,7 @@ namespace NTS.Server.Services.Contracts
         Task<Notes?> CreateNoteAsync(NotesDto request, Guid userId);
         Task<Notes> EditNotesAsync(EditNotesDto editNotesDto, Guid noteId, Guid userId);
         Task<bool> RemoveNoteAsync(Guid noteId);
+        Task<Notes> GetNoteByIdAsync(Guid noteId, Guid userId);
         Task<List<Notes>> GetAllNotesAsync(Guid userId);
         Task<IQueryable<Notes>> SearchNotesAsync(string searchTerm);
         Task<bool> MarkNoteAsFavoriteAsync(Guid noteId, Guid userId);
