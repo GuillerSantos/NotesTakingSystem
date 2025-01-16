@@ -43,31 +43,14 @@ namespace NTS.Server.Controller
         }
 
 
-        [HttpPost("register-defaultuser")]
-        public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(SignUpAdminDto request)
+        [HttpPost("register")]
+        public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(SignUpDto request)
         {
             try
             {
-                var user = await authService.RegisterUsersAsync(request, false);
+                var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
 
-                if (user is null)
-                    return BadRequest("Email Already Exists");
-
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "An Error Occurred During Registration", details = ex.Message });
-            }
-        }
-
-
-        [HttpPost("register-admin"), Authorize (Roles = "Admin")]
-        public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(SignUpAdminDto request)
-        {
-            try
-            {
-                var user = await authService.RegisterUsersAsync(request, true);
+                var user = await authService.RegisterUsersAsync(request, isAuthenticated);
 
                 if (user is null)
                     return BadRequest("Email Already Exists");
