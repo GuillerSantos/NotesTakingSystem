@@ -60,7 +60,7 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpAdminDto request, bool isAdmin)
+        public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request, bool isAdmin)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace NTS.Server.Services
                 user.FullName = request.FullName;
                 user.Email = request.Email;
                 user.PasswordHash = hashPassword;
-                user.Role = isAdmin == true ? "Admin" : "DefaultUser";
+                user.Role = isAdmin ? "Admin" : "DefaultUser";
                 user.PhoneNumber = request.PhoneNumber;
                 user.RecoveryEmail = request.RecoveryEmail;
                 user.DateJoined = DateTime.UtcNow;
