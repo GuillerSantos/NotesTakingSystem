@@ -2,7 +2,7 @@
 
 namespace NTS.Server.Entities.DTOs
 {
-    public class SignUpAdminDto
+    public class SignUpDto
     {
         [Required]
         public string FullName { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace NTS.Server.Entities.DTOs
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Required]
-        public string Role { get; set; } = "Admin";
+        public string Role { get; set; } = string.Empty;
 
         [Required]
         public string PhoneNumber { get; set; } = string.Empty;

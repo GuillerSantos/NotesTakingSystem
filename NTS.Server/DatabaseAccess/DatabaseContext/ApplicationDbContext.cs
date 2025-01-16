@@ -49,7 +49,7 @@ namespace NTS.Server.Database.DatabaseContext
                 .HasOne(f => f.Note)
                 .WithMany()
                 .HasForeignKey(f => f.NoteId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<FavoriteNotes>()
                 .HasOne(f => f.ApplicationUser)
@@ -68,13 +68,13 @@ namespace NTS.Server.Database.DatabaseContext
                 .HasOne(i => i.ApplicationUser)
                 .WithMany()
                 .HasForeignKey(i => i.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);  // Change this to NoAction or SetNull
 
             builder.Entity<ImportantNotes>()
                 .HasOne(i => i.Note)
                 .WithMany()
                 .HasForeignKey(i => i.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);  // Keep or change to NoAction/SetNull
 
             // SharedNotes
             builder.Entity<SharedNotes>()
@@ -93,7 +93,7 @@ namespace NTS.Server.Database.DatabaseContext
                 .HasOne(s => s.Note)
                 .WithMany()
                 .HasForeignKey(s => s.NoteId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // StarredNotes
             builder.Entity<StarredNotes>()
@@ -106,13 +106,13 @@ namespace NTS.Server.Database.DatabaseContext
                 .HasOne(s => s.ApplicationUser)
                 .WithMany()
                 .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<StarredNotes>()
                 .HasOne(s => s.Note)
                 .WithMany()
                 .HasForeignKey(s => s.NoteId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

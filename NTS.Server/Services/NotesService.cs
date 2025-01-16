@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Entities;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NTS.Server.Services
 {
@@ -19,7 +16,8 @@ namespace NTS.Server.Services
             this.dbContext = dbContext;
         }
 
-        public async Task<Notes?> CreateNoteAsync(NotesDto request, Guid userId)
+
+        public async Task<Notes?> CreateNoteAsync([FromBody] CreateNotesDto request, Guid userId)
         {
             try
             {
@@ -42,6 +40,7 @@ namespace NTS.Server.Services
             }
         }
 
+
         public async Task<Notes> EditNotesAsync(EditNotesDto editNotesDto, Guid noteId, Guid userId)
         {
             try
@@ -63,6 +62,7 @@ namespace NTS.Server.Services
             }
         }
 
+
         public async Task<bool> RemoveNoteAsync(Guid noteId)
         {
             try
@@ -83,42 +83,75 @@ namespace NTS.Server.Services
 
         public async Task<List<Notes>> GetAllNotesAsync(Guid userId)
         {
-            return await dbContext.Notes.Where(n => n.UserId == userId).ToListAsync();
+            try
+            {
+                return await dbContext.Notes.Where(n => n.UserId == userId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Fetching All Notes: {ex.Message}");
+            }
         }
 
 
-        public async Task<Notes> GetNoteByIdAsync(Guid noteId, Guid userId)
+        public async Task<Notes> GetNoteByIdAsync(Guid noteId)
         {
-            var note = await dbContext.Notes.FindAsync(noteId);
-            if (note == null || (note.UserId != userId && !dbContext.SharedNotes.Any(sn => sn.NoteId == noteId && sn.UserId == userId)))
-                return null;
+            try
+            {
+                var note = await dbContext.Notes.FindAsync(noteId);
 
-            return note;
+                return note!;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Fetching Note By Note ID: {ex.Message}");
+            }
         }
 
-        public async Task<IQueryable<Notes>> SearchNotesAsync(string searchTerm)
+
+        public async Task<IQueryable<Notes>> SearchNotesAsync(string searchTerm, Guid userId)
         {
-            var notes = dbContext.Notes.Where(n => n.Title.Contains(searchTerm) || n.Content.Contains(searchTerm));
-            return notes;
+            try
+            {
+                var notes = dbContext.Notes
+                    .Where(n => n.UserId == userId &&
+                        (n.Title.Contains(searchTerm) || n.Content.Contains(searchTerm)));
+
+                return notes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Searching Notes: {ex.Message}");
+            }
         }
+
 
         public async Task<bool> MarkNoteAsFavoriteAsync(Guid noteId, Guid userId)
         {
-            var note = await dbContext.Notes.FindAsync(noteId);
-            if (note == null || note.UserId != userId) return false;
-
-            var favoriteNote = new FavoriteNotes
+            try
             {
-                FavoriteNoteId = Guid.NewGuid(),
-                NoteId = noteId,
-                UserId = userId,
-                CreatedAt = DateTime.UtcNow
-            };
+                var note = await dbContext.Notes.FindAsync(noteId);
+                if (note == null || note.UserId != userId) return false;
 
-            dbContext.FavoriteNotes.Add(favoriteNote);
-            await dbContext.SaveChangesAsync();
-            return true;
+                var favoriteNote = new FavoriteNotes
+                {
+                    FavoriteNoteId = Guid.NewGuid(),
+                    Title = note.Title,
+                    NoteId = noteId,
+                    UserId = userId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                dbContext.FavoriteNotes.Add(favoriteNote);
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error Marking Note: {ex.Message}");
+            }
         }
+
 
         public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
         {
@@ -130,6 +163,7 @@ namespace NTS.Server.Services
                 var importantNote = new ImportantNotes
                 {
                     ImportantNoteId = Guid.NewGuid(),
+                    Title = note.Title,
                     NoteId = noteId,
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow
@@ -142,9 +176,10 @@ namespace NTS.Server.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error Marking The Note: {ex.Message}");
+                throw new Exception($"Error Marking Note: {ex.Message}");
             }
         }
+
 
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId, Guid sharedWithUserId)
         {
@@ -156,6 +191,7 @@ namespace NTS.Server.Services
                 var sharedNote = new SharedNotes
                 {
                     SharedNoteId = Guid.NewGuid(),
+                    Title = note.Title,
                     NoteId = noteId,
                     UserId = userId,
                     SharedWithUserId = sharedWithUserId,
@@ -172,6 +208,7 @@ namespace NTS.Server.Services
             }
         }
 
+
         public async Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId)
         {
             try
@@ -182,6 +219,7 @@ namespace NTS.Server.Services
                 var starredNote = new StarredNotes
                 {
                     StarredNotesId = Guid.NewGuid(),
+                    Title = note.Title,
                     NoteId = noteId,
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow

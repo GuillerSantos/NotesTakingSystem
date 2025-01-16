@@ -7,7 +7,7 @@ namespace NTS.Server.Services.Contracts
     {
         Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize);
 
-        Task<ApplicationUsers?> RegisterUsersAsync(SignUpAdminDto request, bool isAdmin);
+        Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request, bool isAdmin);
 
         Task<TokenResponseDto?> LoginUsersAsync(LoginDto request);
 

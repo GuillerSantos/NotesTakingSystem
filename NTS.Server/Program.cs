@@ -15,9 +15,7 @@ builder.Services.AddControllers();
 
 // Database Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-        .EnableSensitiveDataLogging()
-        .LogTo(Console.WriteLine, LogLevel.Information));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
