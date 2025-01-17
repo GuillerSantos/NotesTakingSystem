@@ -42,6 +42,6 @@ namespace NTS.Server.Entities
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        public ICollection<Notes> Notes { get; set; }
+        public ICollection<NotesBase> Notes { get; set; }
     }
 }
