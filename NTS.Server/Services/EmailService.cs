@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using NTS.Server.Database.DatabaseContext;
+using NTS.Server.Data;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
 using System.Net;
