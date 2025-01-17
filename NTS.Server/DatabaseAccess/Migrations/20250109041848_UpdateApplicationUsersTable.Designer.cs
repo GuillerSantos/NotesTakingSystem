@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NTS.Server.Database.DatabaseContext;
-
+using NTS.Server.Data;
 #nullable disable
 
 namespace NTS.Server.Migrations
