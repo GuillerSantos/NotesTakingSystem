@@ -25,7 +25,7 @@ namespace NTS.Server.Entities
         public DateTime CreatedAt { get; set; }
 
 
-        public Notes Note { get; set; }
+        public NotesBase Note { get; set; }
         public ApplicationUsers ApplicationUser { get; set; }
     }
 }
