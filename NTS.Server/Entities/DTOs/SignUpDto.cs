@@ -24,6 +24,7 @@ namespace NTS.Server.Entities.DTOs
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
+        [EmailAddress]
         public string RecoveryEmail { get; set; } = string.Empty;
 
         [Required]
