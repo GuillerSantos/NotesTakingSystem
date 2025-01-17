@@ -4,6 +4,7 @@ using NTS.Server.Database.DatabaseContext;
 using NTS.Server.Entities;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
+using System.Transactions;
 
 namespace NTS.Server.Services
 {
@@ -65,17 +66,33 @@ namespace NTS.Server.Services
 
         public async Task<bool> RemoveNoteAsync(Guid noteId)
         {
+            using var transcation = await dbContext.Database.BeginTransactionAsync();
             try
             {
                 var note = await dbContext.Notes.FindAsync(noteId);
-                if (note == null) return false;
+                if (note == null) 
+                    return false;
 
-                dbContext.Remove(note);
+                var relatedEntries = new object[]
+                {
+                    dbContext.FavoriteNotes.Where(f => f.NoteId == noteId),
+                    dbContext.ImportantNotes.Where(i => i.NoteId == noteId),
+                    dbContext.SharedNotes.Where(s => s.NoteId == noteId),
+                    dbContext.StarredNotes.Where(sn => sn.NoteId == noteId)
+                };
+
+                foreach (var entities in relatedEntries)
+                    dbContext.RemoveRange(entities);
+
+                dbContext.Notes.Remove(note);
+
                 await dbContext.SaveChangesAsync();
+                await transcation.CommitAsync();
                 return true;
             }
             catch (Exception ex)
             {
+                await transcation.RollbackAsync();
                 throw new Exception($"Error Removing Note: {ex.Message}");
             }
         }
