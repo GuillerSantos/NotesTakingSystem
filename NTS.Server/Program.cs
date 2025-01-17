@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using NTS.Server.Database.DatabaseContext;
+using NTS.Server.Data;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using NTS.Server.Entities.DTOs;
