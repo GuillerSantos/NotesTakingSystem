@@ -19,6 +19,88 @@ namespace NTS.Server.Controllers
         }
 
 
+        [HttpGet("get-all-notes"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> GetAllNotesAsync()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (userIdClaim == null)
+                {
+                    return Unauthorized("User Id Not Found In Token");
+                }
+
+                var userId = Guid.Parse(userIdClaim.Value);
+
+                var notes = await notesService.GetAllNotesAsync(userId);
+
+                if (notes == null)
+                {
+                    return NotFound("No Notes Found");
+                }
+
+                return Ok(notes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("get-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [ActionName("GetNoteById")]
+        public async Task<IActionResult> GetNoteByIdAsync(Guid noteId)
+        {
+            try
+            {
+                var note = await notesService.GetNoteByIdAsync(noteId);
+
+                if (note == null)
+                {
+                    return NotFound("No Note Found With the Note Id");
+                }
+
+                return Ok(note);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("search-note"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchTerm)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (userIdClaim == null)
+                {
+                    return Unauthorized("User Id Not Found In Token");
+                }
+
+                var userId = Guid.Parse(userIdClaim.Value);
+
+                var response = await notesService.SearchNotesAsync(searchTerm, userId);
+
+                if (response == null || response.Count() == 0)
+                {
+                    return NotFound("No Notes Matching Your Search Criteria");
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpPost("create-note"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> CreateNoteAsync([FromBody] CreateNotesDto request)
         {
@@ -46,7 +128,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error Creating Note: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -74,7 +156,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             { 
-                return BadRequest($"Error Editing Note: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -97,89 +179,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Removing Note: {ex.Message}");
-            }
-        }
-
-
-        [HttpGet("get-all-notes"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> GetAllNotesAsync()
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var notes = await notesService.GetAllNotesAsync(userId);
-
-                if (notes == null)
-                {
-                    return NotFound("No Notes Found");
-                }
-
-                return Ok(notes);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error Fetching Notes: {ex.Message}");
-            }
-        }
-
-
-        [HttpGet("get-note/{noteId}"), Authorize (Roles = "DefaultUser")]
-        [ActionName("GetNoteById")]
-        public async Task<IActionResult> GetNoteByIdAsync(Guid noteId)
-        {
-            try
-            {
-                var note = await notesService.GetNoteByIdAsync(noteId);
-
-                if (note == null)
-                {
-                    return NotFound("No Note Found With the Note Id");
-                }
-
-                return Ok(note);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error Fetching Note: {ex.Message}");
-            }
-        }
-
-
-        [HttpGet("search-note"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchTerm)
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var response = await notesService.SearchNotesAsync(searchTerm, userId);
-
-                if (response == null || response.Count() == 0)
-                {
-                    return NotFound("No Notes Matching Your Search Criteria");
-                }
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error Searching Notes: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -202,7 +202,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Marking Note As Favorite: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -225,7 +225,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Marking Note As Importand: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -248,7 +248,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Sharing Note: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -271,7 +271,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error Marking Note As Starred: {ex.Message}");
+                return BadRequest(ex.Message);
             }
         }
     }
