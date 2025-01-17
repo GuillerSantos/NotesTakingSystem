@@ -1,118 +1,96 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NTS.Server.Entities;
 
-namespace NTS.Server.Database.DatabaseContext
+namespace NTS.Server.Data
 {
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<ApplicationUsers> ApplicationUsers { get; set; }
-        public DbSet<Notes> Notes { get; set; }
+        public DbSet<NotesBase> NotesBase { get; set; }
         public DbSet<FavoriteNotes> FavoriteNotes { get; set; }
         public DbSet<ImportantNotes> ImportantNotes { get; set; }
         public DbSet<SharedNotes> SharedNotes { get; set; }
         public DbSet<StarredNotes> StarredNotes { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            // ApplicationUsers
-            builder.Entity<ApplicationUsers>()
-                .ToTable("ApplicationUsers");
+            modelBuilder.Entity<ApplicationUsers>()
+                .HasKey(a => a.UserId);
 
-            builder.Entity<ApplicationUsers>()
-                .HasKey(user => user.UserId);
-
-            // Notes
-            builder.Entity<Notes>()
-                .ToTable("Notes");
-
-            builder.Entity<Notes>()
-                .HasKey(n => n.NoteId);
-
-            builder.Entity<Notes>()
-                .HasOne(n => n.ApplicationUser)
-                .WithMany(u => u.Notes)
-                .HasForeignKey(n => n.UserId);
+            // NotesBase
+            modelBuilder.Entity<NotesBase>(entity =>
+            {
+                entity.HasOne(e => e.ApplicationUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
             // FavoriteNotes
-            builder.Entity<FavoriteNotes>()
-                .HasKey(f => f.FavoriteNoteId);
+            modelBuilder.Entity<FavoriteNotes>(entity =>
+            {
+                entity.HasOne(e => e.Note)
+                      .WithMany()
+                      .HasForeignKey(e => e.NoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<FavoriteNotes>()
-                .ToTable("FavoriteNotes");
-
-            builder.Entity<FavoriteNotes>()
-                .HasOne(f => f.Note)
-                .WithMany()
-                .HasForeignKey(f => f.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<FavoriteNotes>()
-                .HasOne(f => f.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.ApplicationUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
 
             // ImportantNotes
-            builder.Entity<ImportantNotes>()
-                .ToTable("ImportantNotes");
+            modelBuilder.Entity<ImportantNotes>(entity =>
+            {
+                entity.HasOne(e => e.Note)
+                      .WithMany()
+                      .HasForeignKey(e => e.NoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ImportantNotes>()
-                .HasKey(i => i.ImportantNoteId);
-
-            builder.Entity<ImportantNotes>()
-                .HasOne(i => i.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(i => i.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder.Entity<ImportantNotes>()
-                .HasOne(i => i.Note)
-                .WithMany()
-                .HasForeignKey(i => i.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.ApplicationUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
 
             // SharedNotes
-            builder.Entity<SharedNotes>()
-                .ToTable("SharedNotes");
+            modelBuilder.Entity<SharedNotes>(entity =>
+            {
+                entity.HasOne(e => e.Note)
+                      .WithMany()
+                      .HasForeignKey(e => e.NoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<SharedNotes>()
-                .HasKey(s => s.SharedNoteId);
+                entity.HasOne(e => e.ApplicationUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<SharedNotes>()
-                .HasOne(s => s.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.SharedWithUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.SharedWithUserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
 
-            builder.Entity<SharedNotes>()
-                .HasOne(s => s.Note)
-                .WithMany()
-                .HasForeignKey(s => s.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // StarredNotes (Separate from SharedNotes configuration)
+            modelBuilder.Entity<StarredNotes>(entity =>
+            {
+                entity.HasOne(e => e.Note)
+                      .WithMany()
+                      .HasForeignKey(e => e.NoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            // StarredNotes
-            builder.Entity<StarredNotes>()
-                .ToTable("StarredNotes");
-
-            builder.Entity<StarredNotes>()
-                .HasKey(s => s.StarredNotesId);
-
-            builder.Entity<StarredNotes>()
-                .HasOne(s => s.ApplicationUser)
-                .WithMany()
-                .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<StarredNotes>()
-                .HasOne(s => s.Note)
-                .WithMany()
-                .HasForeignKey(s => s.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.ApplicationUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
         }
+
     }
 }
