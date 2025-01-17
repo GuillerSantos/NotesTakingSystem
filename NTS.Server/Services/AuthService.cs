@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NTS.Server.Database.DatabaseContext;
+using NTS.Server.Data;
 using NTS.Server.Entities;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
@@ -59,7 +59,7 @@ namespace NTS.Server.Services
             };
         }
 
-
+        // Need to be Modify
         public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request, bool isAdmin)
         {
             try
@@ -77,7 +77,7 @@ namespace NTS.Server.Services
                 user.FullName = request.FullName;
                 user.Email = request.Email;
                 user.PasswordHash = hashPassword;
-                user.Role = isAdmin ? "Admin" : "DefaultUser";
+                user.Role =  isAdmin ? "Admin" : "DefaultUser";
                 user.PhoneNumber = request.PhoneNumber;
                 user.RecoveryEmail = request.RecoveryEmail;
                 user.DateJoined = DateTime.UtcNow;
