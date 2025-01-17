@@ -22,6 +22,22 @@ namespace NTS.Server.Controller
         }
 
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("get-all-users")]
+        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var usersAccounts = await authService.GetAllUsersAccounts(page, pageSize);
+                return Ok(usersAccounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDto>> LoginUsersAsync(LoginDto request)
         {
@@ -98,22 +114,6 @@ namespace NTS.Server.Controller
             }
 
             return Ok(result);
-        }
-
-
-        [Authorize(Roles = "Admin")]
-        [HttpGet("get-all-users")]
-        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
-        {
-            try
-            {
-                var usersAccounts = await authService.GetAllUsersAccounts(page, pageSize);
-                return Ok(usersAccounts);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            }
         }
     }
 }
