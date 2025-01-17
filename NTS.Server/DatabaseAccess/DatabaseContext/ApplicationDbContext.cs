@@ -68,13 +68,13 @@ namespace NTS.Server.Database.DatabaseContext
                 .HasOne(i => i.ApplicationUser)
                 .WithMany()
                 .HasForeignKey(i => i.UserId)
-                .OnDelete(DeleteBehavior.NoAction);  // Change this to NoAction or SetNull
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<ImportantNotes>()
                 .HasOne(i => i.Note)
                 .WithMany()
                 .HasForeignKey(i => i.NoteId)
-                .OnDelete(DeleteBehavior.Cascade);  // Keep or change to NoAction/SetNull
+                .OnDelete(DeleteBehavior.Cascade);
 
             // SharedNotes
             builder.Entity<SharedNotes>()
