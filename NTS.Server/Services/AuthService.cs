@@ -35,17 +35,17 @@ namespace NTS.Server.Services
                     return null;
                 }
 
-                if (new PasswordHasher<ApplicationUsers>().VerifyHashedPassword(user, user.PasswordHash, request.Password)
-                    == PasswordVerificationResult.Failed)
+                if (new PasswordHasher<ApplicationUsers>().VerifyHashedPassword
+                    (user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
                 {
                     return null;
                 }
 
                 return await CreateTokenResponse(user);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                throw new Exception($"Error Logging In User: {ex.Message}", ex);
+                throw new Exception($"Error Logging In User: {error.Message}");
             }
         }
 
@@ -59,41 +59,77 @@ namespace NTS.Server.Services
             };
         }
 
-        // Need to be Modify
+
         public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request, bool isAdmin)
         {
             try
             {
                 if (await dbContext.ApplicationUsers.AnyAsync(u => u.Email == request.Email))
-                {
                     return null;
-                }
 
-                var user = new ApplicationUsers();
+                var registerUser = new ApplicationUsers();
 
                 var hashPassword = new PasswordHasher<ApplicationUsers>()
-                    .HashPassword(user, request.Password);
+                    .HashPassword(registerUser, request.Password);
 
-                user.FullName = request.FullName;
-                user.Email = request.Email;
-                user.PasswordHash = hashPassword;
-                user.Role =  isAdmin ? "Admin" : "DefaultUser";
-                user.PhoneNumber = request.PhoneNumber;
-                user.RecoveryEmail = request.RecoveryEmail;
-                user.DateJoined = DateTime.UtcNow;
+                registerUser.FullName = request.FullName;
+                registerUser.Email = request.Email;
+                registerUser.PasswordHash = hashPassword;
+                registerUser.Role =  isAdmin ? "Admin" : "DefaultUser";
+                registerUser.PhoneNumber = request.PhoneNumber;
+                registerUser.RecoveryEmail = request.RecoveryEmail;
+                registerUser.DateJoined = DateTime.UtcNow;
 
 
-                dbContext.ApplicationUsers.Add(user);
+                dbContext.ApplicationUsers.Add(registerUser);
                 await dbContext.SaveChangesAsync();
-
-                return user;
+                return registerUser;
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                throw new Exception($"Error Registering User: {ex.Message}", ex);
+                throw new Exception($"Error Registering User: {error.Message}");
             }
         }
 
+
+        public async Task<bool> RemoveAccountAsync(Guid userId)
+        {
+            using var transaction = await dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                var accountToRemove = await dbContext.ApplicationUsers.FindAsync(userId);
+
+                if (accountToRemove is null)
+                    return false;
+
+                var relatedRecordsToRemove = new List<IQueryable<object>>
+                {
+                    dbContext.Notes.Where(note => note.UserId == userId),
+                    dbContext.FavoriteNotes.Where(favNote => favNote.UserId == userId),
+                    dbContext.ImportantNotes.Where(impNote => impNote.UserId == userId),
+                    dbContext.SharedNotes.Where(sharedNote => sharedNote.UserId == userId),
+                    dbContext.StarredNotes.Where(starNote => starNote.UserId == userId),
+                };
+
+                foreach (var records in relatedRecordsToRemove)
+                {
+                    var recordsList = records.ToList();
+                    dbContext.RemoveRange(records);
+                }
+
+                dbContext.ApplicationUsers.Remove(accountToRemove);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception error)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Error Removing Account: {error.Message}");
+            }
+        }
 
 
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
@@ -113,9 +149,9 @@ namespace NTS.Server.Services
                     })
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                throw new Exception($"Error Retrieving All Users: {ex.Message}", ex);
+                throw new Exception($"Error Retrieving All Users: {error.Message}");
             }
         }
 
@@ -188,9 +224,9 @@ namespace NTS.Server.Services
 
                 return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                throw new Exception($"Error Creating Token: {ex.Message}", ex);
+                throw new Exception($"Error Creating Token: {error.Message}");
             }
         }
     }
