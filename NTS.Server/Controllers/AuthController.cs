@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Entities;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
+using System.Security.Claims;
 
 namespace NTS.Server.Controller
 {
@@ -28,12 +29,12 @@ namespace NTS.Server.Controller
         {
             try
             {
-                var usersAccounts = await authService.GetAllUsersAccounts(page, pageSize);
-                return Ok(usersAccounts);
+                var fetchedAccounts = await authService.GetAllUsersAccounts(page, pageSize);
+                return Ok(fetchedAccounts);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {error.Message}");
             }
         }
 
@@ -43,39 +44,68 @@ namespace NTS.Server.Controller
         {
             try
             {
-                var result = await authService.LoginUsersAsync(request);
+                var loggedIn = await authService.LoginUsersAsync(request);
 
-                if (result is null)
+                if (loggedIn is null)
                 {
                     return BadRequest("Invalid Credentials");
                 }
 
-                return Ok(result);
+                return Ok(loggedIn);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(new { message = "An Error Occurred During Login", details = ex.Message });
+                return BadRequest(new { message = "An Error Occurred During Login", details = error.Message });
             }
         }
 
 
-        [HttpPost("register")]
+        [HttpPost("register-defaultuser")]
         public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(SignUpDto request)
         {
             try
             {
-                var isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+                var registeredUser = await authService.RegisterUsersAsync(request, false);
 
-                var user = await authService.RegisterUsersAsync(request, isAuthenticated);
-
-                if (user is null)
+                if (registeredUser is null)
+                {
                     return BadRequest("Email Already Exists");
+                }
 
-                return Ok(user);
+                return Ok(registeredUser);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(new { message = "An Error Occurred During Registration", details = ex.Message });
+                return BadRequest(new { message = "An Error Occurred During Registration", details = error.Message });
+            }
+        }
+
+
+        [HttpPost("register-admin"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(SignUpDto request)
+        {
+            try
+            {
+                var isAuthenticated = User!.Identity?.IsAuthenticated ?? false;
+                var currentUserRole = User!.FindFirstValue(ClaimTypes.Role);
+
+                if (!isAuthenticated || currentUserRole != "Admin")
+                {
+                    return Unauthorized("Only Authenticated Admins Can Create Admin Accounts");
+                }
+
+                var registeredAdmin = await authService.RegisterUsersAsync(request, true);
+
+                if (registeredAdmin is null)
+                {
+                    return BadRequest("Email Already Exists");
+                }
+
+                return Ok(registeredAdmin);
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new { message = "An Error Occurred During Registration", details = error.Message });
             }
         }
 
@@ -96,10 +126,10 @@ namespace NTS.Server.Controller
 
                 return Ok(new { message = "Password Reset Email Has Been Sent" });
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                logger.LogError($"An Error Occurred While Handling Forgot Password Request: {ex.Message}", ex);
-                return BadRequest(new { message = "An Error Occurred During Forgot Password", details = ex.Message });
+                logger.LogError($"An Error Occurred While Handling Forgot Password Request: {error.Message}");
+                return BadRequest(new { message = "An Error Occurred During Forgot Password", details = error.Message });
             }
         }
 
@@ -107,13 +137,43 @@ namespace NTS.Server.Controller
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
-            var result = await authService.RefreshTokensAsync(request);
-            if (result is null || result.AccessToken is null || result.RefreshToken is null)
+            try
             {
-                return Unauthorized("Invalid Refresh Token");
-            }
+                var resfreshedToken = await authService.RefreshTokensAsync(request);
+                if (resfreshedToken is null || resfreshedToken.AccessToken is null || resfreshedToken.RefreshToken is null)
+                {
+                    return Unauthorized("Invalid Refresh Token");
+                }
 
-            return Ok(result);
+                return Ok(resfreshedToken);
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Refreshing The Token: {error.Message}");
+            }
+        }
+
+
+        [HttpDelete("remove-account/{userId}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveAccountAsync(Guid userId)
+        {
+            try
+            {
+                var removedAccount = await authService.RemoveAccountAsync(userId);
+
+                if (!removedAccount)
+                {
+                    return NotFound("Account Not Found");
+                }
+                else
+                {
+                    return Ok("Successfully Removed Account");
+                }
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Removing Account: {error.Message}");
+            }
         }
     }
 }
