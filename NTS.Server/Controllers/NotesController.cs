@@ -33,18 +33,18 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var notes = await notesService.GetAllNotesAsync(userId);
+                var fetchedNotes = await notesService.GetAllNotesAsync(userId);
 
-                if (notes == null)
+                if (fetchedNotes == null)
                 {
                     return NotFound("No Notes Found");
                 }
 
-                return Ok(notes);
+                return Ok(fetchedNotes);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -55,18 +55,18 @@ namespace NTS.Server.Controllers
         {
             try
             {
-                var note = await notesService.GetNoteByIdAsync(noteId);
+                var fetchedNote = await notesService.GetNoteByIdAsync(noteId);
 
-                if (note == null)
+                if (fetchedNote == null)
                 {
                     return NotFound("No Note Found With the Note Id");
                 }
 
-                return Ok(note);
+                return Ok(fetchedNote);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -85,18 +85,18 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var response = await notesService.SearchNotesAsync(searchTerm, userId);
+                var searchedNote = await notesService.SearchNotesAsync(searchTerm, userId);
 
-                if (response == null || response.Count() == 0)
+                if (searchedNote == null || searchedNote.Count() == 0)
                 {
                     return NotFound("No Notes Matching Your Search Criteria");
                 }
 
-                return Ok(response);
+                return Ok(searchedNote);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -117,24 +117,24 @@ namespace NTS.Server.Controllers
                 // Convert UserId Claim Value To A Guid
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var note = await notesService.CreateNoteAsync(request, userId);
+                var newNote = await notesService.CreateNoteAsync(request, userId);
 
-                if (note == null)
+                if (newNote == null)
                 {
                     return BadRequest("Failed To Create The Note");
                 }
 
-                return CreatedAtAction("GetNoteById", new { noteId = note.NoteId }, note);
+                return CreatedAtAction("GetNoteById", new { noteId = newNote.NoteId }, newNote);
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
 
         [HttpPost("edit-note/{noteId}"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> EditNoteAsync([FromBody] EditNotesDto request, Guid noteId)
+        public async Task<IActionResult> EditNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
         {
             try
             {
@@ -147,16 +147,16 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var updatedNote = await notesService.EditNotesAsync(request, noteId, userId);
+                var editedNote = await notesService.UpdateNotesAsync(request, noteId, userId);
 
-                if (updatedNote == null)
+                if (editedNote == null)
                     return NotFound("Note Not Found Or You Are Not Authorized To Edit this Note");
 
-                return Ok(updatedNote);
+                return Ok(editedNote);
             }
-            catch (Exception ex)
+            catch (Exception error)
             { 
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -166,9 +166,9 @@ namespace NTS.Server.Controllers
         {
             try
             {
-                var removed = await notesService.RemoveNoteAsync(noteId);
+                var removedNote = await notesService.RemoveNoteAsync(noteId);
 
-                if (!removed)
+                if (!removedNote)
                 {
                     return NotFound("Note Not Found");
                 }
@@ -177,9 +177,9 @@ namespace NTS.Server.Controllers
                     return Ok("Successfully Removed Notes");
                 }
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -193,16 +193,16 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim!.Value);
 
-                var response = await notesService.MarkNoteAsFavoriteAsync(noteId, userId);
+                var markedNote = await notesService.MarkNoteAsFavoriteAsync(noteId, userId);
 
-                if (!response)
+                if (!markedNote)
                     return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Favorite");
 
-                return Ok($"Note Marked as Favorite: {response}");
+                return Ok($"Note Marked as Favorite: {markedNote}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -216,16 +216,16 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim!.Value);
 
-                var response = await notesService.MarkNoteAsImportantAsync(noteId, userId);
+                var markedNote = await notesService.MarkNoteAsImportantAsync(noteId, userId);
                
-                if (!response)
+                if (!markedNote)
                     return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Important");
 
-                return Ok($"Note Marked As Important: {response}");
+                return Ok($"Note Marked As Important: {markedNote}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -239,16 +239,16 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim!.Value);
 
-                var response = await notesService.MarkNoteAsSharedAsync(noteId, userId, sharedWithUserId);
+                var markedNote = await notesService.MarkNoteAsSharedAsync(noteId, userId, sharedWithUserId);
                 
-                if (!response)
+                if (!markedNote)
                     return NotFound("Note Not Found Or You Are Not Authorized To Shared This Note");
 
-                return Ok($"Note  Shared: {response}");
+                return Ok($"Note  Shared: {markedNote}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
 
@@ -262,16 +262,16 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim!.Value);
 
-                var response = await notesService.MarkNoteAsStarredAsync(noteId, userId);
+                var markedNote = await notesService.MarkNoteAsStarredAsync(noteId, userId);
 
-                if (!response)
+                if (!markedNote)
                     return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Starred");
 
-                return Ok($"Note Marked As Starred: {response}");
+                return Ok($"Note Marked As Starred: {markedNote}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(error.Message);
             }
         }
     }
