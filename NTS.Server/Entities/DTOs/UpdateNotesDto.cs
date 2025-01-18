@@ -1,6 +1,6 @@
 ﻿namespace NTS.Server.Entities.DTOs
 {
-    public class EditNotesDto
+    public class UpdateNotesDto
     {
         public string Title { get; set; } = string.Empty;
 

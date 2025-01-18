@@ -1,0 +1,174 @@
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+BEGIN TRANSACTION;
+CREATE TABLE [ApplicationUsers] (
+    [UserId] uniqueidentifier NOT NULL,
+    [FullName] nvarchar(255) NOT NULL,
+    [Email] nvarchar(255) NOT NULL,
+    [PasswordHash] varbinary(255) NOT NULL,
+    [PhoneNumber] nvarchar(11) NOT NULL,
+    [RecoveryEmail] nvarchar(255) NOT NULL,
+    [DateJoined] datetime NOT NULL,
+    [Role] nvarchar(50) NOT NULL,
+    [RefreshToken] nvarchar(500) NOT NULL,
+    [RefreshTokenExpiryTime] datetime NULL,
+    CONSTRAINT [PK_ApplicationUsers] PRIMARY KEY ([UserId])
+);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250109041130_InitialCreate', N'9.0.0');
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250109041848_UpdateApplicationUsersTable', N'9.0.0');
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250109092953_RemovePasswordSalt', N'9.0.0');
+
+DECLARE @var0 sysname;
+SELECT @var0 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[ApplicationUsers]') AND [c].[name] = N'PasswordHash');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [ApplicationUsers] DROP CONSTRAINT [' + @var0 + '];');
+ALTER TABLE [ApplicationUsers] ALTER COLUMN [PasswordHash] nvarchar(255) NOT NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250109101212_ChangePasswordHashToNVarchar', N'9.0.0');
+
+DECLARE @var1 sysname;
+SELECT @var1 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[ApplicationUsers]') AND [c].[name] = N'RefreshToken');
+IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [ApplicationUsers] DROP CONSTRAINT [' + @var1 + '];');
+ALTER TABLE [ApplicationUsers] ALTER COLUMN [RefreshToken] nvarchar(500) NULL;
+
+DECLARE @var2 sysname;
+SELECT @var2 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[ApplicationUsers]') AND [c].[name] = N'PhoneNumber');
+IF @var2 IS NOT NULL EXEC(N'ALTER TABLE [ApplicationUsers] DROP CONSTRAINT [' + @var2 + '];');
+ALTER TABLE [ApplicationUsers] ALTER COLUMN [PhoneNumber] nvarchar(15) NULL;
+
+CREATE TABLE [Notes] (
+    [NoteId] uniqueidentifier NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [Title] nvarchar(255) NOT NULL,
+    [Content] nvarchar(255) NOT NULL,
+    [Priority] nvarchar(50) NOT NULL,
+    [IsPublic] bit NOT NULL,
+    [CreatedAt] datetime2 NULL,
+    [FavoriteNote] bit NOT NULL,
+    CONSTRAINT [PK_Notes] PRIMARY KEY ([NoteId]),
+    CONSTRAINT [FK_Notes_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]) ON DELETE CASCADE
+);
+
+CREATE TABLE [FavoriteNote] (
+    [FavoriteNoteId] uniqueidentifier NOT NULL,
+    [NoteId] uniqueidentifier NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_FavoriteNote] PRIMARY KEY ([FavoriteNoteId]),
+    CONSTRAINT [FK_FavoriteNote_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_FavoriteNote_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId])
+);
+
+CREATE INDEX [IX_FavoriteNote_NoteId] ON [FavoriteNote] ([NoteId]);
+
+CREATE INDEX [IX_FavoriteNote_UserId] ON [FavoriteNote] ([UserId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250113031852_AddNewTableFavoriteAndModifiedOtherTables', N'9.0.0');
+
+CREATE TABLE [ImportantNotes] (
+    [ImportantNoteId] uniqueidentifier NOT NULL,
+    [NoteId] uniqueidentifier NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_ImportantNotes] PRIMARY KEY ([ImportantNoteId]),
+    CONSTRAINT [FK_ImportantNotes_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ImportantNotes_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId])
+);
+
+CREATE INDEX [IX_FavoriteNotes_NoteId] ON [ImportantNotes] ([NoteId]);
+
+CREATE INDEX [IX_FavoriteNotes_UserId] ON [ImportantNotes] ([UserId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250113033712_AddImportantNotesTable', N'9.0.0');
+
+ALTER TABLE [FavoriteNote] DROP CONSTRAINT [FK_FavoriteNote_Notes_NoteId];
+
+CREATE TABLE [SharedNotes] (
+    [SharedNoteId] uniqueidentifier NOT NULL,
+    [NoteId] uniqueidentifier NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SharedNotes] PRIMARY KEY ([SharedNoteId]),
+    CONSTRAINT [FK_SharedNotes_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_SharedNotes_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId])
+);
+
+CREATE INDEX [IX_FavoriteNotes_NoteId] ON [SharedNotes] ([NoteId]);
+
+CREATE INDEX [IX_FavoriteNotes_UserId] ON [SharedNotes] ([UserId]);
+
+ALTER TABLE [FavoriteNote] ADD CONSTRAINT [FK_FavoriteNote_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250113041255_AddSharedNotesTable', N'9.0.0');
+
+ALTER TABLE [FavoriteNote] DROP CONSTRAINT [FK_FavoriteNote_ApplicationUsers_UserId];
+
+ALTER TABLE [FavoriteNote] DROP CONSTRAINT [FK_FavoriteNote_Notes_NoteId];
+
+ALTER TABLE [FavoriteNote] DROP CONSTRAINT [PK_FavoriteNote];
+
+EXEC sp_rename N'[FavoriteNote]', N'FavoriteNotes', 'OBJECT';
+
+ALTER TABLE [FavoriteNotes] ADD CONSTRAINT [PK_FavoriteNotes] PRIMARY KEY ([FavoriteNoteId]);
+
+CREATE TABLE [StarredNotes] (
+    [StarredNotesId] uniqueidentifier NOT NULL,
+    [NoteId] uniqueidentifier NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_StarredNotes] PRIMARY KEY ([StarredNotesId]),
+    CONSTRAINT [FK_StarredNotes_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]),
+    CONSTRAINT [FK_StarredNotes_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId])
+);
+
+CREATE INDEX [IX_FavoriteNotes_NoteId] ON [StarredNotes] ([NoteId]);
+
+CREATE INDEX [IX_FavoriteNotes_UserId] ON [StarredNotes] ([UserId]);
+
+ALTER TABLE [FavoriteNotes] ADD CONSTRAINT [FK_FavoriteNotes_ApplicationUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [ApplicationUsers] ([UserId]) ON DELETE CASCADE;
+
+ALTER TABLE [FavoriteNotes] ADD CONSTRAINT [FK_FavoriteNotes_Notes_NoteId] FOREIGN KEY ([NoteId]) REFERENCES [Notes] ([NoteId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250113042531_AddStarredNoteTable', N'9.0.0');
+
+DECLARE @var3 sysname;
+SELECT @var3 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Notes]') AND [c].[name] = N'IsPublic');
+IF @var3 IS NOT NULL EXEC(N'ALTER TABLE [Notes] DROP CONSTRAINT [' + @var3 + '];');
+ALTER TABLE [Notes] DROP COLUMN [IsPublic];
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250113065647_RemoveIsPublicProperty', N'9.0.0');
+
+COMMIT;
+GO
+

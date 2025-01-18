@@ -79,10 +79,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 // Dependency Injection for services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotesService, NotesService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+
 
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
 

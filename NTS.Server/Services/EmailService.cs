@@ -22,6 +22,7 @@ namespace NTS.Server.Services
             this.logger = logger;
         }
 
+
         public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userEmail, string resetToken)
         {
             var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.RecoveryEmail == userEmail);
@@ -37,7 +38,7 @@ namespace NTS.Server.Services
 
             var toEmail = userEmail;
             var subject = "Password Reset Request";
-            var body = $"Please Click on the Following Link to Reset your Password: https://notestakingsystem.com/reset-password?token={resetToken}";
+            var body = $"Please Click On The Following Link To Reset Your Password: https://notestakingsystem.com/reset-password?token={resetToken}";
 
             var smtpClient = new SmtpClient(emailSettings.SMTPServer)
             {
@@ -62,9 +63,9 @@ namespace NTS.Server.Services
                 logger.LogInformation($"Password Reset Email Sent Successfully To: {toEmail}");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                logger.LogError($"Error Sending Password Reset Email To: {toEmail}: {ex.Message}", ex);
+                logger.LogError($"Error Sending Password Reset Email To: {toEmail}: {error.Message}");
                 return false;
             }
         }

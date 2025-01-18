@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NTS.Server.Entities
 {
-    public class NotesBase
+    public class Notes
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid NoteId { get; set; }
 
         [Required]
-        [ForeignKey(nameof(ApplicationUser))]
+        [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
 
         [Required]
@@ -27,6 +27,6 @@ namespace NTS.Server.Entities
         [Required]
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ApplicationUsers ApplicationUser { get; set; }
+        public ApplicationUsers? User { get; set; }
     }
 }
