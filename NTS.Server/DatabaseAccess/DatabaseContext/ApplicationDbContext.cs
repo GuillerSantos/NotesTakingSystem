@@ -8,7 +8,7 @@ namespace NTS.Server.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<ApplicationUsers> ApplicationUsers { get; set; }
-        public DbSet<NotesBase> NotesBase { get; set; }
+        public DbSet<Notes> Notes { get; set; }
         public DbSet<FavoriteNotes> FavoriteNotes { get; set; }
         public DbSet<ImportantNotes> ImportantNotes { get; set; }
         public DbSet<SharedNotes> SharedNotes { get; set; }
@@ -18,17 +18,24 @@ namespace NTS.Server.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
+            // ApplicationUsers
             modelBuilder.Entity<ApplicationUsers>()
                 .HasKey(a => a.UserId);
 
+
             // NotesBase
-            modelBuilder.Entity<NotesBase>(entity =>
+            modelBuilder.Entity<Notes>(entity =>
             {
-                entity.HasOne(e => e.ApplicationUser)
-                      .WithMany()
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Notes)
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => e.UserId)
+                       .HasDatabaseName("IX_NotesBase_UserId");
             });
+
 
             // FavoriteNotes
             modelBuilder.Entity<FavoriteNotes>(entity =>
@@ -41,8 +48,9 @@ namespace NTS.Server.Data
                 entity.HasOne(e => e.ApplicationUser)
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Cascade);
             });
+
 
             // ImportantNotes
             modelBuilder.Entity<ImportantNotes>(entity =>
@@ -55,8 +63,9 @@ namespace NTS.Server.Data
                 entity.HasOne(e => e.ApplicationUser)
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Cascade);
             });
+
 
             // SharedNotes
             modelBuilder.Entity<SharedNotes>(entity =>
@@ -66,18 +75,19 @@ namespace NTS.Server.Data
                       .HasForeignKey(e => e.NoteId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(e => e.ApplicationUser)
+                entity.HasOne(e => e.User)
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(e => e.SharedWithUser)
                       .WithMany()
                       .HasForeignKey(e => e.SharedWithUserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // StarredNotes (Separate from SharedNotes configuration)
+
+            // StarredNotes (Separate From SharedNotes Configuration)
             modelBuilder.Entity<StarredNotes>(entity =>
             {
                 entity.HasOne(e => e.Note)
@@ -85,12 +95,11 @@ namespace NTS.Server.Data
                       .HasForeignKey(e => e.NoteId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne(e => e.ApplicationUser)
+                entity.HasOne(e => e.User)
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
-
     }
 }
