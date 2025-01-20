@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
+using System.Data.Common;
 using System.Security.Claims;
 
 namespace NTS.Server.Controllers
@@ -13,7 +14,7 @@ namespace NTS.Server.Controllers
     {
         private readonly INotesService notesService;
 
-        public NotesController(INotesService notesService)
+    public NotesController(INotesService notesService)
         {
             this.notesService = notesService;
         }
@@ -176,98 +177,6 @@ namespace NTS.Server.Controllers
                 {
                     return Ok("Successfully Removed Notes");
                 }
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-
-        [HttpPost("mark-favorite/{noteId}"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> MarkNoteFavoriteAsync(Guid noteId)
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                var userId = Guid.Parse(userIdClaim!.Value);
-
-                var markedNote = await notesService.MarkNoteAsFavoriteAsync(noteId, userId);
-
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Favorite");
-
-                return Ok($"Note Marked as Favorite: {markedNote}");
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-
-        [HttpPost("mark-important/{noteId}"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> MarkNoteAsImportantAsync(Guid noteId)
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                var userId = Guid.Parse(userIdClaim!.Value);
-
-                var markedNote = await notesService.MarkNoteAsImportantAsync(noteId, userId);
-               
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Important");
-
-                return Ok($"Note Marked As Important: {markedNote}");
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-
-        [HttpPost("mark-shared/{noteId}"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> MarkNoteAsSharedAsync(Guid noteId, [FromQuery] Guid sharedWithUserId)
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                var userId = Guid.Parse(userIdClaim!.Value);
-
-                var markedNote = await notesService.MarkNoteAsSharedAsync(noteId, userId, sharedWithUserId);
-                
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Shared This Note");
-
-                return Ok($"Note  Shared: {markedNote}");
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
-        }
-
-
-        [HttpPost("mark-starred/{noteId}"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> MarkNoteAsStarredAsync(Guid noteId)
-        {
-            try
-            {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                var userId = Guid.Parse(userIdClaim!.Value);
-
-                var markedNote = await notesService.MarkNoteAsStarredAsync(noteId, userId);
-
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Starred");
-
-                return Ok($"Note Marked As Starred: {markedNote}");
             }
             catch (Exception error)
             {
