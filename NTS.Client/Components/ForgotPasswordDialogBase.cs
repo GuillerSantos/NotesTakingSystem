@@ -10,6 +10,7 @@ namespace NTS.Client.Components
         public readonly DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, NoHeader = true };
 
         [CascadingParameter] MudDialogInstance mudDialog { get; set; }
+        [Inject] ISnackbar snackbar { get; set; }
         [Parameter] public ForgotPasswordDto forgotPasswordDto { get; set; } = new ForgotPasswordDto();
         [Inject] IAuthService authService { get; set; }
 
@@ -21,6 +22,11 @@ namespace NTS.Client.Components
             try
             {
                 var result = await authService.ForgotPasswordAsync(forgotPasswordDto);
+
+                if (result.IsSuccess)
+                {
+                    snackbar.Add("Password Reset Email Has Been Sent", Severity.Success);
+                }
 
                 if (!string.IsNullOrWhiteSpace(response?.Token))
                 {

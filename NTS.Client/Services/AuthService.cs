@@ -2,6 +2,7 @@
 using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NTS.Client.Services
 {
@@ -10,6 +11,7 @@ namespace NTS.Client.Services
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
+        private ResponseDto responseDto = new ResponseDto();
 
         public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -18,7 +20,7 @@ namespace NTS.Client.Services
             this.authenticationState = authenticationState;
         }
 
-        public async Task<bool> LoginAsync(LoginDto request)
+        public async Task<ResponseDto> LoginAsync(LoginDto request)
         {
             try
             {
@@ -31,19 +33,24 @@ namespace NTS.Client.Services
                     {
                         await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
                         await authenticationState.RefreshAuthenticationStateAsync();
-                        return true;
+
+                        responseDto.IsSuccess = true;
+                        responseDto.ResponseMessage = "Login Successfully";
+                        return responseDto;
                     }
                 }
 
-                return false;
+                responseDto.IsSuccess = false;
+                responseDto.ErrorMessage = "Invalid Credentials. Please Try Again";
+                return responseDto;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException error)
             {
-                throw new Exception($"Network error occurred: {ex.Message}");
+                throw new Exception($"Network error occurred: {error.Message}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                throw new Exception($"An unexpected error occurred: {ex.Message}");
+                throw new Exception($"An unexpected error occurred: {error.Message}");
             }
         }
 
@@ -56,18 +63,39 @@ namespace NTS.Client.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
-                    return result ?? new ResponseDto { IsSuccess = false, Message = "Empty response received." };
+                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty response received." };
                 }
 
-                return new ResponseDto { IsSuccess = false, Message = "Failed To Send Forgot Password Request" };
+                return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Send Forgot Password Request" };
             }
             catch (HttpRequestException ex)
             {
-                return new ResponseDto { IsSuccess = false, Message = $"Network error: {ex.Message}" };
+                return new ResponseDto { IsSuccess = false, ResponseMessage = $"Network error: {ex.Message}" };
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return new ResponseDto { IsSuccess = false, Message = "An unexpected error occurred: " + ex.Message };
+                return new ResponseDto { IsSuccess = false, ResponseMessage = "An unexpected error occurred: " + error.Message };
+            }
+        }
+
+        public async Task<RegisterDto> RegisterDefaultUserAsync(RegisterDto request)
+        {
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync("/api/register-defaultuser", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<RegisterDto>();
+                }
+                else
+                {
+                    throw new Exception(await response.Content.ReadAsStringAsync());
+                }
+            }
+            catch (HttpRequestException error)
+            {
+                throw new Exception(error.Message);
             }
         }
     }

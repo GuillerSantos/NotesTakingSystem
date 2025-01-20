@@ -3,18 +3,34 @@
 @inherits LoginBase
 @layout LoginLayout
 
-
 <MudLayout>
     <MudContainer>
-        <MudCard Class="w-full" Elevation="5">
+        <MudImage Src=""></MudImage>
+    </MudContainer>
+
+    <MudContainer Class="mt-20" MaxWidth="MaxWidth.Small">
+        <MudCard Class="p-9 bg-neutral-400" Elevation="20">
+            <MudContainer Class="text-center mb-6">
+                <h4 class="text-3xl md:text-3xl lg:text-4xl font-bold">
+                    Welcome Back Senpai!
+                </h4>
+            </MudContainer>
+
             <MudContainer>
+                <h6 Class="px-2 font-medium font-bold">Your Email</h6>
                 <MudTextField T="string"
                               Label="Email"
                               @bind-Value="loginDto.Email"
                               Variant="Variant.Outlined"
-                              FullWidth />
+                              FullWidth
+                              InputType="InputType.Email"
+                              Required
+                              Class="px-2 py-2" />
+            </MudContainer>
 
-                <MudTextField T="string"
+            <MudContainer>
+                <h6 Class="px-2 font-medium font-bold">Your Password</h6>
+                <MudTextField Class="px-2 py-2" T="string"
                               Label="Password"
                               @bind-Value="loginDto.Password"
                               Variant="Variant.Outlined"
@@ -22,24 +38,32 @@
                               InputType="@showPasswordUtil.InputType"
                               Adornment="Adornment.End"
                               AdornmentIcon="@showPasswordUtil.Icon"
-                              OnAdornmentClick="ShowPasswordClick" />
+                              OnAdornmentClick="ShowPasswordClick"
+                              Required />
+            </MudContainer>
 
-                @if (!string.IsNullOrEmpty(responseDto.ErrorMessage))
-                {
-                    <MudAlert Severity="Severity.Error" Dense="true">@responseDto.ErrorMessage</MudAlert>
-                }
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <MudAlert Severity="Severity.Error" Dense="true">@errorMessage</MudAlert>
+            }
 
-                <MudButton Class="mt-4"
+            <MudContainer Class="mb-4">
+                <MudLink OnClick="() => OpenForgotPasswordDialog()">Forgot Password?</MudLink>
+            </MudContainer>
+
+            <MudContainer Class="mb-6 px-8">
+                <MudButton Class="py-4"
+                           OnClick="HandleLoginClick"
                            Variant="Variant.Filled"
                            Color="Color.Primary"
-                           FullWidth
-                           OnClick="HandleLoginClick">
+                           FullWidth>
                     Login
                 </MudButton>
+            </MudContainer>
 
-                <MudLink OnClick="() => OpenForgotPasswordDialog()">Forgot Password?</MudLink>
+            <MudContainer Class="text-center text-sm">
+                <MudText Inline>Not Registered? <MudLink Href="/signup">Sign Up</MudLink></MudText>
             </MudContainer>
         </MudCard>
     </MudContainer>
 </MudLayout>
-

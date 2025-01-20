@@ -20,7 +20,7 @@ namespace NTS.Client.Pages.UserPages
         [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
-        public ResponseDto responseDto { get; set; } = new ResponseDto();
+        public string? errorMessage;
         public LoginDto loginDto { get; set; } = new LoginDto();
 
         public readonly DialogOptions dialogOptions = new DialogOptions()
@@ -32,40 +32,31 @@ namespace NTS.Client.Pages.UserPages
 
         public async Task HandleLoginClick()
         {
+            errorMessage = null;
             try
             {
                 var response = await authService.LoginAsync(loginDto);
 
-                if (response)
+                if (response.IsSuccess)
                 {
                     var token = await localStorageService.GetItemAsStringAsync("Token");
                     if (!string.IsNullOrEmpty(token))
                     {
-                        var claims = CustomAuthenticationStateProvider.ParseClaimsFromJwt(token);
-                        var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-
-                        if (roleClaim?.Value == "Admin")
-                        {
-                            navigationManager.NavigateTo("/admindashboard");
-                        }
-                        else
-                        {
-                            navigationManager.NavigateTo("/userdashboard");
-                        }
+                        navigationManager.NavigateTo("/userdashboard");
                     }
                     else
                     {
-                        snackbar.Add("Token not found.", Severity.Error);
+                        Console.WriteLine("Login successful, But Token Not Found");
                     }
                 }
                 else
                 {
-                    snackbar.Add("Invalid credentials.", Severity.Error);
+                    errorMessage = response.ErrorMessage;
                 }
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                snackbar.Add($"An error occurred while logging in: {ex.Message}", Severity.Error);
+                throw new Exception($"An error occurred while logging in: {error.Message}");
             }
         }
 
