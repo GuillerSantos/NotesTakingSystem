@@ -1,0 +1,10 @@
+﻿@page "/userdashboard"
+@inherits UserDashboardBase
+@attribute [Authorize(Roles = "DefaultUser")]
+
+<MudLayout>
+    <MudText>
+        Dashboard
+    </MudText>
+</MudLayout>
+
