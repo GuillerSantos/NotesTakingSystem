@@ -10,10 +10,18 @@ namespace NTS.Server.Services
     public class NotesService : INotesService
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IFavoriteNoteService favoriteNoteService;
+        private readonly IImpotantNotesService impotantNotesService;
+        private readonly ISharedNotesService sharedNotesService;
+        private readonly IStarredNotesService starredNotesService;
 
-        public NotesService(ApplicationDbContext dbContext)
+        public NotesService(ApplicationDbContext dbContext, IFavoriteNoteService favoriteNoteService, IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService, IStarredNotesService starredNotesService)
         {
             this.dbContext = dbContext;
+            this.favoriteNoteService = favoriteNoteService;
+            this.impotantNotesService = impotantNotesService;
+            this.sharedNotesService = sharedNotesService;
+            this.starredNotesService = starredNotesService;
         }
 
 
@@ -117,141 +125,22 @@ namespace NTS.Server.Services
                 if (noteToRemove == null)
                     return false;
 
-                var relatedRecordsToRemove = new List<IQueryable<object>>
-                {
-                     dbContext.FavoriteNotes.Where(favNote => favNote.NoteId == noteId),
-                     dbContext.ImportantNotes.Where(impNote => impNote.NoteId == noteId),
-                     dbContext.SharedNotes.Where(sharedNote => sharedNote.NoteId == noteId),
-                     dbContext.StarredNotes.Where(starNote => starNote.NoteId == noteId)
-                };
-
-                foreach (var records in relatedRecordsToRemove)
-                {
-                    var recordsList = records.ToList();
-                    dbContext.RemoveRange(records);
-                }
+                await favoriteNoteService.RemoveByNoteIdAsync(noteId);
+                await impotantNotesService.RemoveByNoteIdAsync(noteId);
+                await sharedNotesService.RemoveByNoteIdAsync(noteId);
+                await starredNotesService.RemoveByNoteIdAsync(noteId);
 
                 dbContext.Notes.Remove(noteToRemove);
 
                 await dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return true;
             }
             catch (Exception error)
             {
                 await transaction.RollbackAsync();
                 throw new Exception($"Error Removing Note: {error.Message}");
-            }
-        }
-
-
-        public async Task<bool> MarkNoteAsFavoriteAsync(Guid noteId, Guid userId)
-        {
-            try
-            {
-                var note = await dbContext.Notes.FindAsync(noteId);
-
-                if (note == null || note.UserId != userId) return false;
-
-                var favoriteNote = new FavoriteNotes
-                {
-                    FavoriteNoteId = Guid.NewGuid(),
-                    Title = note.Title,
-                    NoteId = noteId,
-                    UserId = userId,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                dbContext.FavoriteNotes.Add(favoriteNote);
-                await dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Marking Note As Favorite: {error.Message}");
-            }
-        }
-
-
-        public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
-        {
-            try
-            {
-                var note = await dbContext.Notes.FindAsync(noteId);
-                if (note == null || note.UserId != userId) return false;
-
-                var importantNote = new ImportantNotes
-                {
-                    ImportantNoteId = Guid.NewGuid(),
-                    Title = note.Title,
-                    NoteId = noteId,
-                    UserId = userId,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                dbContext.ImportantNotes.Add(importantNote);
-                await dbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Marking Note As Important: {error.Message}");
-            }
-        }
-
-
-        public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId, Guid sharedWithUserId)
-        {
-            try
-            {
-                var note = await dbContext.Notes.FindAsync(noteId);
-                if (note == null || note.UserId != userId) return false;
-
-                var sharedNote = new SharedNotes
-                {
-                    SharedNoteId = Guid.NewGuid(),
-                    Title = note.Title,
-                    NoteId = noteId,
-                    UserId = userId,
-                    SharedWithUserId = sharedWithUserId,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                dbContext.SharedNotes.Add(sharedNote);
-                await dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Marking Note As Shared: {error.Message}");
-            }
-        }
-
-
-        public async Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId)
-        {
-            try
-            {
-                var note = await dbContext.Notes.FindAsync(noteId);
-                if (note == null || note.UserId != userId) return false;
-
-                var starredNote = new StarredNotes
-                {
-                    StarredNotesId = Guid.NewGuid(),
-                    Title = note.Title,
-                    NoteId = noteId,
-                    UserId = userId,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                dbContext.StarredNotes.Add(starredNote);
-                await dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Marking Note As Starred: {error.Message}");
             }
         }
     }

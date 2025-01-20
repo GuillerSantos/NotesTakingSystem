@@ -24,7 +24,6 @@ namespace NTS.Server.Services
             this.configuration = configuration;
         }
 
-
         public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
         {
             try
