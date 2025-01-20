@@ -17,13 +17,5 @@ namespace NTS.Server.Services.Contracts
         Task<IEnumerable<Notes>> GetAllNotesAsync(Guid userId);
 
         Task<IEnumerable<Notes>> SearchNotesAsync(string searchTerm, Guid userId);
-
-        Task<bool> MarkNoteAsFavoriteAsync(Guid noteId, Guid userId);
-
-        Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId);
-
-        Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId, Guid sharedWithUserId);
-
-        Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId);
     }
 }
