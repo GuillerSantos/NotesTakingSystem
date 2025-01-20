@@ -79,11 +79,6 @@ namespace NTS.Server.Data
                       .WithMany()
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(e => e.SharedWithUser)
-                      .WithMany()
-                      .HasForeignKey(e => e.SharedWithUserId)
-                      .OnDelete(DeleteBehavior.Cascade);
             });
 
 
