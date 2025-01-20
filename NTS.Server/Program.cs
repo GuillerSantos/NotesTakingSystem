@@ -83,6 +83,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Dependency Injection for services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotesService, NotesService>();
+builder.Services.AddScoped<IFavoriteNoteService, FavoriteNoteService>();
+builder.Services.AddScoped<IImpotantNotesService, ImportantNotesService>();
+builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
+builder.Services.AddScoped<IStarredNotesService, StarredNoteesService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 
