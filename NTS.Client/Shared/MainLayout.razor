@@ -1,0 +1,55 @@
+﻿@using YourApp.Client.Securities
+@inherits LayoutComponentBase
+@attribute [Authorize(Roles = "DefaultUser")]
+
+<MudThemeProvider />
+<MudSnackbarProvider />
+<MudDialogProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Left" Variant="DrawerVariant.Persistent">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">Blazing Notesu</MudText>
+        </MudDrawerHeader>
+        <MudNavMenu>
+            <MudNavLink Href="/userdashboard" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Href="/notes" Icon="@Icons.Material.Filled.List">Notes</MudNavLink>
+            <MudNavLink Href="/" Icon="@Icons.Material.Filled.ExitToApp" OnClick="Logout">Logout</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <!-- Main Content Area -->
+    <MudMainContent>
+        <MudAppBar Elevation="5">
+            <MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Menu" OnClick="ToggleDrawer" />
+            <MudContainer>
+                <MudText>Blazing Notesu</MudText>
+            </MudContainer>
+        </MudAppBar>
+
+        <MudContainer Class="content px-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = false;
+
+    [Inject] CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
+    [Inject] ILocalStorageService localStorageService { get; set; }
+    [Inject] NavigationManager navigationManager { get; set; }
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    public async Task Logout()
+    {
+        await localStorageService.RemoveItemAsync("Token");
+        await authenticationStateProvider.RefreshAuthenticationStateAsync();
+        navigationManager.NavigateTo("/", true);
+    }
+}
