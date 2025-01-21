@@ -24,11 +24,11 @@ namespace NTS.Server.Entities
 
         [Required]
         [StringLength(256)]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]
         [StringLength(256)]
-        public string? RecoveryEmail { get; set; }
+        public string RecoveryEmail { get; set; } = string.Empty;
 
         [Required]
         public DateTime? DateJoined { get; set; } = DateTime.UtcNow;

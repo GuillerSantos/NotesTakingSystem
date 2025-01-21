@@ -82,17 +82,12 @@ namespace YourApp.Client.Securities
             {
                 var state = await GetAuthenticationStateAsync();
                 NotifyAuthenticationStateChanged(Task.FromResult(state));
+                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error refreshing authentication state: {ex.Message}");
             }
-        }
-
-        public async Task LogoutAsync()
-        {
-            await localStorageService.RemoveItemAsync("Token");
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal())));
         }
     }
 }

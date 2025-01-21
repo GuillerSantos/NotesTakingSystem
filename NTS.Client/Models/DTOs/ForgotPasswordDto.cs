@@ -2,6 +2,6 @@
 {
     public class ForgotPasswordDto
     {
-        public string Email { get; set; }
+        public string RecoveryEmail { get; set; } = string.Empty;
     }
 }

@@ -23,20 +23,20 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userEmail, string resetToken)
+        public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userRecoveryEmail, string resetToken)
         {
-            var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.RecoveryEmail == userEmail);
+            var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.RecoveryEmail == userRecoveryEmail);
 
             if (user == null)
             {
-                logger.LogWarning($"No User Found With This Recovery Email {userEmail}");
+                logger.LogWarning($"No User Found With This Recovery Email {userRecoveryEmail}");
                 return false;
             }
 
             var fromEmail = emailSettings.FromEmail;
             var senderPassword = emailSettings.AppPassword;
 
-            var toEmail = userEmail;
+            var toEmail = userRecoveryEmail;
             var subject = "Password Reset Request";
             var body = $"Please Click On The Following Link To Reset Your Password: https://notestakingsystem.com/reset-password?token={resetToken}";
 

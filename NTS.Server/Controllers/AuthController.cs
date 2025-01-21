@@ -60,6 +60,28 @@ namespace NTS.Server.Controller
         }
 
 
+        [HttpPost("logout"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            try
+            {
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var result = await authService.LogoutAsync(userId);
+
+                if (result)
+                {
+                    return Ok(new { message = "Successfully Logged Out"});
+                }
+
+                return BadRequest("Logout Failed");
+            }
+            catch(Exception error)
+            {
+                return StatusCode(500, $"Internal Server Error: {error.Message}");
+            }
+        }
+
+
         [HttpPost("register-defaultuser")]
         public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(SignUpDto request)
         {
@@ -117,7 +139,7 @@ namespace NTS.Server.Controller
             {
                 string resetToken = Guid.NewGuid().ToString();
 
-                bool emailSent = await emailService.SendPasswordResetToRecoveryEmailAsync(request.Email, resetToken);
+                bool emailSent = await emailService.SendPasswordResetToRecoveryEmailAsync(request.RecoveryEmail, resetToken);
 
                 if (!emailSent)
                 {

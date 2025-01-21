@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
+using System.Security.Claims;
 using YourApp.Client.Securities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -12,6 +13,7 @@ namespace NTS.Client.Services
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
         private ResponseDto responseDto = new ResponseDto();
+        private ResponseTokenDto responseToken = new ResponseTokenDto();
 
         public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -19,6 +21,7 @@ namespace NTS.Client.Services
             this.localStorageService = localStorageService;
             this.authenticationState = authenticationState;
         }
+
 
         public async Task<ResponseDto> LoginAsync(LoginDto request)
         {
@@ -28,7 +31,7 @@ namespace NTS.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponseDto>();
+                    var tokenResponse = await response.Content.ReadFromJsonAsync<ResponseTokenDto>();
                     if (tokenResponse?.AccessToken != null)
                     {
                         await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
@@ -54,6 +57,16 @@ namespace NTS.Client.Services
             }
         }
 
+
+        public async Task LogoutAsync()
+        {
+            await localStorageService.RemoveItemAsync("Token");
+            await localStorageService.RemoveItemAsync("RefreshToken");
+            await authenticationState.RefreshAuthenticationStateAsync();
+            await RefreshTokenAsync();
+        }
+
+
         public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
         {
             try
@@ -78,6 +91,7 @@ namespace NTS.Client.Services
             }
         }
 
+
         public async Task<RegisterDto> RegisterDefaultUserAsync(RegisterDto request)
         {
             try
@@ -97,6 +111,49 @@ namespace NTS.Client.Services
             {
                 throw new Exception(error.Message);
             }
+        }
+
+        public async Task<bool> RefreshTokenAsync()
+        {
+            try
+            {
+                var refreshToken = await localStorageService.GetItemAsync<string>("RefreshToken");
+
+                if (string.IsNullOrEmpty(refreshToken))
+                {
+                    Console.WriteLine("No Refresh Token Or User Id Found");
+                    return false;
+                }
+
+                var requestDto = new ResponseTokenDto
+                {
+                    ResetToken = responseToken.ResetToken
+                };
+
+                var response = await httpClient.PostAsJsonAsync("api/Auth/refresh-token", responseToken);
+                if (response.IsSuccessStatusCode)
+                {
+                    var tokenResponse = await response.Content.ReadFromJsonAsync<ResponseTokenDto>();
+                    if (tokenResponse is not null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
+                    {
+                        await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
+                        await localStorageService.SetItemAsync("RefreshToken", tokenResponse.ResetToken);
+                        await authenticationState.RefreshAuthenticationStateAsync();
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed To Refresh Tokens: " + response.ReasonPhrase);
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Refreshing Token: {error.Message}");
+            }
+
+            return false;
         }
     }
 }

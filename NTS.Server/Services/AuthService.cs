@@ -49,6 +49,27 @@ namespace NTS.Server.Services
         }
 
 
+        public async Task<bool> LogoutAsync(Guid userId)
+        {
+            try
+            {
+                var currentUser = await dbContext.ApplicationUsers.FindAsync(userId);
+
+                if (currentUser is null) return false;
+
+                currentUser.RefreshToken = null;
+                currentUser.RefreshTokenExpiryTime = null;
+                await dbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Logging Out User: {error.Message}");
+            }
+        }
+
+
         private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
         {
             return new TokenResponseDto()

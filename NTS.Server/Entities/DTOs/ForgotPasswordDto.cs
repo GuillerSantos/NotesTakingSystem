@@ -6,6 +6,6 @@ namespace NTS.Server.Entities.DTOs
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string RecoveryEmail { get; set; } = string.Empty;
     }
 }

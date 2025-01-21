@@ -15,7 +15,7 @@ namespace NTS.Client.Components
         [Inject] IAuthService authService { get; set; }
 
         public ResponseDto response { get; set; } = new ResponseDto();
-        public string ResetToken { get; set; }
+        public ResponseTokenDto responseToken { get; set; } = new ResponseTokenDto();
 
         public async Task Submit()
         {
@@ -28,9 +28,9 @@ namespace NTS.Client.Components
                     snackbar.Add("Password Reset Email Has Been Sent", Severity.Success);
                 }
 
-                if (!string.IsNullOrWhiteSpace(response?.Token))
+                if (!string.IsNullOrWhiteSpace(responseToken?.Token))
                 {
-                    ResetToken = response.Token;
+                    responseToken.ResetToken = responseToken.Token;
                     response.ErrorMessage = string.Empty;
                 }
                 else
