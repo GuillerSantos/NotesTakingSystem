@@ -134,8 +134,8 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpPost("edit-note/{noteId}"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> EditNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
+        [HttpPost("update-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> UpdateNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
         {
             try
             {

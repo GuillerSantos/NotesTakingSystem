@@ -16,12 +16,25 @@ namespace NTS.Server.Services
     public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly INotesService noteService;
+        private readonly IFavoriteNoteService favoriteNoteService;
+        private readonly IImpotantNotesService impotantNotesService;
+        private readonly ISharedNotesService sharedNotesService;
+        private readonly IStarredNotesService starredNotesService;
         private readonly IConfiguration configuration;
 
-        public AuthService(ApplicationDbContext dbContext, IConfiguration configuration)
+        public AuthService(ApplicationDbContext dbContext, IConfiguration configuration, 
+            INotesService notesService, IFavoriteNoteService favoriteNoteService, 
+            IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService, 
+            IStarredNotesService starredNotesService)
         {
             this.dbContext = dbContext;
             this.configuration = configuration;
+            this.noteService = notesService;
+            this.favoriteNoteService = favoriteNoteService;
+            this.impotantNotesService = impotantNotesService;
+            this.sharedNotesService = sharedNotesService;
+            this.starredNotesService = starredNotesService;
         }
 
         public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
@@ -57,7 +70,7 @@ namespace NTS.Server.Services
 
                 if (currentUser is null) return false;
 
-                currentUser.RefreshToken = null;
+                currentUser.RefreshToken = null!;
                 currentUser.RefreshTokenExpiryTime = null;
                 await dbContext.SaveChangesAsync();
 
@@ -123,25 +136,18 @@ namespace NTS.Server.Services
                 if (accountToRemove is null)
                     return false;
 
-                var relatedRecordsToRemove = new List<IQueryable<object>>
-                {
-                    dbContext.Notes.Where(note => note.UserId == userId),
-                    dbContext.FavoriteNotes.Where(favNote => favNote.UserId == userId),
-                    dbContext.ImportantNotes.Where(impNote => impNote.UserId == userId),
-                    dbContext.SharedNotes.Where(sharedNote => sharedNote.UserId == userId),
-                    dbContext.StarredNotes.Where(starNote => starNote.UserId == userId),
-                };
-
-                foreach (var records in relatedRecordsToRemove)
-                {
-                    var recordsList = records.ToList();
-                    dbContext.RemoveRange(records);
-                }
+                await noteService.RemoveNoteAsync(userId);
+                await favoriteNoteService.RemoveByNoteIdAsync(userId);
+                await impotantNotesService.RemoveByNoteIdAsync(userId);
+                await sharedNotesService.RemoveByNoteIdAsync(userId);
+                await starredNotesService.RemoveByNoteIdAsync(userId);
+                
 
                 dbContext.ApplicationUsers.Remove(accountToRemove);
 
                 await dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return true;
             }
             catch (Exception error)

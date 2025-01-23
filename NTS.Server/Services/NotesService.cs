@@ -25,7 +25,7 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<IEnumerable<Notes>> GetAllNotesAsync(Guid userId)
+        public async Task<List<Notes>> GetAllNotesAsync(Guid userId)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace NTS.Server.Services
             try
             {
                 var existingNote = await dbContext.Notes.FindAsync(noteId);
-                if (existingNote == null || existingNote.UserId != userId) return null;
+                if (existingNote == null || existingNote.UserId != userId) return null!;
 
                 existingNote.Title = updatedNoteDetails.Title;
                 existingNote.Content = updatedNoteDetails.Content;
@@ -119,10 +119,12 @@ namespace NTS.Server.Services
         public async Task<bool> RemoveNoteAsync(Guid noteId)
         {
             using var transaction = await dbContext.Database.BeginTransactionAsync();
+           
             try
             {
                 var noteToRemove = await dbContext.Notes.FindAsync(noteId);
-                if (noteToRemove == null)
+                
+                if (noteToRemove is null)
                     return false;
 
                 await favoriteNoteService.RemoveByNoteIdAsync(noteId);

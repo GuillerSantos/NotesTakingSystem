@@ -11,9 +11,10 @@
     gap: 1rem;
     padding: 2rem;
     background-color: #f0f8ff;
+    max-height: 185px;
 }
 
-    .notes-container .mud-paper {
+    .notes-container .mud-content {
         background-color: white;
         cursor: pointer;
         padding: 1rem;
@@ -22,10 +23,33 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.5em;
     }
 
-        .notes-container .mud-paper .mud-text {
+        .notes-container .mud-content .mud-text {
             font-size: 16px;
             color: #333;
             margin-bottom: 8px;
         }
+
+        .notes-container .mud-content:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+.high-priority {
+    background-color: #8a1220;
+    color: white;
+}
+
+.low-priority {
+    background-color: #c4c414;
+    color: white;
+}
+
+.normal-priority {
+    background-color: #26a113;
+    color: black;
+}
