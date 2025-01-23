@@ -1,75 +1,34 @@
 ﻿@page "/notes"
 @inherits NotesBase
+@attribute [Authorize (Roles = "DefaultUser")]
 
 <MudLayout Class="mt-20">
     <div class="flex items-center">
-        <MudIconButton Color="Color.Success" Size="Size.Large" Icon="@Icons.Material.Filled.Add">Add Notes</MudIconButton>
+        <MudIconButton OnClick="OpenCreateNoteDialogAsync" Color="Color.Success" Size="Size.Large" Icon="@Icons.Material.Filled.Add"><MudText>Add Note</MudText></MudIconButton>
         <MudTextField Class="px-4" T="string" Variant="Variant.Outlined" Placeholder="Search Notes" />
         <MudButton Class="px-20 py-4" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
     </div>
 
     <div class="notes-container">
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
-
-        <MudPaper Class="mud-paper">
-            <MudContainer>
-                <MudText>Title</MudText>
-                <MudText>Content</MudText>
-            </MudContainer>
-        </MudPaper>
+        @if (isFetched && notes.Any())
+        {
+            @foreach (var note in notes)
+            {
+                <MudCard Class="@GetNoteCardClass(note)">
+                    <MudCardContent Class="mud-content">
+                        <MudText Class="font-bold">@note.Title</MudText>
+                        <MudText>@note.Content</MudText>
+                    </MudCardContent>
+                </MudCard>
+            }
+        }
+        else if (isFetched)
+        {
+            <MudText Typo="Typo.subtitle1">No Notes Found. Click The "Add" Button To Create One</MudText>
+        }
+        else
+        {
+            <MudProgressCircular Class="items-center" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+        }
     </div>
 </MudLayout>
