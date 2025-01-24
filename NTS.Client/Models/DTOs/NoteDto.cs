@@ -5,7 +5,7 @@
         public Guid NoteId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
-        public string Priority { get; set; } = "Normal";
+        public string Color { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
     }
 }
