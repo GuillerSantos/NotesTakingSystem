@@ -39,17 +39,22 @@ namespace NTS.Client.Pages.DefaultUserPages
         }
 
 
-        public async Task OpenCreateNoteDialogAsync()
+        public async Task OpenCreateOrUpdateNoteDialogAsync(NoteDto note = null)
         {
             try
             {
-                var parameters = new DialogParameters<CreateNoteDialog>();
-                var dialog = dialogService.Show<CreateNoteDialog>("Create Note", parameters, dialogOptions);
+                string dialogHeader = note == null ? "Create Note" : "Update Note";
+
+                var parameters = new DialogParameters
+                {
+                    { "note", note} // Pass The Selected Note If Updating, Or Null if Creating A Note
+                };
+
+                var dialog = dialogService.Show<CreateOrUpdateNoteDialog>(dialogHeader, parameters, dialogOptions);
                 var result = await dialog.Result;
 
                 if (!result.Canceled)
                 {
-                    snackbar.Add("Note Created Successfully!", Severity.Success);
                     notes = await notesService.GetAllNotesAsync();
                 }
             }
@@ -57,17 +62,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             {
                 snackbar.Add($"Faild To Refresh Notes :{error.Message}", Severity.Error);
             }
-        }
-
-        public string GetNoteCardClass(NoteDto note)
-        {
-            return note.Priority switch
-            {
-                "High" => "high-priority",
-                "Low" => "low-priority",
-                "Normal" => "normal-priority",
-                _ => "normal-priority"
-            };
         }
     }
 }

@@ -28,7 +28,8 @@ namespace NTS.Server.Services
                     UserId = userId,
                     Title = note.Title,
                     Content = note.Content,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    Color = note.Color
                 };
 
                 dbContext.StarredNotes.Add(starredNote);

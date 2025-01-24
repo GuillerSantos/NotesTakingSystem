@@ -29,6 +29,7 @@ namespace NTS.Server.Services
                     Title = note.Title,
                     Content = note.Content,
                     CreatedAt = DateTime.UtcNow,
+                    Color = note.Color
                 };
 
                 dbContext.SharedNotes.Add(sharedNote);

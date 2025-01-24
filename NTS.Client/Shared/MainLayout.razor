@@ -10,14 +10,28 @@
 <MudLayout>
     <MudDrawer @bind-Open="drawerOpen" Anchor="Anchor.Left" Variant="DrawerVariant.Persistent">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Blazing Notesu</MudText>
+            <h6 class="ml-2 text-2xl font-bold">Blazing Notesu</h6>
         </MudDrawerHeader>
 
         <MudNavMenu>
-            <MudNavLink Href="/userdashboard" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-            <MudNavLink Href="/notes" Icon="@Icons.Material.Filled.List">Notes</MudNavLink>
-            <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
-            <MudNavLink Href="/" Icon="@Icons.Material.Filled.ExitToApp" OnClick="LogoutAsync">Logout</MudNavLink>
+            <div class="ml-11">
+                <MudNavLink Href="/profile" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Person">
+                    <h6 class="text-1xl font-bold">Profile</h6>
+                </MudNavLink>
+                <MudNavLink Href="/userdashboard" IconColor="Color.Primary" Icon="@Icons.Material.Filled.HomeMax">
+                    <h6 class="text-1xl font-bold">Home</h6>
+                </MudNavLink>
+                <MudNavLink Href="/notes" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Notes">
+                    <h6 class="text-1xl font-bold">Notes</h6>
+                </MudNavLink>
+                <MudNavLink Href="/settings" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Settings">
+                    <h6 class="text-1xl font-bold">Settings</h6>
+                </MudNavLink>
+                <MudNavLink Href="/" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync">
+                    <h6 class="text-1xl font-bold">Logout</h6>
+                </MudNavLink>
+            </div>
+            
         </MudNavMenu>
     </MudDrawer>
 
@@ -26,7 +40,7 @@
             <MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.Menu" OnClick="ToggleDrawer" />
         </MudAppBar>
 
-        <MudContainer>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
             @Body
         </MudContainer>
     </MudMainContent>

@@ -5,51 +5,76 @@
     height: 100%;
 }
 
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
+.mud-title {
+    font-weight: bold !important;
+}
+
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
 .notes-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     padding: 2rem;
-    background-color: #f0f8ff;
-    max-height: 185px;
+    grid-template-columns: repeat(5, 1fr);
 }
 
     .notes-container .mud-content {
-        background-color: white;
+        flex-direction: column;
+        border-radius: 20px !important;
+        max-width: 250px;
+        height: 160px;
         cursor: pointer;
         padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 1.0);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
         word-wrap: break-word;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1.5em;
+        justify-content: space-between;
+        transition: all 0.3s ease;
     }
 
-        .notes-container .mud-content .mud-text {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
+    .notes-container .mud-card:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+        transform: scale(1.05) translateY(-5px) rotate(2deg) !important;
+    }
 
-        .notes-container .mud-content:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        }
 
-.high-priority {
-    background-color: #8a1220;
-    color: white;
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
+
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
+@media (max-width: 1220px) {
+    .notes-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
-.low-priority {
-    background-color: #c4c414;
-    color: white;
+@media (max-width: 992px) {
+    .notes-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
-.normal-priority {
-    background-color: #26a113;
-    color: black;
+@media (max-width: 760px) {
+    .notes-container {
+        grid-template-columns: repeat(2, 1fr);
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .notes-container {
+        grid-template-columns: 1fr;
+        font-size: 1rem;
+    }
 }

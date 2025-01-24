@@ -28,6 +28,7 @@ namespace NTS.Server.Services
                     NoteId = noteId,
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow,
+                    Color = note.Color
                 };
 
                 dbContext.ImportantNotes.Add(importantNote);

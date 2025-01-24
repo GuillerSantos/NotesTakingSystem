@@ -21,8 +21,8 @@ namespace NTS.Server.Entities
         public string Content { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(20)]
-        public string Priority { get; set; } = string.Empty;
+        [StringLength(50)]
+        public string Color { get; set; } = string.Empty;
 
         [Required]
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;

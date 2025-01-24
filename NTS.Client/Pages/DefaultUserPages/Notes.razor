@@ -2,10 +2,10 @@
 @inherits NotesBase
 @attribute [Authorize (Roles = "DefaultUser")]
 
-<MudLayout Class="mt-20">
-    <div class="flex items-center">
-        <MudIconButton OnClick="OpenCreateNoteDialogAsync" Color="Color.Success" Size="Size.Large" Icon="@Icons.Material.Filled.Add"><MudText>Add Note</MudText></MudIconButton>
-        <MudTextField Class="px-4" T="string" Variant="Variant.Outlined" Placeholder="Search Notes" />
+<MudLayout Class="mt-10">
+    <div class="flex items-center mb-5">
+        <MudIconButton OnClick="() => OpenCreateOrUpdateNoteDialogAsync()" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.NoteAdd"><MudText>Add Note</MudText></MudIconButton>
+        <MudTextField Class="px-4" T="string" Variant="Variant.Outlined" Label="Search Notes" />
         <MudButton Class="px-20 py-4" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
     </div>
 
@@ -14,9 +14,10 @@
         {
             @foreach (var note in notes)
             {
-                <MudCard Class="@GetNoteCardClass(note)">
+                <MudCard Class="mud-card" Style="@($"background-color: {note.Color}")" @onclick="() => OpenCreateOrUpdateNoteDialogAsync(note)">
                     <MudCardContent Class="mud-content">
-                        <MudText Class="font-bold">@note.Title</MudText>
+                        <MudText Class="text-center" Typo="Typo.subtitle2">@note.CreatedAt</MudText>
+                        <MudText Class="mud-title mb-5" Typo="Typo.h6">@note.Title</MudText>
                         <MudText>@note.Content</MudText>
                     </MudCardContent>
                 </MudCard>
@@ -24,7 +25,7 @@
         }
         else if (isFetched)
         {
-            <MudText Typo="Typo.subtitle1">No Notes Found. Click The "Add" Button To Create One</MudText>
+            <h5 class="decoration-gray-500">No Notes Found. Click The "Add" Button To Create One</h5>
         }
         else
         {

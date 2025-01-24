@@ -44,7 +44,7 @@ namespace NTS.Client.Services
         {
             try
             {
-                var response = await httpClient.PutAsJsonAsync($"/api/Notes/update-note/{noteId}", request);
+                var response = await httpClient.PostAsJsonAsync($"/api/Notes/update-note/{noteId}", request);
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception error)

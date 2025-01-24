@@ -625,12 +625,24 @@ video {
   margin-bottom: 1.75rem;
 }
 
+.ml-11 {
+  margin-left: 2.75rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .ml-20 {
   margin-left: 5rem;
 }
 
 .mr-20 {
   margin-right: 5rem;
+}
+
+.mt-10 {
+  margin-top: 2.5rem;
 }
 
 .mt-20 {
@@ -734,6 +746,10 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.decoration-gray-500 {
+  text-decoration-color: #6b7280;
 }
 
 .filter {

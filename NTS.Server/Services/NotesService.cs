@@ -79,7 +79,7 @@ namespace NTS.Server.Services
                     UserId = userId,
                     Title = noteDetails.Title,
                     Content = noteDetails.Content,
-                    Priority = noteDetails.Priority,
+                    Color = noteDetails.Color,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -103,7 +103,7 @@ namespace NTS.Server.Services
 
                 existingNote.Title = updatedNoteDetails.Title;
                 existingNote.Content = updatedNoteDetails.Content;
-                existingNote.Priority = updatedNoteDetails.Priority;
+                existingNote.Color = updatedNoteDetails.Color;
 
                 dbContext.Notes.Update(existingNote);
                 await dbContext.SaveChangesAsync();
