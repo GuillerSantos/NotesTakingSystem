@@ -1,0 +1,26 @@
+﻿@page "/createorupdatenotedialog"
+@inherits CreateOrUpdateNoteDialogBase
+
+<MudDialog Class="create-update-mud-dialog" Style="height: 520px">
+    <DialogContent>
+        <div class="flex items-center mb-7">
+            <MudColorPicker Class="mb-4" @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.Palette" />
+            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.PushPin"></MudIconButton>
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
+            <MudIconButton Color="Color.Secondary" Icon="@Icons.Material.Filled.LabelImportant"></MudIconButton>
+            <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
+            <MudIconButton Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
+
+            <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
+        </div>
+
+        <MudContainer>
+            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" />
+            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="10" Variant="Variant.Text" />
+        </MudContainer>
+
+        <MudButton OnClick="HandleCreateNoteAsync" Color="Color.Primary" Variant="Variant.Filled" FullWidth>
+            @(note != null && note.NoteId != Guid.Empty ? "Update" : "Create")
+        </MudButton>
+    </DialogContent>
+</MudDialog>
