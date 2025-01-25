@@ -20,23 +20,47 @@ namespace NTS.Client.Pages.DefaultUserPages
             NoHeader = true,
         };
 
-        public List<NoteDto> notes = new();
+        public List<NoteDto> notes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
         public bool isFetched = false;
 
         protected override async Task OnInitializedAsync()
         {
+            await LoadNotesAsync();
+        }
+
+
+        public async Task LoadNotesAsync()
+        {
             try
             {
-                notes = await notesService.GetAllNotesAsync();
+                if (notesService == null)
+                {
+                    Console.WriteLine("notesService Is Null");
+                    isFetched = false;
+                    return;
+                }
+
+                var result = await notesService.GetAllNotesAsync();
+                if (result == null)
+                {
+                    Console.WriteLine("GetAllNotesAsync Returned Null");
+                    notes = new List<NoteDto>();
+                }
+                else
+                {
+                    notes = result.ToList();
+                }
+
                 isFetched = true;
             }
             catch (Exception error)
             {
-                snackbar.Add($"Failed To Load Notes: {error.Message}", Severity.Error);
+                Console.WriteLine($"Error Fetching All Notes: {error.Message}");
                 isFetched = false;
             }
         }
+
 
 
         public async Task OpenCreateOrUpdateNoteDialogAsync(NoteDto note = null)
