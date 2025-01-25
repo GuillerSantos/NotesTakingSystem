@@ -1,26 +1,30 @@
 ﻿@page "/createorupdatenotedialog"
 @inherits CreateOrUpdateNoteDialogBase
 
-<MudDialog Class="create-update-mud-dialog" Style="height: 520px">
+<MudDialog Class="create-update-mud-dialog" Style="height: 1000px; max-height: 750px; width: 800px; max-width: 1000px">
     <DialogContent>
         <div class="flex items-center mb-7">
+            <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
             <MudColorPicker Class="mb-4" @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.Palette" />
             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.PushPin"></MudIconButton>
             <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
             <MudIconButton Color="Color.Secondary" Icon="@Icons.Material.Filled.LabelImportant"></MudIconButton>
             <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
             <MudIconButton Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
+            <MudIconButton OnClick="HandleRemoveNoteAsync" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
 
-            <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
+            <div class="flex mb-15">
+                <MudIconButton OnClick="Cancel" Color="Color.Dark" Icon="@Icons.Material.Filled.Cancel"></MudIconButton>
+            </div>
         </div>
 
         <MudContainer>
-            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" />
-            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="10" Variant="Variant.Text" />
-        </MudContainer>
+            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" FullWidth/>
+            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="20" Variant="Variant.Text" FullWidth/>
 
-        <MudButton OnClick="HandleCreateNoteAsync" Color="Color.Primary" Variant="Variant.Filled" FullWidth>
-            @(note != null && note.NoteId != Guid.Empty ? "Update" : "Create")
-        </MudButton>
+            <MudButton OnClick="HandleCreateNoteAsync" Color="Color.Primary" Variant="Variant.Filled" FullWidth>
+                @(note != null && note.NoteId != Guid.Empty ? "Update" : "Create")
+            </MudButton>
+        </MudContainer>
     </DialogContent>
 </MudDialog>
