@@ -2,6 +2,7 @@
 using MudBlazor;
 using MudBlazor.Utilities;
 using NTS.Client.Models.DTOs;
+using NTS.Client.Pages.DefaultUserPages;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Components
@@ -11,7 +12,9 @@ namespace NTS.Client.Components
         [CascadingParameter] public MudDialogInstance mudDialog { get; set; }
         [Parameter] public NoteDto note { get; set; } = new NoteDto();
         [Inject] INotesService notesService { get; set; }
+        [Inject] IDialogService dialogService { get; set; }
         [Inject] ISnackbar snackbar { get; set; }
+        private NotesBase notesBase { get; set; } = new NotesBase();
 
         public MudTextField<string>? multilineReference;
         public NoteDto currentNote { get; set; } = new NoteDto();
@@ -25,16 +28,14 @@ namespace NTS.Client.Components
             {
                 currentNote = note;
 
-
-                // Convert The String Color (HEX Value) When Loading The Note
                 if (!string.IsNullOrEmpty(note.Color))
                 {
-                    currentColor = new MudColor(note.Color); // This Works As Long As Its a Valid HEX String Like Our Default Value Na White #FFFFFF
+                    currentColor = new MudColor(note.Color);
                 }
             }
         }
 
-
+        
         public async Task HandleCreateNoteAsync()
         {
             if (string.IsNullOrWhiteSpace(currentNote.Title) || string.IsNullOrWhiteSpace(currentNote.Content))
@@ -45,18 +46,21 @@ namespace NTS.Client.Components
 
             try
             {
-                // Save The Color As A HES String, Including The "#"
-                currentNote.Color = currentColor.ToString(); // This Will Give Your The HEX Color String Like "#FFFFFF"
+                if (notesService == null)
+                {
+                    Console.WriteLine("notesService Is Null");
+                    return;
+                }
+
+                currentNote.Color = currentColor.ToString();
 
                 if (note != null && note.NoteId != Guid.Empty)
                 {
                     await notesService.UpdateNoteAsync(currentNote, note.NoteId);
-                    snackbar.Add("Note Updated Successfully", Severity.Success);
                 }
                 else
                 {
                     await notesService.CreateNoteAsync(currentNote);
-                    snackbar.Add("Note Created Successfully", Severity.Success);
                 }
 
                 mudDialog.Close(DialogResult.Ok(true));
@@ -65,6 +69,48 @@ namespace NTS.Client.Components
             {
                 Console.WriteLine($"An Error Occurred: {error.Message}");
             }
+        }
+
+
+        public async Task HandleRemoveNoteAsync()
+        {
+            try
+            {
+                bool? confirm = await dialogService.ShowMessageBox("Remove Confirmmation", 
+                    "Are You Sure You Want To Remove This Note?", yesText: "Remove", cancelText: "Cancel");
+
+                if (notesService == null)
+                {
+                    Console.WriteLine("notesService Is Null");
+                    return;
+                }
+
+                if (note != null && note.NoteId != Guid.Empty && confirm == true)
+                {
+                    await notesService.RemoveNoteAsync(note.NoteId);
+                }
+
+                mudDialog.Close(DialogResult.Ok(true));
+
+                if (notesBase != null)
+                {
+                    await notesBase.LoadNotesAsync();
+                }
+                else
+                {
+                    Console.WriteLine("noteBase Is Null");
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Removing Note: {error.Message}");
+            }
+        }
+
+
+        public void Cancel()
+        {
+            mudDialog.Cancel();
         }
     }
 }
