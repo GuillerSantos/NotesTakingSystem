@@ -57,7 +57,7 @@ namespace NTS.Client.Services
             }
         }
 
-
+        // Fix Remove and Refresh Token
         public async Task LogoutAsync()
         {
             await localStorageService.RemoveItemAsync("Token");
