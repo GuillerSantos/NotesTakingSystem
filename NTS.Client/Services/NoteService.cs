@@ -52,5 +52,19 @@ namespace NTS.Client.Services
                 Console.Error.WriteLine($"Error Updating Note With ID {noteId}: {error.Message}");
             }
         }
+
+
+        public async Task RemoveNoteAsync(Guid noteId)
+        {
+            try
+            {
+                var response = await httpClient.DeleteAsync($"/api/Notes/remove-note/{noteId}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Removing Note With This ID {noteId}: {error.Message}");
+            }
+        }
     }
 }
