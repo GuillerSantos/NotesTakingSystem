@@ -1,0 +1,63 @@
+﻿@page "/register"
+@inherits RegisterBase
+@layout LoginLayout
+
+<MudGrid>
+    <MudContainer Class="mt-10" MaxWidth="MaxWidth.Small">
+        <MudCard Elevation="20">
+            <MudContainer>
+                <h6 class="text-3xl md\:text-3xl lg\:text-4xl text-center font-bold">
+                    Register Account
+                </h6>
+            </MudContainer>
+
+            <MudContainer>
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Full Name
+                    </h6>
+                    <MudTextField @bind-Value="register.FullName" T="string" Variant="Variant.Outlined" Label="Full Name" FullWidth></MudTextField>
+                </MudContainer>
+
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Email
+                    </h6>
+                    <MudTextField @bind-Value="register.Email" T="string" InputType="InputType.Email" Variant="Variant.Outlined" Label="Email" FullWidth></MudTextField>
+                </MudContainer>
+
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Password
+                    </h6>
+                    <MudTextField @bind-Value="register.Password" T="string" InputType="InputType.Password" Variant="Variant.Outlined" Label="Password" FullWidth></MudTextField>
+                </MudContainer>
+
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Confirm Password
+                    </h6>
+                    <MudTextField @bind-Value="register.ConfirmPassword" InputType="InputType.Password" T="string" Variant="Variant.Outlined" Label="Confirm Password" FullWidth></MudTextField>
+                </MudContainer>
+
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Recovery Email
+                    </h6>
+                    <MudTextField @bind-Value="register.RecoveryEmail" T="string" InputType="InputType.Email" Variant="Variant.Outlined" Label="Recovery Email" FullWidth></MudTextField>
+                </MudContainer>
+
+                <MudContainer>
+                    <h6 class="px-2 font-bold">
+                        Phone Number
+                    </h6>
+                    <MudTextField @bind-Value="register.PhoneNumber" Class="mb-5" T="string" Variant="Variant.Outlined" Label="Phone Number" FullWidth></MudTextField>
+                </MudContainer>
+            </MudContainer>
+
+            <MudContainer Class="px-12">
+                <MudButton OnClick="HandleRegisterAsync" Class="mb-5 py-3" Color="Color.Primary" Variant="Variant.Filled" FullWidth>Register</MudButton>
+            </MudContainer>
+        </MudCard>
+    </MudContainer>
+</MudGrid>
