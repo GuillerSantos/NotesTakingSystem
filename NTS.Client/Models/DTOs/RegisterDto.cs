@@ -18,7 +18,7 @@ namespace NTS.Client.Models.DTOs
         public string FullName { get; set; } = string.Empty;
 
         [Required, Phone]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
         [Required, EmailAddress]
         public string RecoveryEmail { get; set; } = string.Empty;
