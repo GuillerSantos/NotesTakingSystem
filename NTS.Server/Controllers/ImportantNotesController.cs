@@ -14,7 +14,7 @@ namespace NTS.Server.Controllers
 
         public ImportantNotesController(IImpotantNotesService impotantNotesService)
         {
-            this.impotantNotesService = impotantNotesService;
+            this.impotantNotesService = impotantNotesService ?? throw new ArgumentNullException(nameof(impotantNotesService));
         }
 
         [HttpPost("mark-important/{noteId}"), Authorize(Roles = "DefaultUser")]

@@ -17,9 +17,9 @@ namespace NTS.Server.Services
 
         public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettingsDto> emailSettings, ILogger<EmailService> logger)
         {
-            this.dbContext = dbContext;
-            this.emailSettings = emailSettings.Value;
-            this.logger = logger;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.emailSettings = emailSettings.Value ?? throw new ArgumentNullException(nameof(emailSettings));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 

@@ -11,7 +11,7 @@ namespace NTS.Server.Services
 
         public ImportantNotesService(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
         public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
         {

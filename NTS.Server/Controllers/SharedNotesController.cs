@@ -14,7 +14,7 @@ namespace NTS.Server.Controllers
 
         public SharedNotesController(ISharedNotesService sharedNotesService)
         {
-            this.sharedNotesService = sharedNotesService;
+            this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService));
         }
 
         [HttpPost("mark-shared/{noteId}"), Authorize(Roles = "DefaultUser")]

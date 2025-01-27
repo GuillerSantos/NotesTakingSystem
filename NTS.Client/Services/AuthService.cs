@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
 using System.Security.Claims;
@@ -17,9 +18,9 @@ namespace NTS.Client.Services
 
         public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
-            this.httpClient = httpClient;
-            this.localStorageService = localStorageService;
-            this.authenticationState = authenticationState;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.localStorageService = localStorageService ?? throw new ArgumentNullException(nameof(localStorageService));
+            this.authenticationState = authenticationState ?? throw new ArgumentNullException(nameof(authenticationState));
         }
 
 
@@ -32,9 +33,11 @@ namespace NTS.Client.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var tokenResponse = await response.Content.ReadFromJsonAsync<ResponseTokenDto>();
+
                     if (tokenResponse?.AccessToken != null)
                     {
                         await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
+                        await localStorageService.SetItemAsync("RefreshToken", tokenResponse.RefreshToken);
                         await authenticationState.RefreshAuthenticationStateAsync();
 
                         responseDto.IsSuccess = true;
@@ -57,14 +60,6 @@ namespace NTS.Client.Services
             }
         }
 
-        // Fix Remove and Refresh Token
-        public async Task LogoutAsync()
-        {
-            await localStorageService.RemoveItemAsync("Token");
-            await localStorageService.RemoveItemAsync("RefreshToken");
-            await authenticationState.RefreshAuthenticationStateAsync();
-            await RefreshTokenAsync();
-        }
 
 
         public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
@@ -125,19 +120,17 @@ namespace NTS.Client.Services
                     return false;
                 }
 
-                var requestDto = new ResponseTokenDto
-                {
-                    ResetToken = responseToken.ResetToken
-                };
+                var requestDto = new ResponseTokenDto { ResetToken = responseToken.ResetToken };
 
                 var response = await httpClient.PostAsJsonAsync("api/Auth/refresh-token", responseToken);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var tokenResponse = await response.Content.ReadFromJsonAsync<ResponseTokenDto>();
+
                     if (tokenResponse is not null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
                     {
                         await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
-                        await localStorageService.SetItemAsync("RefreshToken", tokenResponse.ResetToken);
                         await authenticationState.RefreshAuthenticationStateAsync();
 
                         return true;

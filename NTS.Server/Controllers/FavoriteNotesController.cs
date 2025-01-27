@@ -13,7 +13,7 @@ namespace NTS.Server.Controllers
 
         public FavoriteNotesController(IFavoriteNoteService favoriteNoteService)
         {
-            this.favoriteNoteService = favoriteNoteService;
+            this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
         }
 
         [HttpPost("mark-favorite{noteId}"), Authorize(Roles = "DefaultUser")]

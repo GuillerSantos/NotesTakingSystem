@@ -9,7 +9,7 @@ namespace NTS.Client.Services
 
         public StarredNotesService(HttpClient httpClient)
         {
-            this.httpClient = httpClient;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task MarkNoteAsStarredAsync(StarredNotes request, Guid noteId)

@@ -30,6 +30,7 @@ namespace NTS.Client.Pages.DefaultUserPages
             NoHeader = true
         };
 
+
         public async Task HandleLoginClick()
         {
             errorMessage = null;
@@ -40,13 +41,11 @@ namespace NTS.Client.Pages.DefaultUserPages
                 if (response.IsSuccess)
                 {
                     var token = await localStorageService.GetItemAsStringAsync("Token");
-                    if (!string.IsNullOrEmpty(token))
+                    var resfreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
+
+                    if (!string.IsNullOrEmpty(token) || !string.IsNullOrEmpty(resfreshToken))
                     {
                         navigationManager.NavigateTo("/userdashboard");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Login successful, But Token Not Found");
                     }
                 }
                 else
@@ -59,6 +58,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 throw new Exception($"An error occurred while logging in: {error.Message}");
             }
         }
+
 
         public async Task OpenForgotPasswordDialog()
         {
@@ -73,6 +73,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 snackbar.Add($"Password Reset Email Has Been Sent To Your Email: {resetToken}", Severity.Info);
             }
         }
+
 
         public void ShowPasswordClick()
         {

@@ -38,7 +38,7 @@ namespace NTS.Server.Entities
         public string Role { get; set; } = string.Empty;
 
         [StringLength(500)]
-        public string RefreshToken { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; } = string.Empty;
 
         public DateTime? RefreshTokenExpiryTime { get; set; }
 

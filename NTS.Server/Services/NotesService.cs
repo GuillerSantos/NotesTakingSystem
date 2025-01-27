@@ -17,11 +17,11 @@ namespace NTS.Server.Services
 
         public NotesService(ApplicationDbContext dbContext, IFavoriteNoteService favoriteNoteService, IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService, IStarredNotesService starredNotesService)
         {
-            this.dbContext = dbContext;
-            this.favoriteNoteService = favoriteNoteService;
-            this.impotantNotesService = impotantNotesService;
-            this.sharedNotesService = sharedNotesService;
-            this.starredNotesService = starredNotesService;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
+            this.impotantNotesService = impotantNotesService ?? throw new ArgumentNullException(nameof(impotantNotesService)) ;
+            this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService)) ;
+            this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
 
 

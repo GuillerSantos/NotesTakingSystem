@@ -13,7 +13,7 @@ namespace NTS.Server.Controllers
 
         public StarredNotesController(IStarredNotesService starredNotesService)
         {
-            this.starredNotesService = starredNotesService;
+            this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
 
         [HttpPost("mark-shared/{noteId}"), Authorize(Roles = "DefaultUser")]

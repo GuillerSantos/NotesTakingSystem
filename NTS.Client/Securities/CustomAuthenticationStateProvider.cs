@@ -12,8 +12,8 @@ namespace YourApp.Client.Securities
 
         public CustomAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorageService)
         {
-            this.httpClient = httpClient;
-            this.localStorageService = localStorageService;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.localStorageService = localStorageService ?? throw new ArgumentNullException(nameof(localStorageService));
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()

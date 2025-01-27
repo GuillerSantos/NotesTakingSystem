@@ -3,13 +3,13 @@ using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Services
 {
-    public class SharedNotesService : ISharedNoteService
+    public class SharedNotesService : ISharedNotesService
     {
         private readonly HttpClient httpClient;
 
         public SharedNotesService(HttpClient httpClient)
         {
-            this.httpClient = httpClient;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId)

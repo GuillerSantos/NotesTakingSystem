@@ -16,7 +16,7 @@ namespace NTS.Server.Controllers
 
     public NotesController(INotesService notesService)
         {
-            this.notesService = notesService;
+            this.notesService = notesService ?? throw new ArgumentNullException(nameof(notesService));
         }
 
 

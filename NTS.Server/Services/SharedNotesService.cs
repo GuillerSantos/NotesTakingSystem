@@ -11,7 +11,7 @@ namespace NTS.Server.Services
 
         public SharedNotesService(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId)

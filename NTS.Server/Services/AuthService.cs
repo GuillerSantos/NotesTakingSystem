@@ -23,19 +23,20 @@ namespace NTS.Server.Services
         private readonly IStarredNotesService starredNotesService;
         private readonly IConfiguration configuration;
 
-        public AuthService(ApplicationDbContext dbContext, IConfiguration configuration, 
-            INotesService notesService, IFavoriteNoteService favoriteNoteService, 
-            IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService, 
+        public AuthService(ApplicationDbContext dbContext, IConfiguration configuration,
+            INotesService notesService, IFavoriteNoteService favoriteNoteService,
+            IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService,
             IStarredNotesService starredNotesService)
         {
-            this.dbContext = dbContext;
-            this.configuration = configuration;
-            this.noteService = notesService;
-            this.favoriteNoteService = favoriteNoteService;
-            this.impotantNotesService = impotantNotesService;
-            this.sharedNotesService = sharedNotesService;
-            this.starredNotesService = starredNotesService;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.noteService = notesService ?? throw new ArgumentNullException(nameof(notesService));
+            this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
+            this.impotantNotesService = impotantNotesService ?? throw new ArgumentNullException(nameof(impotantNotesService));
+            this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService));
+            this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
+
 
         public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
         {
@@ -44,13 +45,21 @@ namespace NTS.Server.Services
                 var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == request.Email);
                 if (user is null)
                 {
+                    Console.WriteLine("User Not Found");
                     return null;
                 }
 
-                if (new PasswordHasher<ApplicationUsers>().VerifyHashedPassword
-                    (user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
+                var passwordVerifivationResult = new PasswordHasher<ApplicationUsers>().VerifyHashedPassword(user, user.PasswordHash, request.Password);
+                if (passwordVerifivationResult == PasswordVerificationResult.Failed)
                 {
+                    Console.WriteLine("Password Verification Failed");
                     return null;
+                }
+
+                if (string.IsNullOrEmpty(user.RefreshToken))
+                {
+                    user.RefreshToken = await GenerateAndSaveRefreshTokenAsync(user);
+                    await dbContext.SaveChangesAsync();
                 }
 
                 return await CreateTokenResponse(user);
@@ -184,41 +193,70 @@ namespace NTS.Server.Services
 
         public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
-            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
-            if (user is null) return null;
+            try
+            {
+                var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+                if (user is null) return null;
 
-            return await CreateTokenResponse(user);
+                return await CreateTokenResponse(user);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Refreshing Token: {error.Message}");
+            }
         }
 
 
         private async Task<ApplicationUsers?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
         {
-            var user = await dbContext.ApplicationUsers.FindAsync(userId);
-            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            try
             {
-                return null;
-            }
+                var user = await dbContext.ApplicationUsers.FindAsync(userId);
+                if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                {
+                    return null;
+                }
 
-            return user;
+                return user;
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Validating Refresh Token: {error.Message}");
+            }
         }
 
 
         private string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
+            try
+            {
+                var randomNumber = new byte[32];
+                using var rng = RandomNumberGenerator.Create();
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Generating Refresh Token: {error.Message}");
+            }
         }
 
 
         private async Task<string> GenerateAndSaveRefreshTokenAsync(ApplicationUsers user)
         {
-            var refreshToken = GenerateRefreshToken();
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-            await dbContext.SaveChangesAsync();
-            return refreshToken;
+            try
+            {
+                var refreshToken = GenerateRefreshToken();
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+                Console.WriteLine($"Generated RefreshToken: {refreshToken}");
+                return refreshToken;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Generating And Saving Refresh Token: {error.Message}");
+                throw new Exception($"Error Generating And Saving Refresh Token: {error.Message}");
+            }
         }
 
 

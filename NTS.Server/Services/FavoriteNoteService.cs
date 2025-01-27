@@ -11,7 +11,7 @@ namespace NTS.Server.Services
 
         public FavoriteNoteService(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
 

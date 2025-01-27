@@ -6,8 +6,6 @@ namespace NTS.Client.Services.Contracts
     {
         Task<ResponseDto> LoginAsync(LoginDto request);
 
-        Task LogoutAsync();
-
         Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request);
 
         Task<RegisterDto> RegisterDefaultUserAsync(RegisterDto request);

@@ -17,9 +17,9 @@ namespace NTS.Server.Controller
 
         public AuthController(IAuthService authService, IEmailService emailService, ILogger<AuthController> logger)
         {
-            this.authService = authService;
-            this.emailService = emailService;
-            this.logger = logger;
+            this.authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            this.emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 

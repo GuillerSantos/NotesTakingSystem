@@ -13,14 +13,8 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public ISnackbar snackbar { get; set; }
         [Inject] public IDialogService dialogService { get; set; }
 
-        public readonly DialogOptions dialogOptions = new DialogOptions()
-        {
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            NoHeader = true,
-        };
 
-        public List<NoteDto> notes { get; set; } = new List<NoteDto>();
+        public List<NoteDto> notes { get; set; }
         public bool isLoggedIn = false;
         public bool isFetched = false;
 
@@ -29,7 +23,7 @@ namespace NTS.Client.Pages.DefaultUserPages
             await LoadNotesAsync();
         }
 
-
+        
         public async Task LoadNotesAsync()
         {
             try
@@ -67,11 +61,20 @@ namespace NTS.Client.Pages.DefaultUserPages
         {
             try
             {
+                // If The Note Is Not Null = Update Note
                 string dialogHeader = note == null ? "Create Note" : "Update Note";
+
+                var dialogOptions = new DialogOptions()
+                {
+                    // If The Note Is Note Null = MaxWidth.Large
+                    MaxWidth = note == null ? MaxWidth.Small : MaxWidth.Large,
+                    FullWidth = true,
+                    NoHeader = true,
+                };
 
                 var parameters = new DialogParameters
                 {
-                    { "note", note} // Pass The Selected Note If Updating, Or Null if Creating A Note
+                    { "note", note } // Pass The Selected Note If Updating, Or Null if Creating A Note
                 };
 
                 var dialog = dialogService.Show<CreateOrUpdateNoteDialog>(dialogHeader, parameters, dialogOptions);
