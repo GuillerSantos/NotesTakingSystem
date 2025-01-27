@@ -4,25 +4,21 @@
 @layout LoginLayout
 
 <MudGrid>
-    <MudContainer>
-        <MudImage Src=""></MudImage>
-    </MudContainer>
-
     <MudContainer Class="mt-20 pt-20" MaxWidth="MaxWidth.Small">
         <MudCard Class="p-9" Elevation="20">
             <MudContainer Class="text-center mb-6">
-                <h4 class="text-3xl md:text-3xl lg:text-4xl font-bold">
+                <h4 class="text-3xl md\:text-3xl lg\:text-4xl text-center font-bold">
                     Welcome Back Senpai!
                 </h4>
             </MudContainer>
 
             <MudContainer>
-                <h6 Class="px-2 font-medium font-bold">Your Email</h6>
+                <h6 class="px-2 font-medium font-bold">Your Email</h6>
                 <MudTextField Class="px-2 py-2" T="string" Label="name@example.com" @bind-Value="loginDto.Email" Variant="Variant.Outlined" FullWidth InputType="InputType.Email" Required />
             </MudContainer>
 
             <MudContainer>
-                <h6 Class="px-2 font-medium font-bold">Your Password</h6>
+                <h6 class="px-2 font-medium font-bold">Your Password</h6>
                 <MudTextField Class="px-2 py-2" T="string" Label="***********" @bind-Value="loginDto.Password" Variant="Variant.Outlined" FullWidth InputType="@showPasswordUtil.InputType" Adornment="Adornment.End" AdornmentIcon="@showPasswordUtil.Icon" OnAdornmentClick="ShowPasswordClick" Required />
             </MudContainer>
 
@@ -43,7 +39,7 @@
 
             <MudContainer Class="text-center text-sm">
                 <MudText Inline />Not Registered? 
-                <MudLink Href="/signup" />Sign Up
+                <MudLink Href="/register" >Register Here</MudLink>
             </MudContainer>
         </MudCard>
     </MudContainer>
