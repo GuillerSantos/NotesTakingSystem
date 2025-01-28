@@ -5,6 +5,8 @@ using NTS.Client.Services.Contracts;
 using NTS.Client.Services;
 using YourApp.Client.Securities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.JSInterop;
+using MudBlazor.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddScoped<IStarredNotesService, StarredNotesService>();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ThemeService>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -40,16 +43,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
-app.UseAuthentication();
-
-app.UseAuthorization();
 
 app.Run();
