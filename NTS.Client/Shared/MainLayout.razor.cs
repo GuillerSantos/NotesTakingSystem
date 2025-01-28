@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
 using NTS.Client.Models.DTOs;
+using NTS.Client.Services;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
 
@@ -14,9 +16,21 @@ namespace NTS.Client.Shared
         [Inject] NavigationManager navigationManager { get; set; }
         [Inject] ILocalStorageService localStorageService { get; set; }
         [Inject] CustomAuthenticationStateProvider authenticationState { get; set; }
+        [Inject] ThemeService themeService { get; set; }
 
         public ResponseTokenDto responseToken { get; set; }
+        private bool themeLoaded = false;
 
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && !themeLoaded)
+            {
+                await themeService.OnInitializedAsync();
+                themeLoaded = true;
+                StateHasChanged();
+            }
+        }
         public void ToggleDrawer()
         {
             this.drawerOpen = !drawerOpen;
