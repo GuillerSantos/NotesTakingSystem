@@ -1,4 +1,6 @@
-﻿using NTS.Client.Models.DTOs;
+﻿using NTS.Client.Models;
+using NTS.Client.Models.DTOs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NTS.Client.Services.Contracts
 {
@@ -8,6 +10,6 @@ namespace NTS.Client.Services.Contracts
 
         Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request);
 
-        Task<RegisterDto> RegisterDefaultUserAsync(RegisterDto request);
+        Task<ResponseDto> RegisterDefaultUserAsync(RegisterDto request);
     }
 }

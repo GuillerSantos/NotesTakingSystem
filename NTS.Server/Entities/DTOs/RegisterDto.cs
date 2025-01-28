@@ -2,7 +2,7 @@
 
 namespace NTS.Server.Entities.DTOs
 {
-    public class SignUpDto
+    public class RegisterDto
     {
         [Required]
         public string FullName { get; set; } = string.Empty;
@@ -27,7 +27,6 @@ namespace NTS.Server.Entities.DTOs
         [EmailAddress]
         public string RecoveryEmail { get; set; } = string.Empty;
 
-        [Required]
         public DateTime? DateJoined { get; set; } = DateTime.UtcNow;
     }
 }

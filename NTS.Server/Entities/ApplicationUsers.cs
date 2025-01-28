@@ -30,7 +30,6 @@ namespace NTS.Server.Entities
         [StringLength(256)]
         public string RecoveryEmail { get; set; } = string.Empty;
 
-        [Required]
         public DateTime? DateJoined { get; set; } = DateTime.UtcNow;
 
         [Required]

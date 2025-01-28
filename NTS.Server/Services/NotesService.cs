@@ -117,13 +117,10 @@ namespace NTS.Server.Services
 
 
         public async Task<bool> RemoveNoteAsync(Guid noteId)
-        {
-            using var transaction = await dbContext.Database.BeginTransactionAsync();
-           
+        {           
             try
             {
-                var noteToRemove = await dbContext.Notes.FindAsync(noteId);
-                
+                var noteToRemove = await dbContext.Notes.FindAsync(noteId);                
                 if (noteToRemove is null)
                     return false;
 
@@ -135,13 +132,11 @@ namespace NTS.Server.Services
                 dbContext.Notes.Remove(noteToRemove);
 
                 await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
 
                 return true;
             }
             catch (Exception error)
             {
-                await transaction.RollbackAsync();
                 throw new Exception($"Error Removing Note: {error.Message}");
             }
         }

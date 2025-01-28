@@ -1,4 +1,6 @@
-﻿namespace NTS.Server.Services.Contracts
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace NTS.Server.Services.Contracts
 {
     public interface IStarredNotesService
     {

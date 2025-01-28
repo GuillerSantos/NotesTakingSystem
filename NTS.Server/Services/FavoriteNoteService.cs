@@ -40,7 +40,7 @@ namespace NTS.Server.Services
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Marking Note As Favorite: {error.Message}");
+                throw new Exception($"Error Marking Note As Favorite: {error.Message}", error);
             }
         }
 

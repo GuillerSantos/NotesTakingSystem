@@ -83,7 +83,7 @@ namespace NTS.Server.Controller
 
 
         [HttpPost("register-defaultuser")]
-        public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(SignUpDto request)
+        public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(RegisterDto request)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace NTS.Server.Controller
 
 
         [HttpPost("register-admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(SignUpDto request)
+        public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(RegisterDto request)
         {
             try
             {

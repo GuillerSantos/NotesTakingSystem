@@ -18,7 +18,6 @@ namespace NTS.Server.Data
         {
             base.OnModelCreating(modelBuilder);
 
-
             // ApplicationUsers
             modelBuilder.Entity<ApplicationUsers>()
                 .HasKey(a => a.UserId);
@@ -33,7 +32,7 @@ namespace NTS.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(e => e.UserId)
-                       .HasDatabaseName("IX_NotesBase_UserId");
+                       .HasDatabaseName("IX_Notes_UserId");
             });
 
 

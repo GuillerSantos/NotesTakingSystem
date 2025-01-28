@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Transactions;
 
 namespace NTS.Server.Services
 {
@@ -92,17 +93,7 @@ namespace NTS.Server.Services
         }
 
 
-        private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
-        {
-            return new TokenResponseDto()
-            {
-                AccessToken = CreateToken(user!),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
-            };
-        }
-
-
-        public async Task<ApplicationUsers?> RegisterUsersAsync(SignUpDto request, bool isAdmin)
+        public async Task<ApplicationUsers?> RegisterUsersAsync(RegisterDto request, bool isAdmin)
         {
             try
             {
@@ -136,35 +127,33 @@ namespace NTS.Server.Services
 
         public async Task<bool> RemoveAccountAsync(Guid userId)
         {
-            using var transaction = await dbContext.Database.BeginTransactionAsync();
+            using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
             try
             {
                 var accountToRemove = await dbContext.ApplicationUsers.FindAsync(userId);
 
-                if (accountToRemove is null)
-                    return false;
+                if (accountToRemove is null) return false;
 
                 await noteService.RemoveNoteAsync(userId);
                 await favoriteNoteService.RemoveByNoteIdAsync(userId);
                 await impotantNotesService.RemoveByNoteIdAsync(userId);
                 await sharedNotesService.RemoveByNoteIdAsync(userId);
                 await starredNotesService.RemoveByNoteIdAsync(userId);
-                
 
                 dbContext.ApplicationUsers.Remove(accountToRemove);
 
                 await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
+                transactionScope.Complete();
 
                 return true;
             }
             catch (Exception error)
             {
-                await transaction.RollbackAsync();
-                throw new Exception($"Error Removing Account: {error.Message}");
+                throw new Exception(error.Message);
             }
         }
+
 
 
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
@@ -188,6 +177,16 @@ namespace NTS.Server.Services
             {
                 throw new Exception($"Error Retrieving All Users: {error.Message}");
             }
+        }
+
+
+        private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
+        {
+            return new TokenResponseDto()
+            {
+                AccessToken = CreateToken(user!),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
+            };
         }
 
 
