@@ -23,7 +23,6 @@ namespace NTS.Client.Models.DTOs
         [Required, EmailAddress]
         public string RecoveryEmail { get; set; } = string.Empty;
 
-        [Required]
         public DateTime? DateJoined { get; set; }
     }
 }
