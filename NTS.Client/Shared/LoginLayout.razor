@@ -1,6 +1,7 @@
-﻿@inherits LayoutComponentBase
-
-<MudThemeProvider />
+﻿@using NTS.Client.Services
+@inherits LayoutComponentBase
+@inject ThemeService themeService
+<MudThemeProvider @bind-IsDarkMode="@themeService.isDarkMode" Theme="themeService.CustomTheme"/>
 <MudSnackbarProvider />
 <MudDialogProvider />
 <MudPopoverProvider />
@@ -13,7 +14,7 @@
         <h5 class="text-white text-2xl font-bold mx-3">Blazing Notesu</h5>
     </MudAppBar>
 
-        <MudContainer Class="pt-20">
-            @Body
-        </MudContainer>
+    <MudContainer Class="pt-20">
+        @Body
+    </MudContainer>
 </MudContainer>
