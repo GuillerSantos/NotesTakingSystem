@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using NTS.Client.Models;
 using NTS.Client.Models.DTOs;
-using NTS.Client.Services;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Pages.DefaultUserPages
@@ -10,16 +10,26 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IAuthService authService { get; set; }
 
         public RegisterDto register { get; set; } = new RegisterDto();
+        public ResponseDto responseDto { get; set; } = new ResponseDto();
+        public ApplicationUsers user;
 
         public async Task HandleRegisterAsync()
         {
             try
             {
                 var response = await authService.RegisterDefaultUserAsync(register);
+                if (response.IsSuccess)
+                {
+                    Console.WriteLine("Account Registered Successfully");
+                }
+                else
+                {
+                    Console.WriteLine($"Error Registering Account: {response.ErrorMessage}");
+                }
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Registrating Account: {error.Message}");
+                Console.WriteLine($"Error Registering Account: {error.Message}");
             }
         }
     }
