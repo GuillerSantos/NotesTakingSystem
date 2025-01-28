@@ -30,5 +30,17 @@
 
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.server.js"></script>
+
+    <script>
+        window.localThemeFunction = {
+            getTheme: function () {
+                return localStorage.getItem('isDarkMode');
+            },
+            setTheme: function (isDarkMode) {
+                localStorage.setItem('isDarkMode', isDarkMode);
+            }
+        };
+    </script>
+
 </body>
 </html>
