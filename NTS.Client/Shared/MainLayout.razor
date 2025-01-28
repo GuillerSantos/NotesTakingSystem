@@ -2,7 +2,7 @@
 @inherits LayoutComponentBase
 @attribute [Authorize(Roles = "DefaultUser")]
 
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@themeService.isDarkMode" Theme="themeService.CustomTheme"/>
 <MudSnackbarProvider />
 <MudDialogProvider />
 <MudPopoverProvider />
@@ -18,17 +18,26 @@
                 <MudNavLink Href="/profile" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Person">
                     <h6 class="text-1xl font-bold">Profile</h6>
                 </MudNavLink>
+
                 <MudNavLink Href="/userdashboard" IconColor="Color.Primary" Icon="@Icons.Material.Filled.HomeMax">
                     <h6 class="text-1xl font-bold">Home</h6>
                 </MudNavLink>
+
                 <MudNavLink Href="/notes" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Notes">
                     <h6 class="text-1xl font-bold">Notes</h6>
                 </MudNavLink>
+
                 <MudNavLink Href="/settings" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Settings">
                     <h6 class="text-1xl font-bold">Settings</h6>
                 </MudNavLink>
-                <MudNavLink Href="/" IconColor="Color.Primary" Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync">
-                    <h6 class="text-1xl font-bold">Logout</h6>
+
+                <div class="flex ml-1">
+                    <MudToggleIconButton @bind-Toggled="@themeService.isDarkMode" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Dark" ToggledIcon="@Icons.Material.Filled.WbSunny" ToggledColor="Color.Inherit" />
+                    <h6 class="font-bold text-1xl mt-3">@themeService.GetModeText()</h6>
+                </div>
+
+                <MudNavLink Href="/" IconColor="Color.Error" Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync">
+                    <h6 class="text-1xl font-bold text-red-400">Logout</h6>
                 </MudNavLink>
             </div>
             
