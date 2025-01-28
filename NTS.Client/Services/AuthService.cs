@@ -1,10 +1,8 @@
 ﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Authentication.BearerToken;
+using NTS.Client.Models;
 using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
-using System.Security.Claims;
 using YourApp.Client.Securities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NTS.Client.Services
 {
@@ -13,11 +11,13 @@ namespace NTS.Client.Services
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
+        private readonly ILogger<AuthService> logger;
         private ResponseDto responseDto = new ResponseDto();
         private ResponseTokenDto responseToken = new ResponseTokenDto();
 
-        public AuthService(HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
+        public AuthService(ILogger<AuthService> logger, HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
+            this.logger = logger;
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.localStorageService = localStorageService ?? throw new ArgumentNullException(nameof(localStorageService));
             this.authenticationState = authenticationState ?? throw new ArgumentNullException(nameof(authenticationState));
@@ -52,14 +52,44 @@ namespace NTS.Client.Services
             }
             catch (HttpRequestException error)
             {
-                throw new Exception($"Network error occurred: {error.Message}");
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network error occurred: {error.Message}" };
             }
             catch (Exception error)
             {
-                throw new Exception($"An unexpected error occurred: {error.Message}");
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An unexpected error occurred: {error.Message}" };
             }
         }
 
+
+        public async Task<ResponseDto> RegisterDefaultUserAsync(RegisterDto request)
+        {
+            try
+            {
+                var response = await httpClient.PostAsJsonAsync("/api/Auth/register-defaultuser", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
+                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received" };
+                }
+
+                return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Register, Please Try Again" };
+            }
+            catch (HttpRequestException error)
+            {
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network Error: {error.Message}" };
+            }
+            catch (InvalidOperationException error)
+            {
+                logger.LogError($"Invalid Operation: {error.Message}");
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Invalid Operation: {error.Message}" };
+            }
+            catch (Exception error)
+            {
+                logger.LogError($"An Error Occured While Handling Registration: {error.Message}");
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
+            }
+        }
 
 
         public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
@@ -71,42 +101,21 @@ namespace NTS.Client.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
-                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty response received." };
+                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received." };
                 }
 
                 return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Send Forgot Password Request" };
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException error)
             {
-                return new ResponseDto { IsSuccess = false, ResponseMessage = $"Network error: {ex.Message}" };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network Error: {error.Message}" };
             }
             catch (Exception error)
             {
-                return new ResponseDto { IsSuccess = false, ResponseMessage = "An unexpected error occurred: " + error.Message };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: { error.Message}" };
             }
         }
 
-
-        public async Task<RegisterDto> RegisterDefaultUserAsync(RegisterDto request)
-        {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync("/api/register-defaultuser", request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<RegisterDto>();
-                }
-                else
-                {
-                    throw new Exception(await response.Content.ReadAsStringAsync());
-                }
-            }
-            catch (HttpRequestException error)
-            {
-                throw new Exception(error.Message);
-            }
-        }
 
         public async Task<bool> RefreshTokenAsync()
         {
@@ -138,7 +147,7 @@ namespace NTS.Client.Services
                 }
                 else
                 {
-                    Console.WriteLine("Failed To Refresh Tokens: " + response.ReasonPhrase);
+                    Console.WriteLine($"Failed To Refresh Tokens: {response.ReasonPhrase}");
                 }
             }
             catch (Exception error)
