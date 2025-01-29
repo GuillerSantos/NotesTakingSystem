@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazor.Utilities;
+using NTS.Client.Models;
 using NTS.Client.Models.DTOs;
 using NTS.Client.Pages.DefaultUserPages;
 using NTS.Client.Services.Contracts;
@@ -12,6 +13,10 @@ namespace NTS.Client.Components
         [CascadingParameter] public MudDialogInstance mudDialog { get; set; }
         [Parameter] public NoteDto note { get; set; } = new NoteDto();
         [Inject] INotesService notesService { get; set; }
+        [Inject] IFavoriteNotesService favoriteNotes { get; set; }
+        [Inject] IImportantNotesService importantNotes { get; set; }
+        [Inject] ISharedNotesService sharedNotes { get; set; }
+        [Inject] IStarredNotesService starredNotes { get; set; }
         [Inject] IDialogService dialogService { get; set; }
         [Inject] ISnackbar snackbar { get; set; }
         private NotesBase notesBase { get; set; } = new NotesBase();
@@ -19,7 +24,6 @@ namespace NTS.Client.Components
         public MudTextField<string>? multilineReference;
         public NoteDto currentNote { get; set; } = new NoteDto();
 
-        // Initialize With A Default Color (Use A HEX Value)
         public MudColor currentColor { get; set; } = new MudColor("#FFFFFF");
 
         protected override void OnParametersSet()
@@ -36,7 +40,7 @@ namespace NTS.Client.Components
         }
 
         
-        public async Task HandleCreateNoteAsync()
+        public async Task CreateNoteAsync()
         {
             if (string.IsNullOrWhiteSpace(currentNote.Title) || string.IsNullOrWhiteSpace(currentNote.Content))
             {
@@ -72,7 +76,7 @@ namespace NTS.Client.Components
         }
 
 
-        public async Task HandleRemoveNoteAsync()
+        public async Task RemoveNoteAsync()
         {
             try
             {
@@ -104,6 +108,32 @@ namespace NTS.Client.Components
             catch (Exception error)
             {
                 Console.WriteLine($"Error Removing Note: {error.Message}");
+            }
+        }
+
+
+        public async Task MarkAsFavorite()
+        {
+            try
+            {
+                await favoriteNotes.MarkAsFavoriteNoteAsync(new FavoriteNotes(), note.NoteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Marking Note: {error.Message}");
+            }
+        }
+
+
+        public async Task UnmarkNoteAsFavoriteAsync()
+        {
+            try
+            {
+                await favoriteNotes.UnmarkNoteAsFavoriteNoteAsync(note.NoteId, note.UserId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Unmarking Note: {error.Message}");
             }
         }
 
