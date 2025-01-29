@@ -12,8 +12,6 @@ namespace NTS.Client.Services
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
         private readonly ILogger<AuthService> logger;
-        private ResponseDto responseDto = new ResponseDto();
-        private ResponseTokenDto responseToken = new ResponseTokenDto();
 
         public AuthService(ILogger<AuthService> logger, HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -26,6 +24,11 @@ namespace NTS.Client.Services
 
         public async Task<ResponseDto> LoginAsync(LoginDto request)
         {
+            if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return new ResponseDto { IsSuccess = false, ErrorMessage = "Please Fill All Fields" };
+            }
+
             try
             {
                 var response = await httpClient.PostAsJsonAsync("/api/Auth/login", request);
@@ -34,29 +37,34 @@ namespace NTS.Client.Services
                 {
                     var tokenResponse = await response.Content.ReadFromJsonAsync<ResponseTokenDto>();
 
-                    if (tokenResponse?.AccessToken != null)
+                    if (tokenResponse?.AccessToken != null || tokenResponse?.ResetToken != null)
                     {
                         await localStorageService.SetItemAsync("Token", tokenResponse.AccessToken);
                         await localStorageService.SetItemAsync("RefreshToken", tokenResponse.RefreshToken);
                         await authenticationState.RefreshAuthenticationStateAsync();
 
-                        responseDto.IsSuccess = true;
-                        responseDto.ResponseMessage = "Login Successfully";
-                        return responseDto;
+                        return new ResponseDto { IsSuccess = true, ResponseMessage = "Login Successfully" };
+                    }
+                    else
+                    {
+                        logger.LogError("Invalid Token Response Recieved");
                     }
                 }
+                else
+                {
+                    var errorDetails = await response.Content.ReadAsStringAsync();
+                    logger.LogError($"Login Failed: {errorDetails}");
+                }
 
-                responseDto.IsSuccess = false;
-                responseDto.ErrorMessage = "Invalid Credentials. Please Try Again";
-                return responseDto;
+                return new ResponseDto { IsSuccess = false, ErrorMessage = "Invalid Credentials. Please Try Again" };
             }
             catch (HttpRequestException error)
             {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network error occurred: {error.Message}" };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network Error Occurred: {error.Message}" };
             }
             catch (Exception error)
             {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An unexpected error occurred: {error.Message}" };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
             }
         }
 
@@ -65,6 +73,16 @@ namespace NTS.Client.Services
         {
             try
             {
+                var properties = typeof(RegisterDto).GetProperties();
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(request) as string;
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        return new ResponseDto { IsSuccess = false, ErrorMessage = "Please Fill All Fields" };
+                    }
+                }
+
                 var response = await httpClient.PostAsJsonAsync("/api/Auth/register-defaultuser", request);
 
                 if (response.IsSuccessStatusCode)
@@ -125,13 +143,13 @@ namespace NTS.Client.Services
 
                 if (string.IsNullOrEmpty(refreshToken))
                 {
-                    Console.WriteLine("No Refresh Token Or User Id Found");
+                    logger.LogError("No Refresh Token Or User Id Found");
                     return false;
                 }
 
-                var requestDto = new ResponseTokenDto { ResetToken = responseToken.ResetToken };
+                var responseTokenDto = new ResponseTokenDto { ResetToken = refreshToken };
 
-                var response = await httpClient.PostAsJsonAsync("api/Auth/refresh-token", responseToken);
+                var response = await httpClient.PostAsJsonAsync("api/Auth/refresh-token", responseTokenDto);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -147,12 +165,12 @@ namespace NTS.Client.Services
                 }
                 else
                 {
-                    Console.WriteLine($"Failed To Refresh Tokens: {response.ReasonPhrase}");
+                    logger.LogError($"Failed To Refresh Tokens: {response.ReasonPhrase}");
                 }
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Refreshing Token: {error.Message}");
+                logger.LogError($"Error Refreshing Token: {error.Message}");
             }
 
             return false;
