@@ -16,25 +16,68 @@ namespace NTS.Server.Controllers
             this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
         }
 
-        [HttpPost("mark-favorite{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("mark-favorite/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsFavoriteAsync(Guid noteId)
         {
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
                 var userId = Guid.Parse(userIdClaim!.Value);
-
                 var markedNote = await favoriteNoteService.MarkNotesAsFavoriteAsync(noteId, userId);
-
                 if (!markedNote)
+                {
                     return NotFound("Note Not Found Or Your Are Not Authorized To Mark This Note As Favorite");
+                }
 
                 return Ok(markedNote);
             }
             catch (Exception error)
             {
                 return BadRequest(error.Message);
+            }
+        }
+
+
+        [HttpGet("get-all-favoritenotes"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> GetAllFavoriteNotesAsync()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                var favoriteNotes = await favoriteNoteService.GetAllFavoriteNotesAsync(userId);
+                if (favoriteNotes == null)
+                {
+                    return NotFound("No Favorite Notes Found");
+                }
+
+                return Ok(favoriteNotes);
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Fetching All Favorite Notes: {error.Message}");
+            }
+        }
+
+
+        [HttpDelete("unmark-favoritenote/{noteId}/{userId}"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> UnmarkNoteAsFavoriteNoteAsync(Guid noteId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                var unmarkAsFavoriteNote = await favoriteNoteService.UnmarkNoteAsFavoriteNoteAsync(noteId, userId);
+                if (!unmarkAsFavoriteNote)
+                {
+                    return NotFound("Note Is Not Mark As Favorite");
+                }
+
+                return Ok("Note Unmarked As Favorite");
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Unmarking Note As Favorite {error.Message}");
             }
         }
     }
