@@ -22,9 +22,9 @@
                 <MudTextField Class="px-2 py-2" T="string" Label="***********" @bind-Value="loginDto.Password" Variant="Variant.Outlined" FullWidth InputType="@showPasswordUtil.InputType" Adornment="Adornment.End" AdornmentIcon="@showPasswordUtil.Icon" OnAdornmentClick="ShowPasswordClick" Required />
             </MudContainer>
 
-            @if (!string.IsNullOrEmpty(errorMessage))
+            @if (!string.IsNullOrEmpty(responseDto.ErrorMessage))
             {
-                <MudAlert Severity="Severity.Error" Dense="true">@errorMessage</MudAlert>
+                <MudAlert Severity="Severity.Error" Dense="true">@responseDto.ErrorMessage</MudAlert>
             }
 
             <MudContainer Class="mb-4">
