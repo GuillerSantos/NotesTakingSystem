@@ -20,7 +20,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
-        public string? errorMessage;
+        public ResponseDto responseDto = new ResponseDto();
         public LoginDto loginDto { get; set; } = new LoginDto();
 
         public readonly DialogOptions dialogOptions = new DialogOptions()
@@ -33,7 +33,8 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public async Task HandleLoginClick()
         {
-            errorMessage = null;
+            responseDto.ErrorMessage = null;
+
             try
             {
                 var response = await authService.LoginAsync(loginDto);
@@ -43,19 +44,22 @@ namespace NTS.Client.Pages.DefaultUserPages
                     var token = await localStorageService.GetItemAsStringAsync("Token");
                     var resfreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
 
-                    if (!string.IsNullOrEmpty(token) || !string.IsNullOrEmpty(resfreshToken))
+                    if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(resfreshToken))
                     {
-                        navigationManager.NavigateTo("/userdashboard");
+                        responseDto.ErrorMessage = response.ErrorMessage;
+                        return;
                     }
+
+                    navigationManager.NavigateTo("/userdashboard");
                 }
                 else
                 {
-                    errorMessage = response.ErrorMessage;
+                    responseDto.ErrorMessage = response.ErrorMessage;
                 }
             }
             catch (Exception error)
             {
-                throw new Exception($"An error occurred while logging in: {error.Message}");
+                throw new Exception($"An Error Occurred While Logging In: {error.Message}");
             }
         }
 
