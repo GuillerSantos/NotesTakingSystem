@@ -23,6 +23,7 @@ namespace NTS.Server.Services
         private readonly ISharedNotesService sharedNotesService;
         private readonly IStarredNotesService starredNotesService;
         private readonly IConfiguration configuration;
+        private Notes notes = new Notes();
 
         public AuthService(ApplicationDbContext dbContext, IConfiguration configuration,
             INotesService notesService, IFavoriteNoteService favoriteNoteService,
@@ -125,7 +126,7 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<bool> RemoveAccountAsync(Guid userId)
+        public async Task<bool> RemoveAccountAsync(Guid userId, Guid noteId)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
@@ -135,8 +136,8 @@ namespace NTS.Server.Services
 
                 if (accountToRemove is null) return false;
 
-                await noteService.RemoveNoteAsync(userId);
-                await favoriteNoteService.RemoveByNoteIdAsync(userId);
+                await noteService.RemoveNoteAsync(userId ,noteId);
+                await favoriteNoteService.UnmarkNoteAsFavoriteNoteAsync(userId, notes.NoteId);
                 await impotantNotesService.RemoveByNoteIdAsync(userId);
                 await sharedNotesService.RemoveByNoteIdAsync(userId);
                 await starredNotesService.RemoveByNoteIdAsync(userId);
@@ -153,7 +154,6 @@ namespace NTS.Server.Services
                 throw new Exception(error.Message);
             }
         }
-
 
 
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)

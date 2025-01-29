@@ -10,7 +10,7 @@ namespace NTS.Server.Services.Contracts
 
         Task<Notes> UpdateNotesAsync(UpdateNotesDto editNotesDto, Guid noteId, Guid userId);
 
-        Task<bool> RemoveNoteAsync(Guid noteId);
+        Task<bool> RemoveNoteAsync(Guid noteId, Guid userId);
 
         Task<Notes> GetNoteByIdAsync(Guid noteId);
 

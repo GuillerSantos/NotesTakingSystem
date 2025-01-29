@@ -164,11 +164,11 @@ namespace NTS.Server.Controllers
 
 
         [HttpDelete("remove-note/{noteId}"), Authorize (Roles = "DefaultUser")]
-        public async Task<IActionResult> RemoveNoteAsync(Guid noteId)
+        public async Task<IActionResult> RemoveNoteAsync(Guid noteId, Guid userId)
         {
             try
             {
-                var removedNote = await notesService.RemoveNoteAsync(noteId);
+                var removedNote = await notesService.RemoveNoteAsync(noteId, userId);
 
                 if (!removedNote)
                 {

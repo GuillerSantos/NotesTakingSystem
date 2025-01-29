@@ -15,6 +15,6 @@ namespace NTS.Server.Services.Contracts
 
         Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
 
-        Task<bool> RemoveAccountAsync(Guid userId);
+        Task<bool> RemoveAccountAsync(Guid userId, Guid noteId);
     }
 }

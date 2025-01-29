@@ -177,11 +177,11 @@ namespace NTS.Server.Controller
 
 
         [HttpDelete("remove-account/{userId}"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RemoveAccountAsync(Guid userId)
+        public async Task<IActionResult> RemoveAccountAsync(Guid userId, Guid noteId)
         {
             try
             {
-                var removedAccount = await authService.RemoveAccountAsync(userId);
+                var removedAccount = await authService.RemoveAccountAsync(userId, noteId);
 
                 if (!removedAccount)
                 {

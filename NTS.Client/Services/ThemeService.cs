@@ -23,7 +23,6 @@ namespace NTS.Client.Services
 
         public async Task OnInitializedAsync()
         {
-
             try
             {
                 var storedTheme = await jSRuntime.InvokeAsync<string>("localThemeFunction.getTheme");
@@ -33,7 +32,6 @@ namespace NTS.Client.Services
             {
                 logger.LogError($"Error: {ex.Message}");
             }
-
         }
 
 

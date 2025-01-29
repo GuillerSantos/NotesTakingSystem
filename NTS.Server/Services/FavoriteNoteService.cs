@@ -19,6 +19,15 @@ namespace NTS.Server.Services
         {
             try
             {
+                var isAlreadyMarked = await dbContext.FavoriteNotes
+                    .AnyAsync(f => f.NoteId == noteId && f.UserId == userId);
+
+                if (isAlreadyMarked)
+                {
+                    Console.WriteLine("Note Already Marked As Favorite");
+                    return false;
+                }
+
                 var note = await dbContext.Notes.FindAsync(noteId);
                 if (note == null || note.UserId != userId) return false;
 
@@ -45,19 +54,33 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task RemoveByNoteIdAsync(Guid noteId)
+        public async Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync(Guid userId)
+        {
+            try
+            {
+                return await dbContext.FavoriteNotes
+                    .Where(f => f.UserId == userId)
+                    .ToListAsync();
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Fetching All Favorite Notes: {error.Message}");
+            }
+        }
+
+
+        public async Task<bool> UnmarkNoteAsFavoriteNoteAsync(Guid noteId, Guid userId)
         {
             try
             {
                 var favoriteNote = await dbContext.FavoriteNotes
-                    .Where(f => f.NoteId == noteId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(f => f.NoteId == noteId && f.UserId == userId);
 
-                if (favoriteNote.Any())
-                {
-                    dbContext.FavoriteNotes.RemoveRange(favoriteNote);
-                    await dbContext.SaveChangesAsync();
-                }
+                if (favoriteNote == null) return false;
+
+                dbContext.FavoriteNotes.Remove(favoriteNote);
+                await dbContext.SaveChangesAsync();
+                return true;
             }
             catch (Exception error)
             {
