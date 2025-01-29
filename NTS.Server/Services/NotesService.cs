@@ -30,7 +30,7 @@ namespace NTS.Server.Services
             try
             {
                 return await dbContext.Notes
-                    .Where(note => note.UserId == userId)
+                    .Where(n => n.UserId == userId)
                     .ToListAsync();
             }
             catch (Exception error)
@@ -116,7 +116,7 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<bool> RemoveNoteAsync(Guid noteId)
+        public async Task<bool> RemoveNoteAsync(Guid noteId, Guid userId)
         {           
             try
             {
@@ -124,7 +124,7 @@ namespace NTS.Server.Services
                 if (noteToRemove is null)
                     return false;
 
-                await favoriteNoteService.RemoveByNoteIdAsync(noteId);
+                await favoriteNoteService.UnmarkNoteAsFavoriteNoteAsync(noteId, userId);
                 await impotantNotesService.RemoveByNoteIdAsync(noteId);
                 await sharedNotesService.RemoveByNoteIdAsync(noteId);
                 await starredNotesService.RemoveByNoteIdAsync(noteId);
