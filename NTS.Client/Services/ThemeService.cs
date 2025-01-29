@@ -7,10 +7,12 @@ namespace NTS.Client.Services
     public class ThemeService
     {
         private readonly IJSRuntime jSRuntime;
+        private readonly ILogger<ThemeService> logger;
 
-        public ThemeService(IJSRuntime jSRuntime)
+        public ThemeService(IJSRuntime jSRuntime, ILogger<ThemeService> logger)
         {
             this.jSRuntime = jSRuntime;
+            this.logger = logger;
         }
 
         public bool isDarkMode;
@@ -29,7 +31,7 @@ namespace NTS.Client.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                logger.LogError($"Error: {ex.Message}");
             }
 
         }
@@ -45,7 +47,7 @@ namespace NTS.Client.Services
         {
             PaletteLight = new PaletteLight()
             {
-                Primary = Colors.Purple.Darken1,
+                Primary = Colors.Blue.Darken3,
                 Secondary = Colors.Green.Accent1
             },
 
