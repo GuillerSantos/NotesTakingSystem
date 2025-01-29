@@ -10,8 +10,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IAuthService authService { get; set; }
 
         public RegisterDto register { get; set; } = new RegisterDto();
-        public ResponseDto responseDto { get; set; } = new ResponseDto();
-        public ApplicationUsers user;
+        public ResponseDto responseDto = new ResponseDto();
 
         public async Task HandleRegisterAsync()
         {
@@ -24,7 +23,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 }
                 else
                 {
-                    Console.WriteLine($"Error Registering Account: {response.ErrorMessage}");
+                    responseDto.ErrorMessage = response.ErrorMessage;
                 }
             }
             catch (Exception error)
