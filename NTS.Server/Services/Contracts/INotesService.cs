@@ -16,6 +16,6 @@ namespace NTS.Server.Services.Contracts
 
         Task<List<Notes>> GetAllNotesAsync(Guid userId);
 
-        Task<IEnumerable<Notes>> SearchNotesAsync(string searchTerm, Guid userId);
+        Task<List<Notes>> SearchNotesAsync(string searchQuery, Guid userId);
     }
 }
