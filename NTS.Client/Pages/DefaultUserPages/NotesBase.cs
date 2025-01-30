@@ -15,6 +15,8 @@ namespace NTS.Client.Pages.DefaultUserPages
 
 
         public List<NoteDto> notes { get; set; }
+        public string searchQuery { get; set; }
+        public List<NoteDto> filteredNotes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
         public bool isFetched = false;
 
@@ -23,27 +25,22 @@ namespace NTS.Client.Pages.DefaultUserPages
             await LoadNotesAsync();
         }
 
-        
+
         public async Task LoadNotesAsync()
         {
             try
             {
-                if (notesService == null)
-                {
-                    Console.WriteLine("notesService Is Null");
-                    isFetched = false;
-                    return;
-                }
+                notes = (await notesService.GetAllNotesAsync())?.ToList() ?? new List<NoteDto>();
+                filteredNotes = notes.ToList();
 
-                var result = await notesService.GetAllNotesAsync();
-                if (result == null)
+                if (notes == null)
                 {
                     Console.WriteLine("GetAllNotesAsync Returned Null");
                     notes = new List<NoteDto>();
                 }
                 else
                 {
-                    notes = result.ToList();
+                    notes = notes.ToList();
                 }
 
                 isFetched = true;
@@ -55,6 +52,30 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
+
+        public async Task SearchNotesAsync(string searchQuery)
+        {
+            try
+            {
+                isFetched = false;
+                if (!string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    var searchResult = await notesService.SearchNotesAsync(searchQuery);
+                    filteredNotes = searchResult?.ToList() ?? new List<NoteDto>();
+                }
+                else
+                {
+                    filteredNotes = notes.ToList();
+
+                }
+                isFetched = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Searching Notes: {error.Message}");
+                isFetched = true;
+            }
+        }
 
 
         public async Task OpenCreateOrUpdateNoteDialogAsync(NoteDto note = null)
