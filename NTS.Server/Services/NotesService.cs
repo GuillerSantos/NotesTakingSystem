@@ -54,14 +54,22 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<IEnumerable<Notes>> SearchNotesAsync(string searchTerm, Guid userId)
+        public async Task<List<Notes>> SearchNotesAsync(string? searchQuery, Guid userId)
         {
             try
             {
-                return await dbContext.Notes
-                    .Where(note => note.UserId == userId &&
-                         (note.Title.Contains(searchTerm) || note.Content.Contains(searchTerm)))
+                if (string.IsNullOrWhiteSpace(searchQuery))
+                {
+                    return await dbContext.Notes
+                        .Where(n => n.UserId == userId)
+                        .ToListAsync();
+                }
+                var notes = await dbContext.Notes
+                    .Where(n => n.UserId == userId)
+                    .Where(n => EF.Functions.Like(n.Title, $"%{searchQuery}%"))
                     .ToListAsync();
+
+                return notes;
             }
             catch (Exception error)
             {
