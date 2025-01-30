@@ -40,6 +40,21 @@ namespace NTS.Client.Services
         }
 
 
+        public async Task<List<NoteDto>> SearchNotesAsync(string searchQuery)
+        {
+            try
+            {
+                var response = await httpClient.GetFromJsonAsync<List<NoteDto>>($"/api/Notes/search-notes?searchQuery={searchQuery}");
+                return response ?? new List<NoteDto>();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Searching Notes: {error.Message}");
+                return new List<NoteDto>();
+            }
+        }
+
+
         public async Task UpdateNoteAsync(NoteDto request, Guid noteId)
         {
             try
