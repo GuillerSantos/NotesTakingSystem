@@ -5,14 +5,14 @@
 <MudLayout Class="mt-10">
     <div class="flex items-center mb-5">
         <MudIconButton OnClick="() => OpenCreateOrUpdateNoteDialogAsync()" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.NoteAdd"><MudText>Add Note</MudText></MudIconButton>
-        <MudTextField Class="px-4" T="string" Variant="Variant.Outlined" Label="Search Notes" />
-        <MudButton Class="px-20 py-4" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
+        <MudTextField Class="px-4" @bind-Value="searchQuery" T="string" Variant="Variant.Outlined" Label="Search Notes" />
+        <MudButton Class="px-20 py-4" OnClick="() => SearchNotesAsync(searchQuery)" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
     </div>
 
     <div class="notes-container">
-        @if (isFetched && notes.Any())
+        @if (isFetched && (notes.Any() || filteredNotes.Any()))
         {
-            @foreach (var note in notes)
+            @foreach (var note in filteredNotes)
             {
                 <MudCard Class="mud-card" Style="@($"background-color: {note.Color}")" @onclick="() => OpenCreateOrUpdateNoteDialogAsync(note)">
                     <MudCardContent Class="mud-content">
