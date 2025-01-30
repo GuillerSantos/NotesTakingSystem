@@ -73,8 +73,8 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpGet("search-note"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchTerm)
+        [HttpGet("search-notes"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchQuery)
         {
             try
             {
@@ -87,14 +87,11 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var searchedNote = await notesService.SearchNotesAsync(searchTerm, userId);
+                var notes = string.IsNullOrWhiteSpace(searchQuery)
+                    ? await notesService.GetAllNotesAsync(userId)
+                    : await notesService.SearchNotesAsync(searchQuery, userId);
 
-                if (searchedNote == null || searchedNote.Count() == 0)
-                {
-                    return NotFound("No Notes Matching Your Search Criteria");
-                }
-
-                return Ok(searchedNote);
+                return Ok(notes);
             }
             catch (Exception error)
             {
