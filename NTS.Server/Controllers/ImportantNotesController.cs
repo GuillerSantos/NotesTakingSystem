@@ -23,9 +23,7 @@ namespace NTS.Server.Controllers
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
                 var userId = Guid.Parse(userIdClaim!.Value);
-
                 var markedNote = await impotantNotesService.MarkNoteAsImportantAsync(noteId, userId);
 
                 if (!markedNote)
@@ -36,6 +34,29 @@ namespace NTS.Server.Controllers
             catch (Exception error)
             {
                 return BadRequest(error.Message);
+            }
+        }
+
+        [HttpGet("get-all-importantnotes"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> GetAllImportantNotesAsync()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                var importantNotes = await impotantNotesService.GetAllImportantNotesAsync(userId);
+
+                if (importantNotes == null)
+                {
+                    return NotFound("No Important Notes Found");
+                }
+
+                return Ok(importantNotes);
+
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Fetching All Importang Notes: {error.Message}");
             }
         }
     }
