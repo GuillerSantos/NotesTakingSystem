@@ -2,7 +2,57 @@
 @inherits BookMarkBase
 
 <MudGrid Class="mt-20">
+
     <MudContainer>
-        <h6 class="text-center text-4xl font-bold">Book Mark Page</h6>
+        <MudPaper Class="notes-container p-10" Elevation="20">
+            @if (isFetched && favoriteNotes.Any())
+            {
+                @foreach (var favoriteNote in favoriteNotes)
+                {
+                    <MudCard Class="mud-card" Style="@($"background-color: {favoriteNote.Color}")" Elevation="20">
+                        <MudCardContent Class="mud-content">
+                            <MudText Class="text-center" Typo="Typo.subtitle2">@favoriteNote.CreatedAt</MudText>
+                            <MudText Class="mud-title mb-5" Typo="Typo.h6">@favoriteNote.Title</MudText>
+                            <MudText>@favoriteNote.Content</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            }
+            else if (isFetched)
+            {
+                <h5 class="decoration-gray-500">No Notes Found.</h5>
+            }
+            else
+            {
+                <MudProgressCircular Class="items-center" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+            }
+        </MudPaper>
     </MudContainer>
+
+    <MudContainer>
+        <MudPaper Class="notes-container p-10" Elevation="20">
+            @if (isFetched && importantNotes.Any())
+            {
+                @foreach (var importantNote in importantNotes)
+                {
+                    <MudCard Class="mud-card" Style="@($"background-color: {importantNote.Color}")" Elevation="20">
+                        <MudCardContent Class="mud-content">
+                            <MudText Class="text-center" Typo="Typo.subtitle2">@importantNote.CreatedAt</MudText>
+                            <MudText Class="mud-title mb-5" Typo="Typo.h6">@importantNote.Title</MudText>
+                            <MudText>@importantNote.Content</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            }
+            else if (isFetched)
+            {
+                <h5 class="decoration-gray-500">No Notes Found.</h5>
+            }
+            else
+            {
+                <MudProgressCircular Class="items-center" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+            }
+        </MudPaper>
+    </MudContainer>
+
 </MudGrid>
