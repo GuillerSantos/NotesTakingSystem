@@ -17,6 +17,15 @@ namespace NTS.Server.Services
         {
             try
             {
+                var isAlreadyMarkred = await dbContext.ImportantNotes
+                    .AnyAsync(i => i.NoteId == noteId && i.UserId == userId);
+
+                if (isAlreadyMarkred)
+                {
+                    Console.WriteLine("Note Is Already Marked As Important");
+                    return false;
+                }
+
                 var note = await dbContext.Notes.FindAsync(noteId);
                 if (note == null || note.UserId != userId) return false;
 
@@ -41,6 +50,22 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Marking Note As Important: {error.Message}");
             }
         }
+
+
+        public async Task<List<ImportantNotes>> GetAllImportantNotesAsync(Guid userId)
+        {
+            try
+            {
+                return await dbContext.ImportantNotes
+                    .Where(i => i.UserId == userId)
+                    .ToListAsync();
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Fetching Important Notes: {error.Message}");
+            }
+        }
+
 
         public async Task RemoveByNoteIdAsync(Guid noteId)
         {
