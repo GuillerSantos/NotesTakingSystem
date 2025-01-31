@@ -1,5 +1,6 @@
 ﻿using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
+using System.Runtime.InteropServices;
 
 namespace NTS.Client.Services
 {
@@ -22,6 +23,20 @@ namespace NTS.Client.Services
             catch (Exception error)
             {
                 Console.WriteLine($"Error Marking As Important :{error.Message}");
+            }
+        }
+
+
+        public async Task<List<ImportantNotes>> GetAllImportantNotesAsync()
+        {
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<ImportantNotes>>("api/ImportantNotes/get-all-importantnotes") ?? new List<ImportantNotes>();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Fetching All Important Notes: {error.Message}");
+                return new List<ImportantNotes>();
             }
         }
     }
