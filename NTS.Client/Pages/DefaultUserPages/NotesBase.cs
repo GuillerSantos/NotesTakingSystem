@@ -14,7 +14,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IDialogService dialogService { get; set; }
 
 
-        public List<NoteDto> notes { get; set; }
+        public List<NoteDto> notes { get; set; } = new List<NoteDto>();
         public string searchQuery { get; set; }
         public List<NoteDto> filteredNotes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
