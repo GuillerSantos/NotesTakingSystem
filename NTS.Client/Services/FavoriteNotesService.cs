@@ -43,9 +43,17 @@ namespace NTS.Client.Services
         }
 
 
-        public async Task GetAllFavoriteNotesAsync()
+        public async Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync()
         {
-            
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<FavoriteNotes>>("/api/FavoriteNotes/get-all-favoritenotes") ?? new List<FavoriteNotes>();
+            }
+            catch (Exception error)
+            {
+                logger.LogError($"Error Fetching All Favorite Notes: {error.Message}");
+                return new List<FavoriteNotes>();
+            }
         }
     }
 }

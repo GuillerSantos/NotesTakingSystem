@@ -120,20 +120,20 @@ namespace NTS.Client.Components
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note: {error.Message}");
+                Console.WriteLine($"Error Marking Note as Favorite: {error.Message}");
             }
         }
 
 
-        public async Task UnmarkNoteAsFavoriteAsync()
+        public async Task MarkAsImportant()
         {
             try
             {
-                await favoriteNotes.UnmarkNoteAsFavoriteNoteAsync(note.NoteId, note.UserId);
+                await importantNotes.MarkNoteAsImportantAsync(new ImportantNotes(), note.NoteId);
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Unmarking Note: {error.Message}");
+                Console.WriteLine($"Error Marking Note As Important: {error.Message}");
             }
         }
 
