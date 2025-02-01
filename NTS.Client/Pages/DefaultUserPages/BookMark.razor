@@ -1,15 +1,19 @@
 ﻿@page "/bookmark"
 @inherits BookMarkBase
 
-<MudGrid Class="mt-20">
+<div class="flex mt-20">
 
     <MudContainer>
+        <MudContainer>
+            <h6 Class="text-center text-3xl font-bold">Favorite Notes</h6>
+        </MudContainer>
+
         <MudPaper Class="notes-container p-10" Elevation="20">
             @if (isFetched && favoriteNotes.Any())
             {
                 @foreach (var favoriteNote in favoriteNotes)
                 {
-                    <MudCard Class="mud-card" Style="@($"background-color: {favoriteNote.Color}")" Elevation="20">
+                    <MudCard Class="mud-card" Style="@($"background-color: {favoriteNote.Color}")" Elevation="5">
                         <MudCardContent Class="mud-content">
                             <MudText Class="text-center" Typo="Typo.subtitle2">@favoriteNote.CreatedAt</MudText>
                             <MudText Class="mud-title mb-5" Typo="Typo.h6">@favoriteNote.Title</MudText>
@@ -22,14 +26,14 @@
             {
                 <h5 class="decoration-gray-500">No Notes Found.</h5>
             }
-            else
-            {
-                <MudProgressCircular Class="items-center" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
-            }
         </MudPaper>
     </MudContainer>
 
     <MudContainer>
+        <MudContainer>
+            <h6 Class="text-center text-3xl font-bold">Important Notes</h6>
+        </MudContainer>
+
         <MudPaper Class="notes-container p-10" Elevation="20">
             @if (isFetched && importantNotes.Any())
             {
@@ -48,11 +52,32 @@
             {
                 <h5 class="decoration-gray-500">No Notes Found.</h5>
             }
-            else
-            {
-                <MudProgressCircular Class="items-center" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
-            }
         </MudPaper>
     </MudContainer>
 
-</MudGrid>
+    <MudContainer>
+        <MudContainer>
+            <h6 Class="text-center text-3xl font-bold">Starred Notes</h6>
+        </MudContainer>
+
+        <MudPaper Class="notes-container p-10" Elevation="20">
+            @if (isFetched && starredNotes.Any())
+            {
+                @foreach (var starredNote in starredNotes)
+                {
+                    <MudCard Class="mud-card" Style="@($"background-color: {starredNote.Color}")" Elevation="20">
+                        <MudCardContent Class="mud-content">
+                            <MudText Class="text-center" Typo="Typo.subtitle2">@starredNote.CreatedAt</MudText>
+                            <MudText Class="mud-title mb-5" Typo="Typo.h6">@starredNote.Title</MudText>
+                            <MudText>@starredNote.Content</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            }
+            else if (isFetched)
+            {
+                <h5 class="decoration-gray-500">No Notes Found.</h5>
+            }
+        </MudPaper>
+    </MudContainer>
+</div>
