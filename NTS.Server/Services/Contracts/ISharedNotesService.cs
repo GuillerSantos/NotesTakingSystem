@@ -6,6 +6,6 @@ namespace NTS.Server.Services.Contracts
     {
         Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId);
 
-        Task RemoveByNoteIdAsync(Guid noteId);
+        Task UnmarkNoteAsSharedAsync(Guid noteId);
     }
 }
