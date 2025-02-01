@@ -7,6 +7,6 @@ namespace NTS.Server.Services.Contracts
     {
         Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId);
         Task<List<ImportantNotes>> GetAllImportantNotesAsync(Guid userId);
-        Task RemoveByNoteIdAsync(Guid noteId);
+        Task UnmarkNoteAsImportantAsync(Guid noteId);
     }
 }
