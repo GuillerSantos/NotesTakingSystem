@@ -69,12 +69,12 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task<bool> UnmarkNoteAsFavoriteNoteAsync(Guid noteId, Guid userId)
+        public async Task<bool> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
             try
             {
                 var favoriteNote = await dbContext.FavoriteNotes
-                    .FirstOrDefaultAsync(f => f.NoteId == noteId && f.UserId == userId);
+                    .FirstOrDefaultAsync(f => f.NoteId == noteId);
 
                 if (favoriteNote == null) return false;
 
