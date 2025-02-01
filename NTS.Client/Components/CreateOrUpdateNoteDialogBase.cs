@@ -11,15 +11,15 @@ namespace NTS.Client.Components
     public class CreateOrUpdateNoteDialogBase : ComponentBase
     {
         [CascadingParameter] public MudDialogInstance mudDialog { get; set; }
+        [Parameter] public NotesBase notesBase { get; set; }
         [Parameter] public NoteDto note { get; set; } = new NoteDto();
-        [Inject] INotesService notesService { get; set; }
-        [Inject] IFavoriteNotesService favoriteNotes { get; set; }
-        [Inject] IImportantNotesService importantNotes { get; set; }
-        [Inject] ISharedNotesService sharedNotes { get; set; }
-        [Inject] IStarredNotesService starredNotes { get; set; }
-        [Inject] IDialogService dialogService { get; set; }
-        [Inject] ISnackbar snackbar { get; set; }
-        private NotesBase notesBase { get; set; } = new NotesBase();
+        [Inject] public INotesService notesService { get; set; }
+        [Inject] public IFavoriteNotesService favoriteNotes { get; set; }
+        [Inject] public IImportantNotesService importantNotes { get; set; }
+        [Inject] public ISharedNotesService sharedNotes { get; set; }
+        [Inject] public IStarredNotesService starredNotes { get; set; }
+        [Inject] public IDialogService dialogService { get; set; }
+        [Inject] public ISnackbar snackbar { get; set; }
 
         public MudTextField<string>? multilineReference;
         public NoteDto currentNote { get; set; } = new NoteDto();
@@ -50,9 +50,9 @@ namespace NTS.Client.Components
 
             try
             {
-                if (notesService == null)
+                if (notesService is null)
                 {
-                    Console.WriteLine("notesService Is Null");
+                    Console.WriteLine("NotesService Is Null");
                     return;
                 }
 
@@ -68,6 +68,15 @@ namespace NTS.Client.Components
                 }
 
                 mudDialog.Close(DialogResult.Ok(true));
+
+                if (notesBase != null)
+                {
+                    await notesBase.LoadNotesAsync();
+                }
+                else
+                {
+                    Console.WriteLine("NotesBase Is Null");
+                }
             }
             catch (Exception error)
             {
@@ -137,7 +146,17 @@ namespace NTS.Client.Components
             }
         }
 
-
+        public async Task MarkAsStarred()
+        {
+            try
+            {
+                await starredNotes.MarkNoteAsStarredAsync(new StarredNotes(), note.NoteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Marking Note As Starred: {error.Message}");
+            }
+        }
         public void Cancel()
         {
             mudDialog.Cancel();
