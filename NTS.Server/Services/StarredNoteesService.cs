@@ -9,7 +9,7 @@ namespace NTS.Server.Services
     {
         private readonly ApplicationDbContext dbContext;
 
-        public StarredNoteesService (ApplicationDbContext dbContext)
+        public StarredNoteesService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
@@ -43,19 +43,35 @@ namespace NTS.Server.Services
             }
         }
 
-        public async Task RemoveByNoteIdAsync(Guid noteId)
+
+        public async Task<List<StarredNotes>> GetAllStarredNotesAsync(Guid userId)
+        {
+            try
+            {
+                return await dbContext.StarredNotes
+                    .Where(s => s.UserId == userId)
+                    .ToListAsync();
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Fetching All Starred Notes: {error.Message}");
+            }
+        }
+
+        public async Task<bool> UnmarkNoteAsStarredAsync(Guid noteId)
         {
             try
             {
                 var starredNote = await dbContext.StarredNotes
-                    .Where(s => s.NoteId == noteId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(s => s.NoteId == noteId);
 
-                if (starredNote.Any())
-                {
-                    dbContext.StarredNotes.RemoveRange(starredNote);
-                    await dbContext.SaveChangesAsync();
-                }
+                if (starredNote is null) return false;
+
+                dbContext.StarredNotes.RemoveRange(starredNote);
+                await dbContext.SaveChangesAsync();
+                return true;
+
+
             }
             catch (Exception error)
             {
