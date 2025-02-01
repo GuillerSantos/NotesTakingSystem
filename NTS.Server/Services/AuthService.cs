@@ -137,10 +137,10 @@ namespace NTS.Server.Services
                 if (accountToRemove is null) return false;
 
                 await noteService.RemoveNoteAsync(userId ,noteId);
-                await favoriteNoteService.UnmarkNoteAsFavoriteNoteAsync(userId, notes.NoteId);
-                await impotantNotesService.RemoveByNoteIdAsync(userId);
-                await sharedNotesService.RemoveByNoteIdAsync(userId);
-                await starredNotesService.RemoveByNoteIdAsync(userId);
+                await favoriteNoteService.UnmarkNoteAsFavoriteAsync(userId);
+                await impotantNotesService.UnmarkNoteAsImportantAsync(userId);
+                await sharedNotesService.UnmarkNoteAsSharedAsync(userId);
+                await starredNotesService.UnmarkNoteAsStarredAsync(userId);
 
                 dbContext.ApplicationUsers.Remove(accountToRemove);
 
