@@ -16,10 +16,7 @@ namespace NTS.Client.Services
         }
 
         public bool isDarkMode;
-
-
         public string GetModeText() => isDarkMode ? "Light Mode" : "Dark Mode";
-
 
         public async Task OnInitializedAsync()
         {
@@ -45,14 +42,12 @@ namespace NTS.Client.Services
         {
             PaletteLight = new PaletteLight()
             {
-                Primary = Colors.Blue.Darken3,
-                Secondary = Colors.Green.Accent1
+                Primary = Colors.Blue.Darken1
             },
 
             PaletteDark = new PaletteDark()
             {
-                Primary = Colors.DeepPurple.Default,
-                Secondary = Colors.Green.Accent4
+                Primary = Colors.Green.Darken1
             }
         };
     }
