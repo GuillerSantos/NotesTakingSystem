@@ -67,7 +67,7 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task RemoveByNoteIdAsync(Guid noteId)
+        public async Task UnmarkNoteAsImportantAsync(Guid noteId)
         {
             try
             {
