@@ -14,7 +14,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IDialogService dialogService { get; set; }
 
 
-        public List<NoteDto> notes { get; set; } = new List<NoteDto>();
+        public List<NoteDto> allNotes { get; set; } = new List<NoteDto>();
         public string searchQuery { get; set; }
         public List<NoteDto> filteredNotes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
@@ -22,6 +22,7 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
             await LoadNotesAsync();
         }
 
@@ -30,20 +31,23 @@ namespace NTS.Client.Pages.DefaultUserPages
         {
             try
             {
-                notes = (await notesService.GetAllNotesAsync())?.ToList() ?? new List<NoteDto>();
-                filteredNotes = notes.ToList();
 
-                if (notes == null)
+                allNotes = (await notesService.GetAllNotesAsync())?.ToList() ?? new List<NoteDto>();
+
+                if (allNotes is null)
                 {
                     Console.WriteLine("GetAllNotesAsync Returned Null");
-                    notes = new List<NoteDto>();
+                    allNotes = new List<NoteDto>();
                 }
                 else
                 {
-                    notes = notes.ToList();
+                    allNotes = allNotes.ToList();
                 }
 
+                filteredNotes = allNotes.ToList();
                 isFetched = true;
+
+                StateHasChanged();
             }
             catch (Exception error)
             {
@@ -65,7 +69,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 }
                 else
                 {
-                    filteredNotes = notes.ToList();
+                    filteredNotes = allNotes.ToList();
 
                 }
                 isFetched = true;
@@ -95,7 +99,8 @@ namespace NTS.Client.Pages.DefaultUserPages
 
                 var parameters = new DialogParameters
                 {
-                    { "note", note } // Pass The Selected Note If Updating, Or Null if Creating A Note
+                    { "note", note }, // Pass The Selected Note If Updating, Or Null if Creating A Note
+                    { "notesBase", this }
                 };
 
                 var dialog = dialogService.Show<CreateOrUpdateNoteDialog>(dialogHeader, parameters, dialogOptions);
@@ -103,7 +108,7 @@ namespace NTS.Client.Pages.DefaultUserPages
 
                 if (!result.Canceled)
                 {
-                    notes = await notesService.GetAllNotesAsync();
+                    await LoadNotesAsync();
                 }
             }
             catch (Exception error)
