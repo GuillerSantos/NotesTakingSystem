@@ -24,5 +24,19 @@ namespace NTS.Client.Services
                 Console.WriteLine($"Error Marking Note As Starred: {error.Message}");
             }
         }
+
+
+        public async Task<List<StarredNotes>> GetAllStarredNotesAsync()
+        {
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<StarredNotes>>("/api/StarredNotes/get-all-starrednotes") ?? new List<StarredNotes>();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Fetching All Starred Notes: {error.Message}");
+                return new List<StarredNotes>();
+            }
+        }
     }
 }
