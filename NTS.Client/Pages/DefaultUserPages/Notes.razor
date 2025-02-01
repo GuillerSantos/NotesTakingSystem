@@ -10,11 +10,11 @@
     </div>
 
     <div class="notes-container">
-        @if (isFetched && (notes.Any() || filteredNotes.Any()))
+        @if (isFetched && (allNotes.Any() || filteredNotes.Any()))
         {
             @foreach (var note in filteredNotes)
             {
-                <MudCard Class="mud-card" Style="@($"background-color: {note.Color}")" @onclick="() => OpenCreateOrUpdateNoteDialogAsync(note)" Elevation="20">
+                <MudCard Class="mud-card" Style="@($"background-color: {note.Color}")" @onclick="() => OpenCreateOrUpdateNoteDialogAsync(note)" Elevation="5">
                     <MudCardContent Class="mud-content">
                         <MudText Class="text-center" Typo="Typo.subtitle2">@note.CreatedAt</MudText>
                         <MudText Class="mud-title mb-5" Typo="Typo.h6">@note.Title</MudText>
