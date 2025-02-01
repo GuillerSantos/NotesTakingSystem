@@ -60,20 +60,20 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpDelete("unmark-favoritenote/{noteId}/{userId}"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> UnmarkNoteAsFavoriteNoteAsync(Guid noteId)
+        [HttpDelete("unmark-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
                 var userId = Guid.Parse(userIdClaim!.Value);
-                var unmarkAsFavoriteNote = await favoriteNoteService.UnmarkNoteAsFavoriteNoteAsync(noteId, userId);
+                var unmarkAsFavoriteNote = await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
                 if (!unmarkAsFavoriteNote)
                 {
                     return NotFound("Note Is Not Mark As Favorite");
                 }
 
-                return Ok("Note Unmarked As Favorite");
+                return Ok($"Note Unmarked As Favorite: {unmarkAsFavoriteNote}");
             }
             catch (Exception error)
             {
