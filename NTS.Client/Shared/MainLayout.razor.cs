@@ -1,10 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using MudBlazor;
 using NTS.Client.Models.DTOs;
 using NTS.Client.Services;
-using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
 
 namespace NTS.Client.Shared
