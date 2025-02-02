@@ -1,79 +1,125 @@
 ﻿html, body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100%;
+    line-height: 1.6;
 }
 
+:root {
+    --breakpoint-lg: 1220px;
+    --breakpoint-md: 992px;
+    --breakpoint-sm: 760px;
+    --breakpoint-xs: 480px;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+
+.note-card {
+    max-height: 200px;
+    border-radius: 20px !important;
+    background: #f5f5f5;
+    position: relative;
+    padding: 1.8rem;
+    border: 2px solid #c3c6ce;
+    transition: 0.5s ease-out;
+    overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+}
+
+.card-details {
+    color: black;
+    height: 100%;
+    gap: .5em;
+    display: grid;
+    place-content: center;
+}
+
+.card-button {
+    transform: translate(-50%, 125%);
+    width: 60%;
+    border-radius: 1rem;
+    border: none;
+    background-color: #008bf8;
+    color: #fff;
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transition: 0.3s ease-out;
+}
+
+
+.note-card:hover {
+    border-color: blue;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.note-card:hover .card-button {
+    transform: translate(-50%);
+    opacity: 1;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+
+    .note-bookmark-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05) translateY(-5px);
+    }
+
+.note-bookmark-card {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 1rem;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    border-radius: 20px !important;
+    min-height: 200px !important;
+    min-width: 200px !important;
+}
 
 /*---------------------------------------------------------------------------------------------------*/
 
 
-.mud-title {
-    font-weight: bold !important;
-}
-
-
-/*---------------------------------------------------------------------------------------------------*/
-
-
-.notes-container {
+.bookmark-container {
     display: grid;
     gap: 1rem;
     padding: 2rem;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 }
-
-    .notes-container .mud-content {
-        flex-direction: column;
-        border-radius: 20px !important;
-        max-width: 250px;
-        height: 160px;
-        cursor: pointer;
-        padding: 1rem;
-        word-wrap: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        justify-content: space-between;
-        transition: all 0.3s ease;
-    }
-
-    .notes-container .mud-card:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
-        transform: scale(1.05) translateY(-5px) rotate(2deg) !important;
-    }
-
 
 
 /*---------------------------------------------------------------------------------------------------*/
 
 
-
-
-/*---------------------------------------------------------------------------------------------------*/
-
-
-@media (max-width: 1220px) {
-    .notes-container {
-        grid-template-columns: repeat(4, 1fr);
+@media (max-width: var(--breakpoint-lg)) {
+    .bookmark-container {
+        grid-template-columns: repeat(3, 1fr)
     }
 }
 
-@media (max-width: 992px) {
-    .notes-container {
+@media (max-width: var(--breakpoint-md)) {
+    .bookmark-container {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 760px) {
-    .notes-container {
+@media (max-width: var(--breakpoint-sm)) {
+    .bookmark-container {
         grid-template-columns: repeat(2, 1fr);
         font-size: 1rem;
     }
 }
 
-@media (max-width: 480px) {
-    .notes-container {
+@media (max-width: var(--breakpoint-xs)) {
+    .bookmark-container {
         grid-template-columns: 1fr;
         font-size: 1rem;
     }
