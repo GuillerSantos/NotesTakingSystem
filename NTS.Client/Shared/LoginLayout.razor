@@ -1,12 +1,11 @@
 ﻿@using NTS.Client.Services
 @inherits LayoutComponentBase
 @inject ThemeService themeService
+
 <MudThemeProvider @bind-IsDarkMode="@themeService.isDarkMode" Theme="themeService.CustomTheme"/>
 <MudSnackbarProvider />
 <MudDialogProvider />
 <MudPopoverProvider />
-
-<PageTitle>NTS.Client</PageTitle>
 
 <MudContainer class="page">
     <MudAppBar>
