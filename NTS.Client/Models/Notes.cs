@@ -8,6 +8,8 @@ namespace NTS.Client.Models
         [Key]
         public Guid NoteId { get; set; }
 
+        public string? FullName { get; set; } = string.Empty;
+
         [ForeignKey("UserId")]
         public Guid UserId { get; set; }
 
