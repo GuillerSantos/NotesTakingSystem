@@ -23,9 +23,7 @@ namespace NTS.Server.Controllers
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
                 var userId = Guid.Parse(userIdClaim!.Value);
-
                 var markedNote = await sharedNotesService.MarkNoteAsSharedAsync(noteId, userId);
 
                 if (!markedNote)
@@ -36,6 +34,28 @@ namespace NTS.Server.Controllers
             catch (Exception error)
             { 
                 return BadRequest(error.Message);
+            }
+        }
+
+
+        [HttpGet("get-all-sharednotes"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> GetAllSharedNotesAsync()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                var sharedNotes = await sharedNotesService.GetAllSharedNotesAsync(userId);
+                if (sharedNotes == null)
+                {
+                    return NotFound("No Shared Notes Found");
+                }
+
+                return Ok(sharedNotes);
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Fetching All Shared Notes: {error.Message}");
             }
         }
     }
