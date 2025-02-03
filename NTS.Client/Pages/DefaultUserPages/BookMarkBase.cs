@@ -7,13 +7,14 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class BookMarkBase : ComponentBase
     {
-        [Inject] public IFavoriteNotesService favoriteNotesService { get; set; }
-        [Inject] public IImportantNotesService importantNotesService { get; set; }
-        [Inject] public IStarredNotesService starredNotesService { get; set; }
+        [Inject] public IFavoriteNotesService favoriteNotesService { get; set; } = default!;
+        [Inject] public IImportantNotesService importantNotesService { get; set; } = default!;
+        [Inject] public IStarredNotesService starredNotesService { get; set; } = default!;
 
-        public List<ImportantNotes> importantNotes { get; set; }
-        public List<FavoriteNotes> favoriteNotes { get; set; }
-        public List<StarredNotes> starredNotes { get; set; }
+        [Parameter] public List<ImportantNotes> importantNotes { get; set; } = new List<ImportantNotes>();
+        [Parameter] public List<FavoriteNotes> favoriteNotes { get; set; } = new List<FavoriteNotes>();
+        [Parameter] public List<StarredNotes> starredNotes { get; set; } = new List<StarredNotes>();
+       
         public NoteDto note { get; set; } = new NoteDto();
         public bool isFetched = false;
 
@@ -22,6 +23,7 @@ namespace NTS.Client.Pages.DefaultUserPages
             await LoadFavoriteNotesAsync();
             isFetched = true;
         }
+
 
         public async Task LoadFavoriteNotesAsync()
         {
