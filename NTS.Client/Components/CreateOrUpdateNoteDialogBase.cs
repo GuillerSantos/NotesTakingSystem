@@ -10,20 +10,20 @@ namespace NTS.Client.Components
 {
     public class CreateOrUpdateNoteDialogBase : ComponentBase
     {
-        [CascadingParameter] public MudDialogInstance mudDialog { get; set; }
-        [Parameter] public NotesBase notesBase { get; set; }
+        [CascadingParameter] public MudDialogInstance mudDialog { get; set; } = default!;
+        [Parameter] public NotesBase notesBase { get; set; } = default!;
         [Parameter] public NoteDto note { get; set; } = new NoteDto();
-        [Inject] public INotesService notesService { get; set; }
-        [Inject] public IFavoriteNotesService favoriteNotes { get; set; }
-        [Inject] public IImportantNotesService importantNotes { get; set; }
-        [Inject] public ISharedNotesService sharedNotes { get; set; }
-        [Inject] public IStarredNotesService starredNotes { get; set; }
-        [Inject] public IDialogService dialogService { get; set; }
-        [Inject] public ISnackbar snackbar { get; set; }
+        [Inject] public INotesService notesService { get; set; } = default!;
+        [Inject] public IFavoriteNotesService favoriteNotesService { get; set; } = default!;
+        [Inject] public IImportantNotesService importantNotesService { get; set; } = default!;
+        [Inject] public ISharedNotesService sharedNotesService { get; set; } = default!;
+        [Inject] public IStarredNotesService starredNotesService { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
+        [Inject] public ISnackbar snackbar { get; set; } = default!;
 
         public MudTextField<string>? multilineReference;
         public NoteDto currentNote { get; set; } = new NoteDto();
-
+        public FavoriteNotes favoriteNotes { get; set; } = new FavoriteNotes();
         public MudColor currentColor { get; set; } = new MudColor("#FFFFFF");
 
         protected override void OnParametersSet()
@@ -125,7 +125,12 @@ namespace NTS.Client.Components
         {
             try
             {
-                await favoriteNotes.MarkAsFavoriteNoteAsync(new FavoriteNotes(), note.NoteId);
+                if (favoriteNotesService == null)
+                {
+                    Console.WriteLine("FavoriteNotesService Is Null");
+                }
+
+                await favoriteNotesService!.MarkAsFavoriteNoteAsync(favoriteNotes, note.NoteId);
             }
             catch (Exception error)
             {
@@ -138,7 +143,7 @@ namespace NTS.Client.Components
         {
             try
             {
-                await importantNotes.MarkNoteAsImportantAsync(new ImportantNotes(), note.NoteId);
+                await importantNotesService.MarkNoteAsImportantAsync(new ImportantNotes(), note.NoteId);
             }
             catch (Exception error)
             {
@@ -150,7 +155,7 @@ namespace NTS.Client.Components
         {
             try
             {
-                await starredNotes.MarkNoteAsStarredAsync(new StarredNotes(), note.NoteId);
+                await starredNotesService.MarkNoteAsStarredAsync(new StarredNotes(), note.NoteId);
             }
             catch (Exception error)
             {
