@@ -24,5 +24,18 @@ namespace NTS.Client.Services
                 Console.WriteLine($"Error Marking Note As Shared: {error.Message}");
             }
         }
+
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
+        {
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<SharedNotes>>("api/SharedNotes/get-all-sharednotes") ?? new List<SharedNotes>(); ;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Fetching All Shared Notes {error.Message}");
+                return new List<SharedNotes>();
+            }
+        }
     }
 }
