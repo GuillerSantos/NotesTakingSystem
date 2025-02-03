@@ -1,0 +1,9 @@
+﻿@page "/home"
+@inherits HomeBase
+@attribute [Authorize(Roles = "DefaultUser")]
+
+<MudLayout>
+    <MudContainer>
+        <h6 class="font-bold text-3xl text-center pt-20 mt-20">Comment Section</h6>
+    </MudContainer>
+</MudLayout>
