@@ -7,6 +7,8 @@ using NTS.Server.Data;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using NTS.Server.Entities.DTOs;
+using Microsoft.AspNetCore.ResponseCompression;
+using NTS.Server.Middleware.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +91,15 @@ builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
 builder.Services.AddScoped<IStarredNotesService, StarredNoteesService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+builder.Services.AddSignalR();
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+    ["application/octet-stream"]);
+});
+
+
 
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
 
@@ -101,6 +112,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
 }
 
+
+app.UseResponseCompression();
+app.MapHub<CommentSignalRHub>("/");
 app.UseHttpsRedirection();
 app.UseCors("AllowBlazorApp");
 
