@@ -24,6 +24,7 @@ namespace NTS.Server.Services
                 var sharedNote = new SharedNotes
                 {
                     SharedNoteId = Guid.NewGuid(),
+                    FullName = note.FullName,
                     NoteId = noteId,
                     UserId = userId,
                     Title = note.Title,
@@ -60,6 +61,20 @@ namespace NTS.Server.Services
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note: {error.Message}");
+            }
+        }
+
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
+        {
+            try
+            {
+                return await dbContext.SharedNotes
+                    .Where(s => s.UserId == userId)
+                    .ToListAsync();
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Fetching All Shared Notes: {error.Message}");
             }
         }
     }
