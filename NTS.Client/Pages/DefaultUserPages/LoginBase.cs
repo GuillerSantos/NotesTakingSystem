@@ -50,7 +50,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                         return;
                     }
 
-                    navigationManager.NavigateTo("/userdashboard");
+                    navigationManager.NavigateTo("/home");
                 }
                 else
                 {
