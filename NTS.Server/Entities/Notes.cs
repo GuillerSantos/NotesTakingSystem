@@ -9,6 +9,8 @@ namespace NTS.Server.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid NoteId { get; set; }
 
+        public string? FullName { get; set; } = string.Empty;
+
         [Required]
         [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }

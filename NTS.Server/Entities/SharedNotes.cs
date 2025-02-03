@@ -10,6 +10,9 @@ namespace NTS.Server.Entities
         public Guid SharedNoteId { get; set; }
 
         [Required]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required]
         public string Title { get; set; } = string.Empty;
 
         [Required]
