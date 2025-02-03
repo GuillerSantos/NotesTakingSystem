@@ -5,8 +5,6 @@ using NTS.Client.Services.Contracts;
 using NTS.Client.Services;
 using YourApp.Client.Securities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.JSInterop;
-using MudBlazor.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +20,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ThemeService>();
 
+builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
