@@ -82,9 +82,16 @@ namespace NTS.Server.Services
         {
             try
             {
+                var user = await dbContext.ApplicationUsers.FindAsync(userId);
+                if (user == null)
+                {
+                    Console.WriteLine("User Not Found");
+                }
+
                 var newNote = new Notes
                 {
                     UserId = userId,
+                    FullName = user!.FullName,
                     Title = noteDetails.Title,
                     Content = noteDetails.Content,
                     Color = noteDetails.Color,
