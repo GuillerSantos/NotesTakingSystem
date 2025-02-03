@@ -12,6 +12,8 @@ namespace NTS.Client.Models.DTOs
         [StringLength(50)]
         public string Title { get; set; } = string.Empty;
 
+        public string? FullName { get; set; } = string.Empty;
+
         [Required]
         [StringLength(100)]
         public string Content { get; set; } = string.Empty;
