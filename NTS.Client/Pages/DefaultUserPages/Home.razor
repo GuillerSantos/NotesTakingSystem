@@ -2,8 +2,31 @@
 @inherits HomeBase
 @attribute [Authorize(Roles = "DefaultUser")]
 
-<MudLayout>
-    <MudContainer>
-        <h6 class="font-bold text-3xl text-center pt-20 mt-20">Comment Section</h6>
-    </MudContainer>
-</MudLayout>
+<MudContainer Class="mt-20">
+    <div>
+        <ul class="space-y-2">
+            @if (comments.Count > 0)
+            {
+                @foreach (var comment in comments)
+                {
+                    <li class="flex items-start space-x-3">
+                        <div>
+                            <MudText Typo="Typo.h6" Class="font-bold">@comment.FullName</MudText>
+                            <MudText Class="text-sm">@comment.CommentContent</MudText>
+                            <MudText Class="text-xs text-gray-500">@comment.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</MudText>
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li><MudText>No comments yet...</MudText></li>
+            }
+        </ul>
+
+        <MudContainer Class="mt-3">
+            <MudInput @bind-Value="@newCommentContent" Placeholder="Write a Comment....." FullWidth="true" Variant="Variant.Outlined" Class="bg-gray-100 rounded-lg" />
+            <MudButton OnClick="SendComment" Color="Color.Primary" Class="mt-2" FullWidth="true" Disabled="string.IsNullOrWhiteSpace(newCommentContent)">Send</MudButton>
+        </MudContainer>
+    </div>
+</MudContainer>
