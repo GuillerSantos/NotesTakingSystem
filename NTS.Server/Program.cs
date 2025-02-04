@@ -6,14 +6,16 @@ using System.Text;
 using NTS.Server.Data;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
-using NTS.Server.Entities.DTOs;
 using Microsoft.AspNetCore.ResponseCompression;
 using NTS.Server.Middleware.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using NTS.Server.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddResponseCompression();
 
 // DB Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -60,7 +62,8 @@ builder.Services.AddCors(policy =>
         policy
         .WithOrigins("https://localhost:5000", "http://localhost:5001")
         .AllowAnyHeader()
-        .AllowAnyMethod();
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
@@ -90,15 +93,9 @@ builder.Services.AddScoped<IImpotantNotesService, ImportantNotesService>();
 builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
 builder.Services.AddScoped<IStarredNotesService, StarredNoteesService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
 
 builder.Services.AddSignalR();
-
-builder.Services.AddResponseCompression(options =>
-{
-    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-    ["application/octet-stream"]);
-});
-
 
 
 builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
@@ -108,18 +105,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline in development
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerUI();
     app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NTS.Server V1"));
 }
 
-
 app.UseResponseCompression();
-app.MapHub<CommentSignalRHub>("/");
 app.UseHttpsRedirection();
 app.UseCors("AllowBlazorApp");
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<CommentHub>("/commenthub");
 
 app.MapControllers();
 
