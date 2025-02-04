@@ -13,6 +13,7 @@ namespace NTS.Server.Data
         public DbSet<ImportantNotes> ImportantNotes { get; set; }
         public DbSet<SharedNotes> SharedNotes { get; set; }
         public DbSet<StarredNotes> StarredNotes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +22,10 @@ namespace NTS.Server.Data
             // ApplicationUsers
             modelBuilder.Entity<ApplicationUsers>()
                 .HasKey(a => a.UserId);
+
+
+            modelBuilder.Entity<Comment>()
+                .HasKey(c => c.CommentId);
 
 
             // NotesBase
