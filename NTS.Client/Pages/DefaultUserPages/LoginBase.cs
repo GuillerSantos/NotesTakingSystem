@@ -2,22 +2,21 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using NTS.Client.Components;
-using NTS.Client.Models.DTOs;
+using NTS.Client.DTOs;
 using NTS.Client.Services.Contracts;
 using NTS.Client.Utilities;
-using System.Security.Claims;
 using YourApp.Client.Securities;
 
 namespace NTS.Client.Pages.DefaultUserPages
 {
     public class LoginBase : ComponentBase
     {
-        [Inject] public IAuthService authService { get; set; }
-        [Inject] public NavigationManager navigationManager { get; set; }
-        [Inject] public IDialogService dialogService { get; set; }
-        [Inject] public ISnackbar snackbar { get; set; }
-        [Inject] public ILocalStorageService localStorageService { get; set; }
-        [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject] public IAuthService authService { get; set; } = default!;
+        [Inject] public NavigationManager navigationManager { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
+        [Inject] public ISnackbar snackbar { get; set; } = default!;
+        [Inject] public ILocalStorageService localStorageService { get; set; } = default!;
+        [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
         public ResponseDto responseDto = new ResponseDto();
