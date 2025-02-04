@@ -10,6 +10,8 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public SharedNotes sharedNotes { get; set; } = default!;
 
+        // Testing
+
 
     }
 }
