@@ -25,11 +25,25 @@ namespace NTS.Client.Services
             }
         }
 
-        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
+
+        public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
             try
             {
-                return await httpClient.GetFromJsonAsync<List<SharedNotes>>("api/SharedNotes/get-all-sharednotes") ?? new List<SharedNotes>(); ;
+                var response = await httpClient.DeleteAsync($"/api/SharedNotes/unmark-sharednote/{noteId}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Unmarking Note: {error.Message}");
+            }
+        }
+
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
+        {
+            try
+            {
+                return await httpClient.GetFromJsonAsync<List<SharedNotes>>($"api/SharedNotes/get-all-sharednotes/{userId}") ?? new List<SharedNotes>(); ;
             }
             catch (Exception error)
             {
