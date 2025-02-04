@@ -6,10 +6,10 @@
         <div class="flex items-center mb-7">
             <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
             <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.PushPin"></MudIconButton>
-            <MudIconButton OnClick="MarkAsFavorite" Color="Color.Primary" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
-            <MudIconButton OnClick="MarkAsImportant" Color="Color.Secondary" Icon="@Icons.Material.Filled.LabelImportant"></MudIconButton>
-            <MudIconButton Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
+            <MudIconButton OnClick="MarkAsFavorite" Color="Color.Error" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
+            <MudIconButton OnClick="MarkAsImportant" Color="Color.Info" Icon="@Icons.Material.Filled.NotificationImportant"></MudIconButton>
             <MudIconButton OnClick="MarkAsStarred" Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
+            <MudIconButton OnClick="MarkAsShared" Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
             <MudColorPicker Class="mb-4 mr-5" @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.Palette" />
             <MudIconButton OnClick="RemoveNoteAsync" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
 
