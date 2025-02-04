@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using NTS.Client.DTOs;
 using NTS.Client.Models;
-using NTS.Client.Models.DTOs;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Pages.DefaultUserPages
@@ -66,7 +66,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         {
             try
             {
-                await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(note.NoteId, note.UserId);
+                await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(note.NoteId);
             }
             catch (Exception error)
             {
