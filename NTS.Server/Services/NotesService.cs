@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NTS.Server.Data;
+using NTS.Server.DTOs;
 using NTS.Server.Entities;
-using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Services

@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using NTS.Client.Models.DTOs;
+using NTS.Client.DTOs;
 using NTS.Client.Services;
 using YourApp.Client.Securities;
 

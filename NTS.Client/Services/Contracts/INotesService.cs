@@ -1,4 +1,4 @@
-﻿using NTS.Client.Models.DTOs;
+﻿using NTS.Client.DTOs;
 
 namespace NTS.Client.Services.Contracts
 {

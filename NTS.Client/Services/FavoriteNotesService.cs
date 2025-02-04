@@ -29,11 +29,11 @@ namespace NTS.Client.Services
         }
 
 
-        public async Task UnmarkNoteAsFavoriteNoteAsync(Guid noteId, Guid userId)
+        public async Task UnmarkNoteAsFavoriteNoteAsync(Guid noteId)
         {
             try
             {
-                var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-favoritenote/{noteId}/{userId}");
+                var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-favoritenote/{noteId}");
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception error)

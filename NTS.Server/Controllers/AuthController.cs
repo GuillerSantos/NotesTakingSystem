@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTS.Server.DTOs;
 using NTS.Server.Entities;
-using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
 using System.Security.Claims;
 

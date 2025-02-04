@@ -9,7 +9,7 @@ namespace NTS.Server.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid NoteId { get; set; }
 
-        public string? FullName { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [ForeignKey(nameof(User))]
@@ -28,7 +28,7 @@ namespace NTS.Server.Entities
         public string Color { get; set; } = string.Empty;
 
         [Required]
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ApplicationUsers? User { get; set; }
     }

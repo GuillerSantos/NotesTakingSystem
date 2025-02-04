@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NTS.Server.Data;
+using NTS.Server.DTOs;
 using NTS.Server.Entities;
-using NTS.Server.Entities.DTOs;
 using NTS.Server.Services.Contracts;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;

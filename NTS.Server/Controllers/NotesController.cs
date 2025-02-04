@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
-using NTS.Server.Entities.DTOs;
+using NTS.Server.DTOs;
 using NTS.Server.Services.Contracts;
 using System.Data.Common;
 using System.Security.Claims;

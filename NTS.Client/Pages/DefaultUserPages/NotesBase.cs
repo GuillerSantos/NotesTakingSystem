@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Razor;
 using MudBlazor;
 using NTS.Client.Components;
-using NTS.Client.Models.DTOs;
+using NTS.Client.DTOs;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Pages.DefaultUserPages

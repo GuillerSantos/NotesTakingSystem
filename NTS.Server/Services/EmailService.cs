@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NTS.Server.Data;
-using NTS.Server.Entities.DTOs;
+using NTS.Server.DTOs;
 using NTS.Server.Services.Contracts;
 using System.Net;
 using System.Net.Mail;
