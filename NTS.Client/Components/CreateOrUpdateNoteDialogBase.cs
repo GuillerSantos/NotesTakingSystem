@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazor.Utilities;
+using NTS.Client.DTOs;
 using NTS.Client.Models;
-using NTS.Client.Models.DTOs;
 using NTS.Client.Pages.DefaultUserPages;
 using NTS.Client.Services.Contracts;
 
@@ -151,6 +151,7 @@ namespace NTS.Client.Components
             }
         }
 
+
         public async Task MarkAsStarred()
         {
             try
@@ -162,6 +163,21 @@ namespace NTS.Client.Components
                 Console.WriteLine($"Error Marking Note As Starred: {error.Message}");
             }
         }
+
+
+        public async Task MarkAsShared()
+        {
+            try
+            {
+                await sharedNotesService.MarkNoteAsSharedAsync(new SharedNotes(), note.NoteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Marking Note As Shared: {error.Message}");
+            }
+        }
+
+
         public void Cancel()
         {
             mudDialog.Cancel();
