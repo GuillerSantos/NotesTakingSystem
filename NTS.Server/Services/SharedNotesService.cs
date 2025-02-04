@@ -40,29 +40,30 @@ namespace NTS.Server.Services
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Marking Note As Shared: {error.Message}");
+                throw new Exception($"Error Marking Note As Shared: {error.Message}", error);
             }
         }
+
 
         public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
             try
             {
                 var sharedNote = await dbContext.SharedNotes
-                    .Where(s => s.NoteId == noteId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(s => s.NoteId == noteId);
 
-                if (sharedNote.Any())
+                if (sharedNote != null)
                 {
-                    dbContext.SharedNotes.RemoveRange(sharedNote);
+                    dbContext.SharedNotes.Remove(sharedNote);
                     await dbContext.SaveChangesAsync();
                 }
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Removing Note: {error.Message}");
+                throw new Exception($"Error Removing Note: {error.Message}", error);
             }
         }
+
 
         public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
         {
@@ -74,7 +75,7 @@ namespace NTS.Server.Services
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Fetching All Shared Notes: {error.Message}");
+                throw new Exception($"Error Fetching All Shared Notes: {error.Message}", error);
             }
         }
     }
