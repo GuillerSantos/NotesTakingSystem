@@ -38,6 +38,23 @@ namespace NTS.Server.Controllers
         }
 
 
+        [HttpDelete("unmark-sharednote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        public async Task<IActionResult> UnmarkNoteAsSharedAsyn(Guid noteId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                await sharedNotesService.UnmarkNoteAsSharedAsync(noteId);
+                return Ok("Note Unmarked As Shared");
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Unmarking Note As Shared {error.Message}");
+            }
+        }
+
+
         [HttpGet("get-all-sharednotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllSharedNotesAsync()
         {
