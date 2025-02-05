@@ -9,19 +9,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<INotesService, NotesService>();
-builder.Services.AddScoped<IFavoriteNotesService, FavoriteNotesService>();
-builder.Services.AddScoped<IImportantNotesService, ImportantNotesService>();
-builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
-builder.Services.AddScoped<IStarredNotesService, StarredNotesService>();
-builder.Services.AddScoped<ICommentsService, CommentsService>();
-builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<CommentSignalRService>();
-builder.Services.AddScoped<ThemeService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
@@ -36,11 +23,26 @@ builder.Services.AddMudServices();
 
 builder.Services.AddHttpClient();
 
+
 builder.Services.AddSingleton<HubConnection>(sp =>
 new HubConnectionBuilder()
-    .WithUrl("https://localhost:7172/commentsignalrhub")
+    .WithUrl("https://localhost:7172/commenthub")
     .WithAutomaticReconnect()
     .Build());
+
+// Add services to the container.
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotesService, NotesService>();
+builder.Services.AddScoped<IFavoriteNotesService, FavoriteNotesService>();
+builder.Services.AddScoped<IImportantNotesService, ImportantNotesService>();
+builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
+builder.Services.AddScoped<IStarredNotesService, StarredNotesService>();
+builder.Services.AddScoped<ICommentSignalRService, CommentSignalRService>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ThemeService>();
 
 var app = builder.Build();
 
