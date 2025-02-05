@@ -39,7 +39,7 @@ namespace NTS.Server.Controllers
 
 
         [HttpDelete("unmark-sharednote/{noteId}"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> UnmarkNoteAsSharedAsyn(Guid noteId)
+        public async Task<IActionResult> UnmarkNoteAsSharedAsync(Guid noteId)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception error)
             {
-                return BadRequest($"Error Unmarking Note As Shared {error.Message}");
+                return BadRequest($"Error Unmarking Note As Shared: {error.Message}");
             }
         }
 
