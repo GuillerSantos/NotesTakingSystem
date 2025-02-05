@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NTS.Server.Data;
+using NTS.Server.DTOs;
 using NTS.Server.Entities;
 using NTS.Server.Services.Contracts;
 
@@ -14,6 +15,7 @@ namespace NTS.Server.Services
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId)
         {
             try
@@ -23,7 +25,6 @@ namespace NTS.Server.Services
 
                 var sharedNote = new SharedNotes
                 {
-                    SharedNoteId = Guid.NewGuid(),
                     FullName = note.FullName,
                     NoteId = noteId,
                     UserId = userId,
@@ -40,7 +41,7 @@ namespace NTS.Server.Services
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Marking Note As Shared: {error.Message}", error);
+                throw new Exception($"Error Marking Note {noteId} As Shared: {error.Message}", error);
             }
         }
 
@@ -49,18 +50,19 @@ namespace NTS.Server.Services
         {
             try
             {
-                var sharedNote = await dbContext.SharedNotes
-                    .FirstOrDefaultAsync(s => s.NoteId == noteId);
+                var sharedNotes = await dbContext.SharedNotes
+                    .Where(s => s.NoteId == noteId)
+                    .ToListAsync();
 
-                if (sharedNote != null)
+                if (sharedNotes.Any())
                 {
-                    dbContext.SharedNotes.Remove(sharedNote);
+                    dbContext.SharedNotes.RemoveRange(sharedNotes);
                     await dbContext.SaveChangesAsync();
                 }
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Removing Note: {error.Message}", error);
+                throw new Exception($"Error Removing Note {noteId} from Shared: {error.Message}", error);
             }
         }
 
@@ -71,11 +73,39 @@ namespace NTS.Server.Services
             {
                 return await dbContext.SharedNotes
                     .Where(s => s.UserId == userId)
+                    .Include(s => s.Note)
+                    .Include(s => s.User)
                     .ToListAsync();
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Fetching All Shared Notes: {error.Message}", error);
+                throw new Exception($"Error Fetching All Shared Notes for User {userId}: {error.Message}", error);
+            }
+        }
+
+
+        public async Task<SharedNotes?> UpdateSharedNoteAsync(Guid noteId, Guid userId, SharedNoteUpdateDto request)
+        {
+            try
+            {
+                var sharedNote = await dbContext.SharedNotes
+                    .FirstOrDefaultAsync(s => s.NoteId == noteId && s.UserId == userId);
+
+                if (sharedNote == null)
+                    return null;
+
+                sharedNote.Title = request.Title;
+                sharedNote.Content = request.Content;
+                sharedNote.Color = request.Color;
+
+                dbContext.SharedNotes.Update(sharedNote);
+                await dbContext.SaveChangesAsync();
+
+                return sharedNote;
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Updating Shared Note {noteId}: {error.Message}", error);
             }
         }
     }
