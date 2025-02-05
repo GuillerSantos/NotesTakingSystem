@@ -4,6 +4,9 @@ namespace NTS.Client.Services.Contracts
 {
     public interface ICommentsService
     {
+        Task StartAsync();
+        Task SendCommentAsync(Guid noteId, Guid userId, string title, string fullName, DateTime createdAt, string content);
         Task<List<Comment>> GetCommentsForNoteAsync(Guid noteId);
+        event Action<Guid, Guid, string, string, string, DateTime> OnCommentReceived;
     }
 }
