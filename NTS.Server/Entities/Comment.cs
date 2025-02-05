@@ -12,7 +12,7 @@ namespace NTS.Server.Entities
         public string Title { get; set; } = string.Empty;
 
         [StringLength(300)]
-        public string CommentContent { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         [StringLength(50), Required]
         public string FullName { get; set; } = string.Empty;

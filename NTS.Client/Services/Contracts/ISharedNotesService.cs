@@ -4,8 +4,10 @@ namespace NTS.Client.Services.Contracts
 {
     public interface ISharedNotesService
     {
-        Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId);
-        Task UnmarkNoteAsSharedAsync(Guid noteId);
-        Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId);
+        Task<List<SharedNotes>> GetAllSharedNotesAsync();
+        Task<SharedNotes> GetSharedNoteByIdAsync(Guid noteId);
+        Task MarkNoteAsSharedAsync(Guid noteId);     
+        Task UpdateSharedNoteAsync(SharedNotes updatedNote);
+        Task DeleteSharedNoteAsync(Guid noteId);
     }
 }

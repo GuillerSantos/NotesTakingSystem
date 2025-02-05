@@ -169,7 +169,7 @@ namespace NTS.Client.Components
         {
             try
             {
-                await sharedNotesService.MarkNoteAsSharedAsync(new SharedNotes(), note.NoteId);
+                await sharedNotesService.MarkNoteAsSharedAsync(note.NoteId);
             }
             catch (Exception error)
             {
