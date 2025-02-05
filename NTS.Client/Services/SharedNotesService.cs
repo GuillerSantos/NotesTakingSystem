@@ -9,47 +9,41 @@ namespace NTS.Client.Services
 
         public SharedNotesService(HttpClient httpClient)
         {
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.httpClient = httpClient;
         }
 
-        public async Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId)
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync($"/api/SharedNotes/mark-shared/{noteId}", request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Marking Note As Shared: {error.Message}");
-            }
+            var response = await httpClient.GetAsync("/api/SharedNotes/get-all-sharednotes");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<SharedNotes>>();
+        }
+
+        public async Task<SharedNotes> GetSharedNoteByIdAsync(Guid noteId)
+        {
+            var response = await httpClient.GetAsync($"api/SharedNotes/{noteId}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<SharedNotes>();
+        }
+
+        public async Task MarkNoteAsSharedAsync(Guid noteId)
+        {
+            var response = await httpClient.PostAsJsonAsync($"api/SharedNotes/mark-shared/{noteId}", noteId);
+            response.EnsureSuccessStatusCode();
         }
 
 
-        public async Task UnmarkNoteAsSharedAsync(Guid noteId)
+        public async Task UpdateSharedNoteAsync(SharedNotes updatedNote)
         {
-            try
-            {
-                var response = await httpClient.DeleteAsync($"/api/SharedNotes/unmark-sharednote/{noteId}");
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Unmarking Note: {error.Message}");
-            }
+            var response = await httpClient.PutAsJsonAsync($"api/SharedNotes/{updatedNote.NoteId}", updatedNote);
+            response.EnsureSuccessStatusCode();
         }
 
-        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
+        public async Task DeleteSharedNoteAsync(Guid noteId)
         {
-            try
-            {
-                return await httpClient.GetFromJsonAsync<List<SharedNotes>>($"api/SharedNotes/get-all-sharednotes/{userId}") ?? new List<SharedNotes>(); ;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Fetching All Shared Notes {error.Message}");
-                return new List<SharedNotes>();
-            }
+            var response = await httpClient.DeleteAsync($"api/notSharedNotes/{noteId}");
+            response.EnsureSuccessStatusCode();
         }
     }
+
 }
