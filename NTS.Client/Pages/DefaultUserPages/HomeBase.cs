@@ -1,23 +1,29 @@
 ﻿using Microsoft.AspNetCore.Components;
+using NTS.Client.DTOs;
 using NTS.Client.Models;
 using NTS.Client.Services;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NTS.Client.Pages.DefaultUserPages
 {
-    public class HomeBase : ComponentBase
+    public class HomeBase : ComponentBase, IAsyncDisposable
     {
         [Inject] private ISharedNotesService sharedNotesService { get; set; } = default!;
-        [Inject] private CommentSignalRService commentSignalRService { get; set; } = default!;
+        [Inject] private ICommentSignalRService commentSignalRService { get; set; } = default!;
         [Inject] private ICommentsService commentsService { get; set; } = default!;
         [Inject] private CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-        public List<SharedNotes> sharedNotesList = new List<SharedNotes>();
-        public List<Comment> comments { get; set; } = new List<Comment>();
+        public List<SharedNotes> filteredNotes = new List<SharedNotes>();
+        public List<SharedNotes> sharedNotesList = new();
+        public Dictionary<Guid, List<Comment>> noteComments = new();
         public SharedNotes sharedNotes = new SharedNotes();
         public string newCommentContent { get; set; } = string.Empty;
         public Guid userId { get; set; }
+        public bool isFetched = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,60 +33,93 @@ namespace NTS.Client.Pages.DefaultUserPages
             if (user.Identity!.IsAuthenticated)
             {
                 var userIdClaim = user.FindFirst(c => c.Type == "sub")?.Value;
-
-                if (Guid.TryParse(userIdClaim, out Guid parsedUserId))
-                {
-                    userId = parsedUserId;
-                }
-                else
-                {
-                    userId = Guid.Empty;
-                }
+                userId = Guid.TryParse(userIdClaim, out Guid parsedUserId) ? parsedUserId : Guid.Empty;
             }
 
-            sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync(userId);
-
+            sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync();
             await commentSignalRService.StartAsync();
             commentSignalRService.OnCommentReceived += OnCommentReceived;
         }
 
-        public async Task LoadComments(Guid noteId)
+        public async Task LoadNotesAsync()
         {
-            comments = await commentsService.GetCommentsForNoteAsync(noteId);
+            try
+            {
+                sharedNotesList = (await sharedNotesService.GetAllSharedNotesAsync())?.ToList() ?? new List<SharedNotes>();
+                filteredNotes = sharedNotesList.ToList();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Fetching All Notes: {error.Message}");
+            }
+
+            isFetched = true;
+            StateHasChanged();
         }
 
-
-        public void OnCommentReceived(Guid noteId, Guid userId, string title, string fullName, string commentContent, DateTime createdAt)
+        public async Task SendComment(Guid noteId)
         {
-            comments.Add(new Comment
+            if (!string.IsNullOrWhiteSpace(newCommentContent))
+            {
+                var note = sharedNotesList.FirstOrDefault(n => n.NoteId == noteId);
+                if (note != null)
+                {
+                    await commentSignalRService.SendCommentAsync(
+                        noteId,
+                        userId,
+                        note.Title,
+                        note.FullName,
+                        DateTime.Now,
+                        newCommentContent
+                    );
+
+                    newCommentContent = string.Empty;
+                    await LoadComments(noteId);
+                }
+            }
+        }
+
+        public async Task LoadComments(Guid noteId)
+        {
+            try
+            {
+                var comments = await commentsService.GetCommentsForNoteAsync(noteId);
+
+                if (comments != null)
+                {
+                    noteComments[noteId] = comments.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error Loading Comments: {ex.Message}");
+            }
+        }
+
+        public void OnCommentReceived(Guid noteId, Guid userId, string title, string fullName, string content, DateTime createdAt)
+        {
+            if (!noteComments.ContainsKey(noteId))
+            {
+                noteComments[noteId] = new List<Comment>();
+            }
+
+            noteComments[noteId].Add(new Comment
             {
                 NoteId = noteId,
                 UserId = userId,
                 Title = title,
                 FullName = fullName,
-                CommentContent = commentContent,
-                CreatedAt = DateTime.Now
+                Content = content,
+                CreatedAt = createdAt
             });
 
             StateHasChanged();
         }
 
-
-        public async Task SendComment()
+        public async ValueTask DisposeAsync()
         {
-            if (!string.IsNullOrEmpty(newCommentContent))
-            {
-                await commentSignalRService.SendCommentAsync(
-                    sharedNotes.NoteId,
-                    sharedNotes.UserId,
-                    sharedNotes.Title,
-                    sharedNotes.FullName,
-                    sharedNotes.CreatedAt,
-                    newCommentContent
-                    );
-
-                newCommentContent = string.Empty;
-            }
+            commentSignalRService.OnCommentReceived -= OnCommentReceived;
+            await commentSignalRService.StopAsync();
         }
     }
 }
