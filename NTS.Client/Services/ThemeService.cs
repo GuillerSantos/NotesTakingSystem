@@ -47,7 +47,7 @@ namespace NTS.Client.Services
 
             PaletteDark = new PaletteDark()
             {
-                Primary = Colors.Green.Darken1
+                Primary = Colors.LightBlue.Darken3
             }
         };
     }
