@@ -28,6 +28,26 @@ namespace NTS.Server.Data
                 .HasKey(c => c.CommentId);
 
 
+            // Comments
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasOne<SharedNotes>()
+                      .WithMany()
+                      .HasForeignKey(c => c.SharedNoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne<Notes>()
+                      .WithMany()
+                      .HasForeignKey(c => c.NoteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne<ApplicationUsers>()
+                      .WithMany()
+                      .HasForeignKey(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
             // NotesBase
             modelBuilder.Entity<Notes>(entity =>
             {
@@ -86,7 +106,7 @@ namespace NTS.Server.Data
             });
 
 
-            // StarredNotes (Separate From SharedNotes Configuration)
+            // StarredNotes
             modelBuilder.Entity<StarredNotes>(entity =>
             {
                 entity.HasOne(e => e.Note)
