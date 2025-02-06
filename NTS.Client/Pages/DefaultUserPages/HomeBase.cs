@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using NTS.Client.DTOs;
 using NTS.Client.Models;
-using NTS.Client.Services;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NTS.Client.Pages.DefaultUserPages
 {
@@ -22,6 +17,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         public Dictionary<Guid, List<Comment>> noteComments = new();
         public SharedNotes sharedNotes = new SharedNotes();
         public string newCommentContent { get; set; } = string.Empty;
+        public HashSet<Guid> visibleComments = new HashSet<Guid>();
         public Guid userId { get; set; }
         public bool isFetched = false;
 
@@ -36,16 +32,18 @@ namespace NTS.Client.Pages.DefaultUserPages
                 userId = Guid.TryParse(userIdClaim, out Guid parsedUserId) ? parsedUserId : Guid.Empty;
             }
 
-            sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync();
+            await base.OnInitializedAsync();
+            await LoadSharedNotesAsync();
             await commentSignalRService.StartAsync();
             commentSignalRService.OnCommentReceived += OnCommentReceived;
         }
 
-        public async Task LoadNotesAsync()
+
+        public async Task LoadSharedNotesAsync()
         {
             try
             {
-                sharedNotesList = (await sharedNotesService.GetAllSharedNotesAsync())?.ToList() ?? new List<SharedNotes>();
+                sharedNotesList = (await sharedNotesService.GetAllSharedNotesAsync(sharedNotes.NoteId))?.ToList() ?? new List<SharedNotes>();
                 filteredNotes = sharedNotesList.ToList();
             }
             catch (Exception error)
@@ -56,6 +54,7 @@ namespace NTS.Client.Pages.DefaultUserPages
             isFetched = true;
             StateHasChanged();
         }
+
 
         public async Task SendComment(Guid noteId)
         {
@@ -79,6 +78,7 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
+
         public async Task LoadComments(Guid noteId)
         {
             try
@@ -95,6 +95,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 Console.WriteLine($"Error Loading Comments: {ex.Message}");
             }
         }
+
 
         public void OnCommentReceived(Guid noteId, Guid userId, string title, string fullName, string content, DateTime createdAt)
         {
@@ -115,6 +116,21 @@ namespace NTS.Client.Pages.DefaultUserPages
 
             StateHasChanged();
         }
+
+
+        public void ToggleCommentsVisibility(Guid noteId)
+        {
+            if (visibleComments.Contains(noteId))
+            {
+                visibleComments.Remove(noteId);
+            }
+            else
+            {
+                visibleComments.Add(noteId);
+                _ = LoadComments(noteId);
+            }
+        }
+
 
         public async ValueTask DisposeAsync()
         {
