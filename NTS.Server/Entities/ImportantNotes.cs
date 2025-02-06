@@ -10,6 +10,14 @@ namespace NTS.Server.Entities
         public Guid ImportantNoteId { get; set; }
 
         [Required]
+        [ForeignKey(nameof(Note))]
+        public Guid NoteId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(ApplicationUser))]
+        public Guid UserId { get; set; }
+
+        [Required]
         public string FullName { get; set; } = string.Empty;
 
         [Required]
@@ -17,14 +25,6 @@ namespace NTS.Server.Entities
 
         [Required]
         public string Content { get; set; } = string.Empty;
-
-        [Required]
-        [ForeignKey(nameof(Note))]
-        public Guid NoteId { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(ApplicationUser))]
-        public Guid UserId { get; set; }
 
         [Required]
         public DateTime CreatedAt { get; set; }
