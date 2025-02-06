@@ -11,15 +11,15 @@ namespace NTS.Server.Services
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IFavoriteNoteService favoriteNoteService;
-        private readonly IImpotantNotesService impotantNotesService;
+        private readonly IImpotantNotesService importantNotesService;
         private readonly ISharedNotesService sharedNotesService;
         private readonly IStarredNotesService starredNotesService;
 
-        public NotesService(ApplicationDbContext dbContext, IFavoriteNoteService favoriteNoteService, IImpotantNotesService impotantNotesService, ISharedNotesService sharedNotesService, IStarredNotesService starredNotesService)
+        public NotesService(ApplicationDbContext dbContext, IFavoriteNoteService favoriteNoteService, IImpotantNotesService importantNotesService, ISharedNotesService sharedNotesService, IStarredNotesService starredNotesService)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
-            this.impotantNotesService = impotantNotesService ?? throw new ArgumentNullException(nameof(impotantNotesService)) ;
+            this.importantNotesService = importantNotesService ?? throw new ArgumentNullException(nameof(importantNotesService)) ;
             this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService)) ;
             this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
@@ -113,21 +113,38 @@ namespace NTS.Server.Services
         {
             try
             {
-                var existingNote = await dbContext.Notes.FindAsync(noteId);
-                if (existingNote == null || existingNote.UserId != userId) return null!;
+                var existingNote = await dbContext.Notes
+                    .Where(n => n.NoteId == noteId && n.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                if (existingNote == null)
+                    return null!;
 
                 existingNote.Title = updatedNoteDetails.Title;
                 existingNote.Content = updatedNoteDetails.Content;
                 existingNote.Color = updatedNoteDetails.Color;
 
                 dbContext.Notes.Update(existingNote);
+
+                await UpdateRelatedNotesTablesAsync(existingNote);
+
                 await dbContext.SaveChangesAsync();
+
                 return existingNote;
             }
             catch (Exception error)
             {
                 throw new Exception($"Error Editing Note: {error.Message}");
             }
+        }
+
+
+        private async Task UpdateRelatedNotesTablesAsync(Notes updatedNote)
+        {
+            await favoriteNoteService.UpdateFavoriteNotesAsync(updatedNote);
+            await sharedNotesService.UpdateSharedNotesAsync(updatedNote);
+            await importantNotesService.UpdateImportantNotesAsync(updatedNote);
+            await starredNotesService.UpdateStarredNotesAsync(updatedNote);
         }
 
 
@@ -140,7 +157,7 @@ namespace NTS.Server.Services
                     return false;
 
                 await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
-                await impotantNotesService.UnmarkNoteAsImportantAsync(noteId);
+                await importantNotesService.UnmarkNoteAsImportantAsync(noteId);
                 await sharedNotesService.UnmarkNoteAsSharedAsync(noteId);
                 await starredNotesService.UnmarkNoteAsStarredAsync(noteId);
 
