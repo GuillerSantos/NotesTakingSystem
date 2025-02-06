@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTS.Server.Entities;
 using NTS.Server.Services.Contracts;
+using System;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace NTS.Server.Controllers
 {
-
     [ApiController]
-   [Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class SharedNotesController : ControllerBase
     {
         private readonly ISharedNotesService sharedNotesService;
@@ -16,6 +19,7 @@ namespace NTS.Server.Controllers
         {
             this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService));
         }
+
 
         [HttpPost("mark-shared/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsSharedAsync(Guid noteId)
@@ -32,7 +36,7 @@ namespace NTS.Server.Controllers
                 return Ok($"Note Marked As Favorite {markedNote}");
             }
             catch (Exception error)
-            { 
+            {
                 return BadRequest(error.Message);
             }
         }
@@ -44,7 +48,8 @@ namespace NTS.Server.Controllers
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
+                if (userIdClaim == null) return Unauthorized(new { Message = "User Not Authorized." });
+
                 await sharedNotesService.UnmarkNoteAsSharedAsync(noteId);
                 return Ok("Note Unmarked As Shared");
             }
@@ -55,24 +60,28 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpGet("get-all-sharednotes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-all-shared-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllSharedNotesAsync()
         {
             try
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
+                if (userIdClaim == null) return Unauthorized(new { Message = "User Not Authorized." });
+
+                var userId = Guid.Parse(userIdClaim.Value);
+
                 var sharedNotes = await sharedNotesService.GetAllSharedNotesAsync(userId);
-                if (sharedNotes == null)
+
+                if (sharedNotes == null || !sharedNotes.Any())
                 {
-                    return NotFound("No Shared Notes Found");
+                    return NotFound(new { Message = "No Shared Notes Found." });
                 }
 
                 return Ok(sharedNotes);
             }
             catch (Exception error)
             {
-                return BadRequest($"Error Fetching All Shared Notes: {error.Message}");
+                return BadRequest(new { Message = $"Error Fetching All Shared Notes: {error.Message}" });
             }
         }
     }
