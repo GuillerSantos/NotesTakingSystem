@@ -46,26 +46,20 @@ namespace NTS.Server.Services
         }
 
 
+
         public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
             try
             {
                 var sharedNotes = await dbContext.SharedNotes
                     .Where(s => s.NoteId == noteId)
-                    .ToListAsync();
-
-                if (sharedNotes.Any())
-                {
-                    dbContext.SharedNotes.RemoveRange(sharedNotes);
-                    await dbContext.SaveChangesAsync();
-                }
+                    .ExecuteDeleteAsync();
             }
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note {noteId} from Shared: {error.Message}", error);
             }
         }
-
 
         public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
         {
@@ -74,7 +68,6 @@ namespace NTS.Server.Services
                 return await dbContext.SharedNotes
                     .Where(s => s.UserId == userId)
                     .Include(s => s.Note)
-                    .Include(s => s.User)
                     .ToListAsync();
             }
             catch (Exception error)
@@ -83,29 +76,27 @@ namespace NTS.Server.Services
             }
         }
 
-
-        public async Task<SharedNotes?> UpdateSharedNoteAsync(Guid noteId, Guid userId, SharedNoteUpdateDto request)
+        public async Task UpdateSharedNotesAsync(Notes updatedNote)
         {
             try
             {
-                var sharedNote = await dbContext.SharedNotes
-                    .FirstOrDefaultAsync(s => s.NoteId == noteId && s.UserId == userId);
+                var sharedNotes = await dbContext.SharedNotes
+                    .Where(s => s.NoteId == updatedNote.NoteId)
+                    .ToListAsync();
 
-                if (sharedNote == null)
-                    return null;
+                foreach (var sharedNote in sharedNotes)
+                {
+                    sharedNote.Title = updatedNote.Title;
+                    sharedNote.Content = updatedNote.Content;
+                    sharedNote.Color = updatedNote.Color;
+                }
 
-                sharedNote.Title = request.Title;
-                sharedNote.Content = request.Content;
-                sharedNote.Color = request.Color;
-
-                dbContext.SharedNotes.Update(sharedNote);
+                dbContext.SharedNotes.UpdateRange(sharedNotes);
                 await dbContext.SaveChangesAsync();
-
-                return sharedNote;
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Updating Shared Note {noteId}: {error.Message}", error);
+                throw new Exception($"Error Updating Shared Notes: {error.Message}");
             }
         }
     }
