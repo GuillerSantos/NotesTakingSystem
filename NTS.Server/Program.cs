@@ -6,9 +6,7 @@ using System.Text;
 using NTS.Server.Data;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
-using Microsoft.AspNetCore.ResponseCompression;
 using NTS.Server.Middleware.Hubs;
-using Microsoft.AspNetCore.SignalR;
 using NTS.Server.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,10 +15,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddResponseCompression();
 
+// Dependency Injection for services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotesService, NotesService>();
+builder.Services.AddScoped<IFavoriteNoteService, FavoriteNoteService>();
+builder.Services.AddScoped<IImpotantNotesService, ImportantNotesService>();
+builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
+builder.Services.AddScoped<IStarredNotesService, StarredNotesService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
+
+builder.Services.AddSignalR();
+
 // DB Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
 
 // learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 // Configure Swagger/OpenAPI with JWT Bearer Authentication
@@ -85,21 +96,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-// Dependency Injection for services
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<INotesService, NotesService>();
-builder.Services.AddScoped<IFavoriteNoteService, FavoriteNoteService>();
-builder.Services.AddScoped<IImpotantNotesService, ImportantNotesService>();
-builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
-builder.Services.AddScoped<IStarredNotesService, StarredNoteesService>();
-builder.Services.AddTransient<IEmailService, EmailService>();
-builder.Services.AddScoped<ICommentsService, CommentsService>();
-
-builder.Services.AddSignalR();
-
-
-builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("EmailSettings"));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline in development
@@ -119,7 +115,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<CommentHub>("/commenthub");
-
-app.MapControllers();
 
 app.Run();
