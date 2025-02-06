@@ -1,5 +1,6 @@
 ﻿using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
+using System.Net.Http;
 
 namespace NTS.Client.Services
 {
@@ -12,38 +13,68 @@ namespace NTS.Client.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
+        public async Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId)
         {
-            var response = await httpClient.GetAsync("/api/SharedNotes/get-all-sharednotes");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<SharedNotes>>();
-        }
+            try
+            {
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync($"/api/SharedNotes/mark-shared/{noteId}", request);
+                response.EnsureSuccessStatusCode();
 
-        public async Task<SharedNotes> GetSharedNoteByIdAsync(Guid noteId)
-        {
-            var response = await httpClient.GetAsync($"api/SharedNotes/{noteId}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<SharedNotes>();
-        }
-
-        public async Task MarkNoteAsSharedAsync(Guid noteId)
-        {
-            var response = await httpClient.PostAsJsonAsync($"api/SharedNotes/mark-shared/{noteId}", noteId);
-            response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException httpEx)
+            {
+                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+            }
         }
 
 
-        public async Task UpdateSharedNoteAsync(SharedNotes updatedNote)
+        public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
-            var response = await httpClient.PutAsJsonAsync($"api/SharedNotes/{updatedNote.NoteId}", updatedNote);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                HttpResponseMessage response = await httpClient.DeleteAsync($"api/SharedNotes/unmark-sharednote/{noteId}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorMessage = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error unsharing note: {errorMessage}");
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected Error: {ex.Message}");
+            }
         }
 
-        public async Task DeleteSharedNoteAsync(Guid noteId)
+
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
         {
-            var response = await httpClient.DeleteAsync($"api/notSharedNotes/{noteId}");
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var response = await httpClient.GetFromJsonAsync<List<SharedNotes>>($"api/SharedNotes/get-all-shared-notes");
+
+                if (response == null)
+                {
+                    Console.WriteLine("No shared notes found.");
+                    return new List<SharedNotes>();
+                }
+
+                return response;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+                return new List<SharedNotes>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected Error: {ex.Message}");
+                return new List<SharedNotes>();
+            }
         }
     }
-
 }
