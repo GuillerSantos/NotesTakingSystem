@@ -7,19 +7,27 @@ namespace NTS.Server.Services
 {
     public class CommentsService : ICommentsService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext dbContext;
 
         public CommentsService(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            this.dbContext = dbContext;
         }
+
+
+        public async Task SaveCommentAsync(Comment comment)
+        {
+            dbContext.Comments.Add(comment);
+            await dbContext.SaveChangesAsync();
+        }
+
 
         public async Task<List<Comment>> GetCommentsForNoteAsync(Guid noteId)
         {
-            return await _dbContext.Comments
-                                    .Where(c => c.NoteId == noteId)
-                                    .OrderBy(c => c.CreateAt)
-                                    .ToListAsync();
+            return await dbContext.Comments
+               .Where(c => c.NoteId == noteId)
+               .OrderBy(c => c.CreatedAt)
+               .ToListAsync();
         }
     }
 }
