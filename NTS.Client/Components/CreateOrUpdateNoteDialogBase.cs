@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
 using MudBlazor;
 using MudBlazor.Utilities;
 using NTS.Client.DTOs;
 using NTS.Client.Models;
 using NTS.Client.Pages.DefaultUserPages;
 using NTS.Client.Services.Contracts;
+using System.Security.Claims;
 
 namespace NTS.Client.Components
 {
     public class CreateOrUpdateNoteDialogBase : ComponentBase
     {
-        [CascadingParameter] public MudDialogInstance mudDialog { get; set; } = default!;
-        [Parameter] public NotesBase notesBase { get; set; } = default!;
-        [Parameter] public NoteDto note { get; set; } = new NoteDto();
         [Inject] public INotesService notesService { get; set; } = default!;
         [Inject] public IFavoriteNotesService favoriteNotesService { get; set; } = default!;
         [Inject] public IImportantNotesService importantNotesService { get; set; } = default!;
@@ -21,10 +20,21 @@ namespace NTS.Client.Components
         [Inject] public IDialogService dialogService { get; set; } = default!;
         [Inject] public ISnackbar snackbar { get; set; } = default!;
 
+
+        [CascadingParameter] public MudDialogInstance mudDialog { get; set; } = default!;
         public MudTextField<string>? multilineReference;
         public NoteDto currentNote { get; set; } = new NoteDto();
-        public FavoriteNotes favoriteNotes { get; set; } = new FavoriteNotes();
         public MudColor currentColor { get; set; } = new MudColor("#FFFFFF");
+
+
+        [Parameter] public NotesBase notesBase { get; set; } = default!;
+        [Parameter] public NoteDto note { get; set; } = new NoteDto();
+
+        public FavoriteNotes favoriteNotes { get; set; } = new FavoriteNotes();
+        public ImportantNotes importantNotes { get; set; } = new ImportantNotes();
+        public SharedNotes sharedNotes { get; set; } = new SharedNotes();
+        public StarredNotes starredNotes { get; set; } = new StarredNotes();
+
 
         protected override void OnParametersSet()
         {
@@ -39,7 +49,7 @@ namespace NTS.Client.Components
             }
         }
 
-        
+
         public async Task CreateNoteAsync()
         {
             if (string.IsNullOrWhiteSpace(currentNote.Title) || string.IsNullOrWhiteSpace(currentNote.Content))
@@ -50,21 +60,17 @@ namespace NTS.Client.Components
 
             try
             {
-                if (notesService is null)
-                {
-                    Console.WriteLine("NotesService Is Null");
-                    return;
-                }
-
                 currentNote.Color = currentColor.ToString();
 
                 if (note != null && note.NoteId != Guid.Empty)
                 {
                     await notesService.UpdateNoteAsync(currentNote, note.NoteId);
+                    snackbar.Add("Note Updated Successfully", Severity.Success);
                 }
                 else
                 {
                     await notesService.CreateNoteAsync(currentNote);
+                    snackbar.Add("Note Created Successfully", Severity.Success);
                 }
 
                 mudDialog.Close(DialogResult.Ok(true));
@@ -75,12 +81,12 @@ namespace NTS.Client.Components
                 }
                 else
                 {
-                    Console.WriteLine("NotesBase Is Null");
+                    snackbar.Add("NotesBase is Null", Severity.Error);
                 }
             }
             catch (Exception error)
             {
-                Console.WriteLine($"An Error Occurred: {error.Message}");
+                snackbar.Add($"An Error Occurred: {error.Message}", Severity.Error);
             }
         }
 
@@ -89,18 +95,19 @@ namespace NTS.Client.Components
         {
             try
             {
-                bool? confirm = await dialogService.ShowMessageBox("Remove Confirmmation", 
+                bool? confirm = await dialogService.ShowMessageBox("Remove Confirmation",
                     "Are You Sure You Want To Remove This Note?", yesText: "Remove", cancelText: "Cancel");
 
                 if (notesService == null)
                 {
-                    Console.WriteLine("notesService Is Null");
+                    snackbar.Add("NotesService Is Null", Severity.Error);
                     return;
                 }
 
                 if (note != null && note.NoteId != Guid.Empty && confirm == true)
                 {
                     await notesService.RemoveNoteAsync(note.NoteId);
+                    snackbar.Add("Note Removed Successfully", Severity.Success);
                 }
 
                 mudDialog.Close(DialogResult.Ok(true));
@@ -111,12 +118,12 @@ namespace NTS.Client.Components
                 }
                 else
                 {
-                    Console.WriteLine("noteBase Is Null");
+                    snackbar.Add("NotesBase Is Null", Severity.Error);
                 }
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Removing Note: {error.Message}");
+                snackbar.Add($"Error Removing Note: {error.Message}", Severity.Error);
             }
         }
 
@@ -169,13 +176,14 @@ namespace NTS.Client.Components
         {
             try
             {
-                await sharedNotesService.MarkNoteAsSharedAsync(note.NoteId);
+                await sharedNotesService.MarkNoteAsSharedAsync(new SharedNotes(), note.NoteId);
             }
             catch (Exception error)
             {
                 Console.WriteLine($"Error Marking Note As Shared: {error.Message}");
             }
         }
+
 
 
         public void Cancel()
