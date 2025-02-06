@@ -8,6 +8,6 @@ namespace NTS.Server.Services.Contracts
         Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId);
         Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId);
         Task UnmarkNoteAsSharedAsync(Guid noteId);
-        Task<SharedNotes?> UpdateSharedNoteAsync(Guid noteId, Guid userId, SharedNoteUpdateDto request);
+        Task UpdateSharedNotesAsync(Notes updatedNote);
     }
 }
