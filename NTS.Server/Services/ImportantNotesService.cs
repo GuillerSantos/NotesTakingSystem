@@ -13,6 +13,8 @@ namespace NTS.Server.Services
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
+
         public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
         {
             try
@@ -32,10 +34,11 @@ namespace NTS.Server.Services
                 var importantNote = new ImportantNotes
                 {
                     ImportantNoteId = Guid.NewGuid(),
-                    Title = note.Title,
-                    Content = note.Content,
                     NoteId = noteId,
                     UserId = userId,
+                    FullName = note.FullName,
+                    Title = note.Title,
+                    Content = note.Content,
                     CreatedAt = DateTime.UtcNow,
                     Color = note.Color
                 };
@@ -84,6 +87,30 @@ namespace NTS.Server.Services
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note: {error.Message}");
+            }
+        }
+
+
+        public async Task UpdateImportantNotesAsync(Notes updatedNote)
+        {
+            try
+            {
+                var importantNotes = await dbContext.ImportantNotes
+                    .Where(i => i.NoteId == updatedNote.NoteId)
+                    .ToListAsync();
+
+                foreach (var importantNote in importantNotes)
+                {
+                    importantNote.Title = updatedNote.Title;
+                    importantNote.Content = updatedNote.Content;
+                    importantNote.Color = updatedNote.Color;
+                }
+
+                dbContext.ImportantNotes.UpdateRange(importantNotes);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Updating Important Notes: {error.Message}");
             }
         }
     }

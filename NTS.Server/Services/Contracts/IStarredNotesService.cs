@@ -8,5 +8,6 @@ namespace NTS.Server.Services.Contracts
         Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId);
         Task<List<StarredNotes>> GetAllStarredNotesAsync(Guid userId);
         Task<bool> UnmarkNoteAsStarredAsync(Guid noteId);
+        Task UpdateStarredNotesAsync(Notes updatedNote);
     }
 }

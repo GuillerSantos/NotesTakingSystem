@@ -10,15 +10,6 @@ namespace NTS.Server.Entities
         public Guid FavoriteNoteId { get; set; }
 
         [Required]
-        public string FullName { get; set; } = string.Empty;
-
-        [Required]
-        public string? Title { get; set; } = string.Empty;
-
-        [Required]
-        public string? Content { get; set; } = string.Empty;
-
-        [Required]
         [ForeignKey(nameof(Note))]
         public Guid NoteId { get; set; }
 
@@ -27,10 +18,19 @@ namespace NTS.Server.Entities
         public Guid UserId { get; set; }
 
         [Required]
-        public DateTime? CreatedAt { get; set; }
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
-        public string? Color { get; set; } = "#ffffff";
+        public string Title { get; set; } = string.Empty;
+
+        [Required]
+        public string Content { get; set; } = string.Empty;
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public string Color { get; set; } = "#ffffff";
 
 
         public Notes? Note { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using NTS.Server.Entities;
 using NTS.Server.Data;
+using NTS.Server.Entities;
+using NTS.Server.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace NTS.Server.Middleware.Hubs
@@ -23,16 +24,15 @@ namespace NTS.Server.Middleware.Hubs
                 Title = title,
                 FullName = fullName,
                 Content = content,
-                CreateAt = createdAt
+                CreatedAt = createdAt
             };
 
             await dbContext.Comments.AddAsync(comment);
             await dbContext.SaveChangesAsync();
 
-            // Broadcast comment to all connected clients
-            await Clients.All.SendAsync("ReceiveMessage", noteId, userId, title, fullName, createdAt, content);
+            // Broadcast comment to all clients
+            await Clients.All.SendAsync("ReceiveMessage", comment);
         }
-
 
         public async Task GetCommentsAsync(Guid noteId)
         {
@@ -40,7 +40,7 @@ namespace NTS.Server.Middleware.Hubs
             {
                 var comments = await dbContext.Comments
                     .Where(c => c.NoteId == noteId)
-                    .OrderBy(c => c.CreateAt)
+                    .OrderBy(c => c.CreatedAt)
                     .ToListAsync();
 
                 await Clients.Caller.SendAsync("ReceiveComments", comments);

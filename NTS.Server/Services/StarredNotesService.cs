@@ -5,14 +5,15 @@ using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Services
 {
-    public class StarredNoteesService : IStarredNotesService
+    public class StarredNotesService : IStarredNotesService
     {
         private readonly ApplicationDbContext dbContext;
 
-        public StarredNoteesService(ApplicationDbContext dbContext)
+        public StarredNotesService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
 
         public async Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId)
         {
@@ -23,9 +24,10 @@ namespace NTS.Server.Services
 
                 var starredNote = new StarredNotes
                 {
-                    StarredNotesId = Guid.NewGuid(),
+                    StarredNoteId = Guid.NewGuid(),
                     NoteId = noteId,
                     UserId = userId,
+                    FullName = note.FullName,
                     Title = note.Title,
                     Content = note.Content,
                     CreatedAt = DateTime.UtcNow,
@@ -58,6 +60,7 @@ namespace NTS.Server.Services
             }
         }
 
+
         public async Task<bool> UnmarkNoteAsStarredAsync(Guid noteId)
         {
             try
@@ -76,6 +79,30 @@ namespace NTS.Server.Services
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note: {error.Message}");
+            }
+        }
+
+
+        public async Task UpdateStarredNotesAsync(Notes updatedNote)
+        {
+            try
+            {
+                var starredNotes = await dbContext.StarredNotes
+                    .Where(s => s.NoteId == updatedNote.NoteId)
+                    .ToListAsync();
+
+                foreach (var starredNote in starredNotes)
+                {
+                    starredNote.Title = updatedNote.Title;
+                    starredNote.Content = updatedNote.Content;
+                    starredNote.Color = updatedNote.Color;
+                }
+
+                dbContext.StarredNotes.UpdateRange(starredNotes);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Updating Starred Notes: {error.Message}");
             }
         }
     }

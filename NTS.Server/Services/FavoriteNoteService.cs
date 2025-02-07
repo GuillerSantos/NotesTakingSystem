@@ -36,6 +36,7 @@ namespace NTS.Server.Services
                     FavoriteNoteId = Guid.NewGuid(),
                     NoteId = noteId,
                     UserId = userId,
+                    FullName = note.FullName,
                     Title = note.Title,
                     Content = note.Content,
                     CreatedAt = DateTime.UtcNow,
@@ -85,6 +86,30 @@ namespace NTS.Server.Services
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note: {error.Message}");
+            }
+        }
+
+
+        public async Task UpdateFavoriteNotesAsync(Notes updatedNote)
+        {
+            try
+            {
+                var favoriteNotes = await dbContext.FavoriteNotes
+                    .Where(f => f.NoteId == updatedNote.NoteId)
+                    .ToListAsync();
+
+                foreach (var favoriteNote in favoriteNotes)
+                {
+                    favoriteNote.Title = updatedNote.Title;
+                    favoriteNote.Content = updatedNote.Content;
+                    favoriteNote.Color = updatedNote.Color;
+                }
+
+                dbContext.FavoriteNotes.UpdateRange(favoriteNotes);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Updating Favorite Notes: {error.Message}");
             }
         }
     }

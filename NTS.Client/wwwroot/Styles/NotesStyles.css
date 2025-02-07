@@ -27,6 +27,28 @@
     text-overflow: ellipsis;
 }
 
+.note-dialog {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+.note-comment-card {
+    height: 400px;
+    max-width: 40rem;
+    min-width: 35rem;
+    border-radius: 50px !important;
+    position: relative;
+    padding: 1.8rem;
+    border: 2px solid #c3c6ce;
+    transition: 0.5s ease-out;
+    overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+}
+
 .card-details {
     color: black;
     height: 100%;

@@ -39,9 +39,9 @@ builder.Services.AddScoped<ISharedNotesService, SharedNotesService>();
 builder.Services.AddScoped<IStarredNotesService, StarredNotesService>();
 builder.Services.AddScoped<ICommentSignalRService, CommentSignalRService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ThemeService>();
 
 var app = builder.Build();

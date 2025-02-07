@@ -8,5 +8,6 @@ namespace NTS.Server.Services.Contracts
         Task<bool> MarkNotesAsFavoriteAsync(Guid noteId, Guid userId);
         Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync(Guid userId);
         Task<bool> UnmarkNoteAsFavoriteAsync(Guid noteId);
+        Task UpdateFavoriteNotesAsync(Notes updatedNote);
     }
 }

@@ -16,6 +16,7 @@ namespace NTS.Server.Controllers
             this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
         }
 
+
         [HttpPost("mark-favorite/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsFavoriteAsync(Guid noteId)
         {

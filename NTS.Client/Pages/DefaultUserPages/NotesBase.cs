@@ -9,9 +9,9 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class NotesBase : ComponentBase
     {
-        [Inject] public INotesService notesService { get; set; }
-        [Inject] public ISnackbar snackbar { get; set; }
-        [Inject] public IDialogService dialogService { get; set; }
+        [Inject] public INotesService notesService { get; set; } = default!;
+        [Inject] public ISnackbar snackbar { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
 
 
         public List<NoteDto> allNotes { get; set; } = new List<NoteDto>();
