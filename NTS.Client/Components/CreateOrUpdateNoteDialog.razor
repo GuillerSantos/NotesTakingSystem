@@ -1,7 +1,8 @@
 ﻿@page "/createorupdatenotedialog"
 @inherits CreateOrUpdateNoteDialogBase
 
-<MudDialog>
+
+<MudDialog Class="note-dialog">
     <DialogContent>
         <div class="flex items-center mb-7">
             <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
@@ -10,7 +11,9 @@
             <MudIconButton OnClick="MarkAsImportant" Color="Color.Info" Icon="@Icons.Material.Filled.NotificationImportant"></MudIconButton>
             <MudIconButton OnClick="MarkAsStarred" Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
             <MudIconButton OnClick="MarkAsShared" Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
+            
             <MudColorPicker Class="mb-4 mr-5" @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.Palette" />
+
             <MudIconButton OnClick="RemoveNoteAsync" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
 
             <div class="flex mb-15">
@@ -19,8 +22,8 @@
         </div>
 
         <MudContainer>
-            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" FullWidth/>
-            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="20" Variant="Variant.Text" FullWidth/>
+            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" FullWidth />
+            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="20" Variant="Variant.Text" FullWidth />
 
             <MudButton OnClick="CreateNoteAsync" Color="Color.Primary" Variant="Variant.Filled" FullWidth>
                 @(note != null && note.NoteId != Guid.Empty ? "Update" : "Create")
