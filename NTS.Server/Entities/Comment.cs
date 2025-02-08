@@ -14,16 +14,10 @@ namespace NTS.Server.Entities
         
         public Guid UserId { get; set; }
 
-        [StringLength(100)]
-        public string Title { get; set; } = string.Empty;
-
-        [StringLength(300)]
-        public string Content { get; set; } = string.Empty;
-
-        public string Color { get; set; } = string.Empty;
-
-        [StringLength(50), Required]
+        [StringLength(100), Required]
         public string FullName { get; set; } = string.Empty;
+
+        public string CommentContent { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
