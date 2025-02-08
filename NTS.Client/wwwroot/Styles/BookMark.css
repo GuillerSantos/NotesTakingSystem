@@ -1,0 +1,79 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100%;
+    line-height: 1.6;
+}
+
+
+:root {
+    --breakpoint-lg: 1220px;
+    --breakpoint-md: 992px;
+    --breakpoint-sm: 760px;
+    --breakpoint-xs: 480px;
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
+.note-bookmark-card {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 1rem;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    justify-content: space-between;
+    border-radius: 20px !important;
+    padding: 1.8rem;
+    transition: all 0.3s ease;
+    height: 290px !important;
+    width: 280px !important;
+}
+
+
+
+    .note-bookmark-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05) translateY(-5px);
+    }
+
+
+.bookmark-container {
+    display: grid;
+    gap: 1rem;
+    padding: 2rem;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/*---------------------------------------------------------------------------------------------------*/
+
+
+@media (max-width: var(--breakpoint-lg)) {
+    .bookmark-container {
+        grid-template-columns: repeat(5, 1fr)
+    }
+}
+
+@media (max-width: var(--breakpoint-md)) {
+    .bookmark-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: var(--breakpoint-sm)) {
+    .bookmark-container {
+        grid-template-columns: repeat(3, 1fr);
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: var(--breakpoint-xs)) {
+    .bookmark-container {
+        grid-template-columns: 2fr;
+        font-size: 1rem;
+    }
+}
