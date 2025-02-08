@@ -2,71 +2,81 @@
 @inherits HomeBase
 @attribute [Authorize(Roles = "DefaultUser")]
 
-<MudContainer Class="mt-20 ">
-    <div class="grid">
+<MudContainer Class="mt-10">
+    <div class="flex items-center mb-20">
+        <MudTextField Class="mr-5" FullWidth Variant="Variant.Outlined" T="string" Placeholder="Search"></MudTextField>
+        <MudIconButton Class="py-4 px-10" Icon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
+    </div>
+
+    <MudGrid Justify="Justify.Center">
         @if (sharedNotesList.Count > 0)
         {
             @foreach (var note in sharedNotesList)
             {
-                <MudCard Class="note-comment-card mb-15" Style="@($"background-color: {note.Color}")">
+                <MudCard Class="note-comment-card transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-100 mb-15 rounded-xl transform-y-12 break-words h-auto" Style="@($"background-color: {note.Color}")">
                     <MudCardContent Class="card-details">
                         <div class="flex">
-                            <h4 class="font-semibold text-1xl mr-20">@note.FullName</h4>
-                            <h4 class="font-semibold text-1xl">@note.CreatedAt</h4>
+                            <h4 class="font-semibold text-gray-950 text-1xl mr-20">@note.FullName</h4>
+                            <h4 class="font-semibold text-gray-950 text-1xl">@note.CreatedAt.ToString("MMM dd, yyyy")</h4>
                         </div>
 
-                        <h5 class="font-bold text-2xl mb-5">@note.Title</h5>
+                        <h5 class="font-bold text-2xl text-gray-950 mb-5">@note.Title</h5>
                         <h6 class="font-medium">@note.Content</h6>
 
-                        <div class="mb-10">
-                            @if (noteComments.ContainsKey(note.NoteId) && noteComments[note.NoteId].Count > 0)
-                            {
-                                <ul class="space-y-4 mt-3">
-                                    @foreach (var comment in noteComments[note.NoteId])
-                                    {
-                                        <li class="flex items-start space-x-3">
-                                            <div>
-                                                <MudText Typo="Typo.h6" Class="font-bold">@comment.FullName</MudText>
-                                                <MudText Class="text-sm">@comment.Content</MudText>
-                                                <MudText Class="text-xs text-gray-500">@comment.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</MudText>
-                                            </div>
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-
-                        <div class="flex space-x-7 h-8">
+                        <MudCardActions class="flex space-x-7 h-7 mt-20 ml-15">
                             <MudButton Color="Color.Primary" Variant="Variant.Filled">
                                 <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.ThumbUp"></MudIcon> Like
                             </MudButton>
 
                             <MudButton OnClick="@(() => ToggleCommentsVisibility(note.NoteId))" Color="Color.Primary" Variant="Variant.Filled">
-                                <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Comment"></MudIcon> View Comments
+                                <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.Comment"></MudIcon> Comments
                             </MudButton>
 
                             <MudButton Color="Color.Primary" Variant="Variant.Filled">
                                 <MudIcon Class="mr-2" Icon="@Icons.Material.Filled.OfflineShare"></MudIcon> Share
                             </MudButton>
-                        </div>
-
-                        <MudContainer Class="w-full">
-                            @if (visibleComments.Contains(note.NoteId))
-                            {
-                                <div Class="flex">
-                                    <MudInput Class="h-8 w-full bg-gray-200 rounded-md" @bind-Value="@newCommentContent" Placeholder="Write a Comment..." Variant="Variant.Outlined">
-                                    </MudInput>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="@(() => SendComment(note.NoteId))" Color="Color.Primary" Disabled="string.IsNullOrWhiteSpace(newCommentContent)" />
-                                </div>
-                            }
-                        </MudContainer>
+                        </MudCardActions>
                     </MudCardContent>
+
+                    <div class="w-full">
+                        @if (visibleComments.Contains(note.NoteId))
+                        {
+                            <div class="flex ml-10 align-center">
+                                <MudInput Class="h-8 w-full bg-gray-200 rounded-md" @bind-Value="@newCommentContent" Placeholder="Write a Comment..." Variant="Variant.Outlined"></MudInput>
+                                <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="@(() => SendComment(note.NoteId))" Color="Color.Primary" Disabled="string.IsNullOrWhiteSpace(newCommentContent)" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="mb-5">
+                        @if (noteComments.ContainsKey(note.NoteId) && noteComments[note.NoteId].Count > 0)
+                        {
+                            <ul class="space-y-4 mt-3">
+                                @foreach (var comment in noteComments[note.NoteId])
+                                {
+                                    <li class="flex items-start space-x-3">
+                                        <div class="w-full rounded-md">
+                                            <div class="flex ml-5">
+                                                <h6 class="font-bold mb-5 mr-20 pr-20">@comment.FullName</h6>
+                                                <h6 class="font-bold text-xs">@comment.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</h6>
+                                            </div>
+
+                                            <div class="ml-5">
+                                                <h6 class="text-sm">@comment.CommentContent</h6>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                }
+                            </ul>
+                        }
+                    </div>
                 </MudCard>
             }
         }
         else
         {
-            <MudText Typo="Typo.h6" Class="text-gray-500">No shared notes available.</MudText>
+            <MudProgressCircular Class="mx-auto" Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
         }
-    </div>
+    </MudGrid>
 </MudContainer>
