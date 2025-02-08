@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using NTS.Client.Components;
 using NTS.Client.DTOs;
 using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
@@ -10,6 +12,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IFavoriteNotesService favoriteNotesService { get; set; } = default!;
         [Inject] public IImportantNotesService importantNotesService { get; set; } = default!;
         [Inject] public IStarredNotesService starredNotesService { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
 
         [Parameter] public List<ImportantNotes> importantNotes { get; set; } = new List<ImportantNotes>();
         [Parameter] public List<FavoriteNotes> favoriteNotes { get; set; } = new List<FavoriteNotes>();
@@ -20,12 +23,12 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadFavoriteNotesAsync();
+            await LoadAllMarkedNotesAsync();
             isFetched = true;
         }
 
 
-        public async Task LoadFavoriteNotesAsync()
+        public async Task LoadAllMarkedNotesAsync()
         {
             try
             {
