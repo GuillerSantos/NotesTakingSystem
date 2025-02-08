@@ -43,7 +43,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         {
             try
             {
-                sharedNotesList = (await sharedNotesService.GetAllSharedNotesAsync(sharedNotes.NoteId))?.ToList() ?? new List<SharedNotes>();
+                sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync() ?? new List<SharedNotes>();
                 filteredNotes = sharedNotesList.ToList();
             }
             catch (Exception error)
@@ -66,8 +66,9 @@ namespace NTS.Client.Pages.DefaultUserPages
                     await commentSignalRService.SendCommentAsync(
                         noteId,
                         userId,
-                        note.Title,
+                        note.SharedNoteId,
                         note.FullName,
+                        
                         DateTime.Now,
                         newCommentContent
                     );
@@ -97,7 +98,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         }
 
 
-        public void OnCommentReceived(Guid noteId, Guid userId, string title, string fullName, string content, DateTime createdAt)
+        public void OnCommentReceived(Guid noteId, Guid userId, Guid sharedNoteId, string fullName, string commentContent, DateTime createdAt)
         {
             if (!noteComments.ContainsKey(noteId))
             {
@@ -108,9 +109,9 @@ namespace NTS.Client.Pages.DefaultUserPages
             {
                 NoteId = noteId,
                 UserId = userId,
-                Title = title,
+                SharedNoteId = sharedNoteId,
                 FullName = fullName,
-                Content = content,
+                CommentContent = commentContent,
                 CreatedAt = createdAt
             });
 
