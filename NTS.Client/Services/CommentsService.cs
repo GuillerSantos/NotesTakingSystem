@@ -14,10 +14,10 @@ namespace NTS.Client.Services
             this.httpClient = httpClient;
         }
 
-        public event Action<Guid, Guid, string, string, string, DateTime>? OnCommentReceived;
+        public event Action<Guid, Guid, Guid, string, string, DateTime>? OnCommentReceived;
 
 
-        public async Task SendCommentAsync(Guid noteId, Guid userId, string title, string fullName, DateTime createdAt, string content)
+        public async Task SendCommentAsync(Guid noteId, Guid userId, Guid sharedNoteId, string fullName, DateTime createdAt, string commentContent)
         {
             try
             {
@@ -25,10 +25,10 @@ namespace NTS.Client.Services
                 {
                     NoteId = noteId,
                     UserId = userId,
-                    Title = title,
+                    SharedNoteId = sharedNoteId,
                     FullName = fullName,
                     CreatedAt = createdAt,
-                    Content = content
+                    CommentContent = commentContent
                 };
 
                 var response = await httpClient.PostAsJsonAsync("/api/Comments/send-comment", comment);
@@ -36,7 +36,7 @@ namespace NTS.Client.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    OnCommentReceived?.Invoke(noteId, userId, title, fullName, content, createdAt);
+                    OnCommentReceived?.Invoke(noteId, userId, sharedNoteId, fullName, commentContent, createdAt);
                 }
             }
             catch (Exception ex)
