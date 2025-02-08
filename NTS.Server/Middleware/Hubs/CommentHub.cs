@@ -15,15 +15,16 @@ namespace NTS.Server.Middleware.Hubs
             this.dbContext = dbContext;
         }
 
-        public async Task SendCommentAsync(Guid noteId, Guid userId, string title, string fullName, DateTime createdAt, string content)
+
+        public async Task SendCommentAsync(Guid noteId, Guid sharedNoteId, Guid userId, string fullName, DateTime createdAt, string commentContent)
         {
             var comment = new Comment
             {
                 NoteId = noteId,
+                SharedNoteId = sharedNoteId,
                 UserId = userId,
-                Title = title,
                 FullName = fullName,
-                Content = content,
+                CommentContent = commentContent,
                 CreatedAt = createdAt
             };
 
@@ -33,6 +34,7 @@ namespace NTS.Server.Middleware.Hubs
             // Broadcast comment to all clients
             await Clients.All.SendAsync("ReceiveMessage", comment);
         }
+
 
         public async Task GetCommentsAsync(Guid noteId)
         {
