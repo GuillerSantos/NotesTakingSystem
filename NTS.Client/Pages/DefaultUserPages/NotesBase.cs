@@ -4,6 +4,7 @@ using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.DTOs;
 using NTS.Client.Services.Contracts;
+using NTS.Client.Utilities;
 
 namespace NTS.Client.Pages.DefaultUserPages
 {
@@ -115,6 +116,13 @@ namespace NTS.Client.Pages.DefaultUserPages
             {
                 snackbar.Add($"Faild To Refresh Notes :{error.Message}", Severity.Error);
             }
+        }
+
+
+        public string GetNoteStyle(NoteDto note)
+        {
+            string lighterColor = NotesCardColorUtil.GetLighterOrDarkerColor(note.Color);
+            return $"background-image: linear-gradient(135deg, {note.Color}, {lighterColor});";
         }
     }
 }
