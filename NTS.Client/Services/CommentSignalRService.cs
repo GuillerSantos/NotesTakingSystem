@@ -15,7 +15,7 @@ namespace NTS.Client.Services
             OnCommentReceived = delegate { };
         }
 
-        public event Action<Guid, Guid, string, string, string, DateTime> OnCommentReceived = delegate { };
+        public event Action<Guid, Guid, Guid, string, string, DateTime> OnCommentReceived = delegate { };
 
         public async Task StartAsync()
         {
@@ -29,9 +29,9 @@ namespace NTS.Client.Services
                 Console.WriteLine($"Error establishing connection: {ex.Message}");
             }
 
-            hubConnection.On<Guid, Guid, string, string, string, DateTime>("ReceiveComment", (noteId, userId, title, fullName, content, createdAt) =>
+            hubConnection.On<Guid, Guid, Guid, string, string, DateTime>("ReceiveComment", (noteId, userId, sharedNoteId, fullName, commentContent, createdAt) =>
             {
-                OnCommentReceived?.Invoke(noteId, userId, title, fullName, content, createdAt);
+                OnCommentReceived?.Invoke(noteId, userId, sharedNoteId, fullName, commentContent, createdAt);
             });
         }
 
@@ -40,9 +40,9 @@ namespace NTS.Client.Services
             await hubConnection.StopAsync();
         }
 
-        public async Task SendCommentAsync(Guid noteId, Guid userId, string title, string fullName, DateTime createdAt, string content)
+        public async Task SendCommentAsync(Guid noteId, Guid userId, Guid sharedNoteId, string fullName, DateTime createdAt, string commentContent)
         {
-            await hubConnection.SendAsync("SendComment", noteId, userId, title, fullName, createdAt, content);
+            await hubConnection.SendAsync("SendComment", noteId, userId, sharedNoteId, fullName, createdAt, commentContent);
         }
     }
 }
