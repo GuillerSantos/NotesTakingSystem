@@ -51,7 +51,7 @@ namespace NTS.Client.Services
         }
 
 
-        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
         {
             try
             {
