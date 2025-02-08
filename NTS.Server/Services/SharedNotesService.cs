@@ -61,18 +61,16 @@ namespace NTS.Server.Services
             }
         }
 
-        public async Task<List<SharedNotes>> GetAllSharedNotesAsync(Guid userId)
+        public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
         {
             try
             {
                 return await dbContext.SharedNotes
-                    .Where(s => s.UserId == userId)
-                    .Include(s => s.Note)
                     .ToListAsync();
             }
             catch (Exception error)
             {
-                throw new Exception($"Error Fetching All Shared Notes for User {userId}: {error.Message}", error);
+                throw new Exception($"Error Fetching All Shared Notes for User: {error.Message}", error);
             }
         }
 
