@@ -4,30 +4,33 @@
 
 <MudDialog Class="note-dialog">
     <DialogContent>
-        <div class="flex items-center mb-7">
-            <MudCheckBox Class="mb-10" Size="Size.Large" Color="Color.Primary" T="string"></MudCheckBox>
-            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.PushPin"></MudIconButton>
-            <MudIconButton OnClick="MarkAsFavorite" Color="Color.Error" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
-            <MudIconButton OnClick="MarkAsImportant" Color="Color.Info" Icon="@Icons.Material.Filled.NotificationImportant"></MudIconButton>
-            <MudIconButton OnClick="MarkAsStarred" Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
-            <MudIconButton OnClick="MarkAsShared" Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
-            
-            <MudColorPicker Class="mb-4 mr-5" @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.Palette" />
+        <div>
+            <MudText>Mark Note</MudText>
+        </div>
 
-            <MudIconButton OnClick="RemoveNoteAsync" Color="Color.Error" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+        <div class="flex items-center mb-7">
+            <MudIconButton Disabled="@(note == null || note.NoteId == Guid.Empty)" Color="Color.Error" Icon="@Icons.Material.Filled.PushPin"></MudIconButton>
+            <MudIconButton OnClick="MarkAsFavorite" Disabled="@(note == null || note.NoteId == Guid.Empty)" Color="Color.Error" Icon="@Icons.Material.Filled.Favorite"></MudIconButton>
+            <MudIconButton OnClick="MarkAsImportant" Disabled="@(note == null || note.NoteId == Guid.Empty)" Color="Color.Info" Icon="@Icons.Material.Filled.NotificationImportant"></MudIconButton>
+            <MudIconButton OnClick="MarkAsStarred" Disabled="@(note == null || note.NoteId == Guid.Empty)" Color="Color.Warning" Icon="@Icons.Material.Filled.Star"></MudIconButton>
+            <MudIconButton OnClick="MarkAsShared" Disabled="@(note == null || note.NoteId == Guid.Empty)" Color="Color.Info" Icon="@Icons.Material.Filled.Share"></MudIconButton>
+            
+            <MudColorPicker AdornmentColor="Color.Tertiary" Class="mb-4 mr-5 " @bind-Value="currentColor" Label="Choose Color" ColorPickerView="ColorPickerView.GridCompact" />
+
+            <MudIconButton OnClick="RemoveNoteAsync" Color="Color.Warning" Icon="@Icons.Material.Filled.Delete"></MudIconButton>
 
             <div class="flex mb-15">
-                <MudIconButton OnClick="Cancel" Color="Color.Dark" Icon="@Icons.Material.Filled.Cancel"></MudIconButton>
+                <MudIconButton OnClick="Cancel" Color="Color.Error" Icon="@Icons.Material.Filled.Cancel"></MudIconButton>
             </div>
         </div>
 
-        <MudContainer>
-            <MudTextField Class="mb-10" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" FullWidth />
-            <MudTextField Class="mb-7" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="20" Variant="Variant.Text" FullWidth />
+        <div>
+            <MudTextField Class="mb-10" Style="color: white" T="string" @bind-Value="currentNote.Title" Variant="Variant.Text" Label="Title" FullWidth />
+            <MudTextField Class="mb-7" Style="color: white" T="string" @bind-Value="currentNote.Content" @ref="multilineReference" Label="Content" Lines="20" Variant="Variant.Text" FullWidth />
 
             <MudButton OnClick="CreateNoteAsync" Color="Color.Primary" Variant="Variant.Filled" FullWidth>
                 @(note != null && note.NoteId != Guid.Empty ? "Update" : "Create")
             </MudButton>
-        </MudContainer>
+        </div>
     </DialogContent>
 </MudDialog>
