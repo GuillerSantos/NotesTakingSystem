@@ -4,29 +4,29 @@
 
 <MudLayout Class="mt-10">
     <div class="flex items-center mb-5">
-        <MudIconButton OnClick="() => OpenCreateOrUpdateNoteDialogAsync()" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.NoteAdd"><MudText>Add Note</MudText></MudIconButton>
+        <MudIconButton OnClick="() => OpenCreateOrUpdateNoteDialogAsync()" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.NoteAdd"> </MudIconButton>
+        <h3 class="font-bold text-2xl"> Add Note </h3>
         <MudTextField Class="px-4" @bind-Value="searchQuery" T="string" Variant="Variant.Outlined" Label="Search Notes" />
-        <MudButton Class="px-20 py-4" OnClick="() => SearchNotesAsync(searchQuery)" Variant="Variant.Filled" Color="Color.Primary">Search</MudButton>
+        <MudIconButton Class="py-4 px-10" Icon="@Icons.Material.Filled.Search" OnClick="() => SearchNotesAsync(searchQuery)" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
     </div>
 
-    <div class="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div class="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full">
         @if (isFetched && (allNotes.Any() || filteredNotes.Any()))
         {
             @foreach (var note in filteredNotes)
             {
-                <MudCard Class="note-card flex flex-col justify-between rounded-2xl p-4 cursor-pointer transition transform hover:shadow-lg hover:scale-105" Outlined="true"
-                         Style="@($"background-color: {note.Color}")"
-                         Elevation="5">
-                    <MudCardContent Class="card-details">
-                        <h6 class="font-bold text-lg mb-2 break-words">@note.Title</h6>
-                        <MudTFootRow>
-                            <h6 class="text-sm text-gray-600 break-words">@note.Content</h6>
-                        </MudTFootRow>
-                        <MudTFootRow>
-                            <MudText class="text-right text-sm" Typo="Typo.subtitle2">@note.CreatedAt</MudText>
-                        </MudTFootRow>
+                <MudCard Style="@GetNoteStyle(note)" Class="note-card" Outlined="true" Elevation="5">
+                    <MudCardContent Class="note-card-details">
+                        <h6 class="font-bold text-gray-950 text-lg mb-2 break-words">@note.Title</h6>
+                        <h6 class="text-sm text-gray-950 break-words">@note.Content</h6>
                     </MudCardContent>
-                    <button class="note-button" @onclick="() => OpenCreateOrUpdateNoteDialogAsync(note)">More Info</button>
+
+                    <MudCardActions Class="flex justify-between items-center px-4 py-3">
+                        <MudText Class="text-sm text-white" Typo="Typo.subtitle2">@note.CreatedAt.ToString("MMM dd, yyyy")</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => OpenCreateOrUpdateNoteDialogAsync(note)">
+                            View
+                        </MudButton>
+                    </MudCardActions>
                 </MudCard>
             }
         }
