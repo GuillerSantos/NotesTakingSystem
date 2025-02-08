@@ -9,14 +9,15 @@ namespace NTS.Client.Services
         private readonly IJSRuntime jSRuntime;
         private readonly ILogger<ThemeService> logger;
 
+        public bool isDarkMode;
+        public string GetModeText() => isDarkMode ? "Light Mode" : "Dark Mode";
+
         public ThemeService(IJSRuntime jSRuntime, ILogger<ThemeService> logger)
         {
             this.jSRuntime = jSRuntime;
             this.logger = logger;
         }
 
-        public bool isDarkMode;
-        public string GetModeText() => isDarkMode ? "Light Mode" : "Dark Mode";
 
         public async Task OnInitializedAsync()
         {
@@ -38,16 +39,19 @@ namespace NTS.Client.Services
             await jSRuntime.InvokeVoidAsync("localThemeFunction.setTheme", isDarkMode.ToString().ToLower());
         }
 
+
         public MudTheme CustomTheme { get; } = new MudTheme()
         {
             PaletteLight = new PaletteLight()
             {
-                Primary = Colors.Blue.Darken1
+                Primary = Colors.Blue.Darken2,
+                Secondary = Colors.BlueGray.Darken1
             },
 
             PaletteDark = new PaletteDark()
             {
-                Primary = Colors.LightBlue.Darken3
+                Primary = Colors.LightBlue.Darken1,
+                Secondary = Colors.DeepPurple.Darken1
             }
         };
     }
