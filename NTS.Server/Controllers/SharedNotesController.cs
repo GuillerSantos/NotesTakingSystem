@@ -70,7 +70,7 @@ namespace NTS.Server.Controllers
 
                 var userId = Guid.Parse(userIdClaim.Value);
 
-                var sharedNotes = await sharedNotesService.GetAllSharedNotesAsync(userId);
+                var sharedNotes = await sharedNotesService.GetAllSharedNotesAsync();
 
                 if (sharedNotes == null || !sharedNotes.Any())
                 {
