@@ -8,11 +8,13 @@ namespace NTS.Client.Services
     public class CommentSignalRService : ICommentSignalRService
     {
         private readonly HubConnection hubConnection;
+        private readonly ILogger<CommentSignalRService> logger;
 
-        public CommentSignalRService(HubConnection hubConnection)
+        public CommentSignalRService(HubConnection hubConnection, ILogger<CommentSignalRService> logger)
         {
             this.hubConnection = hubConnection;
             OnCommentReceived = delegate { };
+            this.logger = logger;
         }
 
         public event Action<Guid, Guid, Guid, string, string, DateTime> OnCommentReceived = delegate { };
@@ -22,11 +24,11 @@ namespace NTS.Client.Services
             try
             {
                 await hubConnection.StartAsync();
-                Console.WriteLine("SignalR connection established.");
+                logger.LogInformation("SignalR connection established.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error establishing connection: {ex.Message}");
+                logger.LogError($"Error establishing connection: {ex.Message}");
             }
 
             hubConnection.On<Guid, Guid, Guid, string, string, DateTime>("ReceiveComment", (noteId, userId, sharedNoteId, fullName, commentContent, createdAt) =>
