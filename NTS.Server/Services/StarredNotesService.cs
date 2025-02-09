@@ -73,8 +73,6 @@ namespace NTS.Server.Services
                 dbContext.StarredNotes.RemoveRange(starredNote);
                 await dbContext.SaveChangesAsync();
                 return true;
-
-
             }
             catch (Exception error)
             {
