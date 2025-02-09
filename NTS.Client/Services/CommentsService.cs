@@ -8,10 +8,12 @@ namespace NTS.Client.Services
     public class CommentsService : ICommentsService
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<CommentsService> logger;
 
-        public CommentsService(HttpClient httpClient)
+        public CommentsService(HttpClient httpClient, ILogger<CommentsService> logger)
         {
             this.httpClient = httpClient;
+            this.logger = logger;
         }
 
         public event Action<Guid, Guid, Guid, string, string, DateTime>? OnCommentReceived;
@@ -41,7 +43,7 @@ namespace NTS.Client.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending comment: {ex.Message}");
+                logger.LogError($"Error sending comment: {ex.Message}");
             }
         }
 
@@ -58,11 +60,11 @@ namespace NTS.Client.Services
             }
             catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+                logger.LogError($"HTTP Request Error: {httpEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected Error: {ex.Message}");
+                logger.LogError($"Unexpected Error: {ex.Message}");
             }
 
             return new List<Comment>();
