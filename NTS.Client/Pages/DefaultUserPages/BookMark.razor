@@ -15,14 +15,14 @@
                             <MudCard Class="note-bookmark-card" Style="@($"background-color: {favoriteNote.Color}")" Elevation="5">
                                <div class="flex">
                                     <MudIcon Icon="@Icons.Material.Filled.Favorite" Color="Color.Error"></MudIcon>
-                                    <MudText Class="mt-1 ml-4" Typo="Typo.caption">@favoriteNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
-                               </div>
+                                    <MudText Class="mt-1 ml-4 mr-20" Typo="Typo.caption">@favoriteNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
+                                    <MudIcon @onclick="() => UnmarkNoteAsFavoriteAsync(favoriteNote.NoteId)" Icon="@Icons.Material.Filled.BookmarkRemove" Color="Color.Error"></MudIcon>
+                                </div>
 
                                 <MudCardContent Class="note-card-details">
                                     <h6 class="mb-4 font-bold text-2xl text-gray-950">@favoriteNote.Title</h6>
                                     <h6 class="text-sm">@favoriteNote.Content</h6>
                                 </MudCardContent>
-
                             </MudCard>
                         }
                     }
@@ -47,7 +47,8 @@
                             <MudCard Class="note-bookmark-card" Style="@($"background-color: {importantNote.Color}")" Elevation="5">
                                <div class="flex">
                                     <MudIcon Icon="@Icons.Material.Filled.NotificationImportant" Color="Color.Info"></MudIcon>
-                                    <MudText Class="mt-1 ml-4" Typo="Typo.caption">@importantNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
+                                    <MudText Class="mt-1 ml-4 mr-20" Typo="Typo.caption">@importantNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
+                                    <MudIcon @onclick="() => UnmarkNoteAsImportantAsync(importantNote.NoteId)" Icon="@Icons.Material.Filled.BookmarkRemove" Color="Color.Error"></MudIcon>
                                 </div>
 
                                 <MudCardContent Class="note-card-details">
@@ -78,8 +79,9 @@
                             <MudCard Class="note-bookmark-card" Style="@($"background-color: {starredNote.Color}")" Elevation="5">
                                <div class="flex">
                                     <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Warning"></MudIcon>
-                                    <MudText Class="mt-1 ml-4" Typo="Typo.caption">@starredNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
-                               </div>
+                                    <MudText Class="mt-1 ml-4 mr-20" Typo="Typo.caption">@starredNote.CreatedAt.ToString("MMM dd, yyyy")</MudText>
+                                    <MudIcon @onclick="() => UnmarkNoteAsStarredAsync(starredNote.NoteId)" Icon="@Icons.Material.Filled.BookmarkRemove" Color="Color.Error"></MudIcon>
+                                </div>
 
                                 <MudCardContent Class="note-card-details">
                                     <h6 class="font-bold text-2xl mb-4 text-gray-950">@starredNote.Title</h6>
