@@ -11,8 +11,7 @@
 
 
 .note-comment-card {
-    max-width: 50rem;
-    min-width: 35rem;
+    width: 50rem;
     padding: 1.8rem;
     overflow: hidden;
 }
