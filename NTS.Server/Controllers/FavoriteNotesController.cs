@@ -61,7 +61,7 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpDelete("unmark-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("unmark-as-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
             try
