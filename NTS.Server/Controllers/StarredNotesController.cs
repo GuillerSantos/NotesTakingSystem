@@ -59,7 +59,7 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpDelete("unmark-starrednotes/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("unmark-as-starrednote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNotesAsStarredAsync(Guid noteId)
         {
             try
