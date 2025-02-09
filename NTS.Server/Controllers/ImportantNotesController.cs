@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NTS.Server.Entities;
+using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using System.Security.Claims;
 
@@ -57,6 +59,28 @@ namespace NTS.Server.Controllers
             catch (Exception error)
             {
                 return BadRequest($"Error Fetching All Importang Notes: {error.Message}");
+            }
+        }
+
+
+        [HttpDelete("unmark-as-importantnote/{noteId}"), Authorize (Roles = "DefaultUser")]
+        public async Task<IActionResult> UnmarkNoteAsImportantAsync(Guid noteId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                var userId = Guid.Parse(userIdClaim!.Value);
+                var unmarkAsImportantNote = await impotantNotesService.UnmarkNoteAsImportantAsync(noteId);
+                if (!unmarkAsImportantNote)
+                {
+                    return NotFound("Note Is Not Mark As Important");
+                }
+
+                return Ok($"Note Unmarked As Important: {unmarkAsImportantNote}");
+            }
+            catch (Exception error)
+            {
+                return BadRequest($"Error Unmarking Note As Important {error.Message}");
             }
         }
     }
