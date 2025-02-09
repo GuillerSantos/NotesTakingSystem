@@ -16,12 +16,12 @@
                 <MudCard Class="note-comment-card transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-100 mb-15 rounded-xl transform-y-12 break-words h-auto" Style="@($"background-color: {note.Color}")">
                     <MudCardContent Class="card-details">
                         <div class="flex">
-                            <h4 class="font-semibold text-gray-950 text-1xl mr-20">@note.FullName</h4>
-                            <h4 class="font-semibold text-gray-950 text-1xl">@note.CreatedAt.ToString("MMM dd, yyyy")</h4>
+                            <h4 class="font-semibold text-white text-1xl mr-20">@note.FullName</h4>
+                            <h4 class="font-semibold text-white text-1xl">@note.CreatedAt.ToString("MMM dd, yyyy")</h4>
                         </div>
 
                         <h5 class="font-bold text-2xl text-gray-950 mb-5">@note.Title</h5>
-                        <h6 class="font-medium">@note.Content</h6>
+                        <h6 class="font-medium text-white">@note.Content</h6>
 
                         <MudCardActions class="flex space-x-7 h-7 mt-20 ml-15">
                             <MudButton Color="Color.Primary" Variant="Variant.Filled">
@@ -57,12 +57,12 @@
                                     <li class="flex items-start space-x-3">
                                         <div class="w-full rounded-md">
                                             <div class="flex ml-5">
-                                                <h6 class="font-bold mb-5 mr-20 pr-20">@comment.FullName</h6>
-                                                <h6 class="font-bold text-xs">@comment.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</h6>
+                                                <h6 class="font-bold mb-5 mr-20 pr-20 text-white">@comment.FullName</h6>
+                                                <h6 class="font-bold text-xs text-white">@comment.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</h6>
                                             </div>
 
                                             <div class="ml-5">
-                                                <h6 class="text-sm">@comment.CommentContent</h6>
+                                                <h6 class="text-sm text-white">@comment.CommentContent</h6>
                                             </div>
                                         </div>
                                     </li>
