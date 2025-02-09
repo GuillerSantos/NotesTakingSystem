@@ -9,10 +9,10 @@ namespace NTS.Client.Components
     {
         public readonly DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, NoHeader = true };
 
-        [CascadingParameter] MudDialogInstance mudDialog { get; set; }
-        [Inject] ISnackbar snackbar { get; set; }
+        [CascadingParameter] MudDialogInstance mudDialog { get; set; } = default!;
         [Parameter] public ForgotPasswordDto forgotPasswordDto { get; set; } = new ForgotPasswordDto();
-        [Inject] IAuthService authService { get; set; }
+        [Inject] IAuthService authService { get; set; } = default!;
+        [Inject] ISnackbar snackbar { get; set; } = default!;
 
         public ResponseDto response { get; set; } = new ResponseDto();
         public ResponseTokenDto responseToken { get; set; } = new ResponseTokenDto();
@@ -43,6 +43,7 @@ namespace NTS.Client.Components
                 response.ErrorMessage = ex.Message;
             }
         }
+
 
         public void Cancel()
         {
