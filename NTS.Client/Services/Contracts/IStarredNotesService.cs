@@ -6,5 +6,6 @@ namespace NTS.Client.Services.Contracts
     {
         Task MarkNoteAsStarredAsync(StarredNotes request, Guid noteId);
         Task<List<StarredNotes>> GetAllStarredNotesAsync();
+        Task UnmarkNoteAsImportantNoteAsync(Guid noteId);
     }
 }
