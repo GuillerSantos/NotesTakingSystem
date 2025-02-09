@@ -70,19 +70,19 @@ namespace NTS.Server.Services
         }
 
 
-        public async Task UnmarkNoteAsImportantAsync(Guid noteId)
+        public async Task<bool> UnmarkNoteAsImportantAsync(Guid noteId)
         {
             try
             {
                 var importantNote = await dbContext.ImportantNotes
-                    .Where(i => i.NoteId == noteId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(i => i.NoteId == noteId);
 
-                if (importantNote.Any())
-                {
-                    dbContext.ImportantNotes.RemoveRange(importantNote);
-                    await dbContext.SaveChangesAsync();
-                }
+                if (importantNote == null) return false;
+
+                dbContext.ImportantNotes.Remove(importantNote);
+                await dbContext.SaveChangesAsync();
+                return true;
+
             }
             catch (Exception error)
             {
