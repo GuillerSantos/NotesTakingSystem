@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc.Razor;
 using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.DTOs;
@@ -16,7 +15,7 @@ namespace NTS.Client.Pages.DefaultUserPages
 
 
         public List<NoteDto> allNotes { get; set; } = new List<NoteDto>();
-        public string searchQuery { get; set; }
+        public string searchQuery { get; set; } = default!;
         public List<NoteDto> filteredNotes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
         public bool isFetched = false;
