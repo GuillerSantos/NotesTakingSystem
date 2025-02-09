@@ -6,10 +6,12 @@ namespace NTS.Client.Services
     public class NotesService : INotesService
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<NotesService> logger;
 
-        public NotesService(HttpClient httpClient)
+        public NotesService(HttpClient httpClient, ILogger<NotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger;
         }
 
         public async Task CreateNoteAsync(NoteDto request)
@@ -21,7 +23,7 @@ namespace NTS.Client.Services
             }
             catch(Exception error)
             {
-                Console.WriteLine($"Error Create Note: {error.Message}");
+                logger.LogError($"Error Create Note: {error.Message}");
             }
         }
 
@@ -34,7 +36,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Fetching All Notes: {error.Message}");
+                logger.LogError($"Error Fetching All Notes: {error.Message}");
                 return new List<NoteDto>();
             }
         }
@@ -49,7 +51,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Searching Notes: {error.Message}");
+                logger.LogError($"Error Searching Notes: {error.Message}");
                 return new List<NoteDto>();
             }
         }
@@ -64,7 +66,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.Error.WriteLine($"Error Updating Note With ID {noteId}: {error.Message}");
+                logger.LogError($"Error Updating Note With ID {noteId}: {error.Message}");
             }
         }
 
@@ -78,7 +80,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Removing Note With This ID {noteId}: {error.Message}");
+                logger.LogError($"Error Removing Note With This ID {noteId}: {error.Message}");
             }
         }
     }

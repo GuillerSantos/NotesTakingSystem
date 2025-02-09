@@ -6,10 +6,12 @@ namespace NTS.Client.Services
     public class StarredNotesService : IStarredNotesService
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<StarredNotesService> logger;
 
-        public StarredNotesService(HttpClient httpClient)
+        public StarredNotesService(HttpClient httpClient, ILogger<StarredNotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger;
         }
 
         public async Task MarkNoteAsStarredAsync(StarredNotes request, Guid noteId)
@@ -21,7 +23,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note As Starred: {error.Message}");
+                logger.LogError($"Error Marking Note As Starred: {error.Message}");
             }
         }
 
@@ -34,8 +36,22 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Fetching All Starred Notes: {error.Message}");
+                logger.LogError($"Error Fetching All Starred Notes: {error.Message}");
                 return new List<StarredNotes>();
+            }
+        }
+
+
+        public async Task UnmarkNoteAsImportantNoteAsync(Guid noteId)
+        {
+            try
+            {
+                var response = await httpClient.DeleteAsync($"/api/StarredNotes/unmark-as-starrednote/{noteId}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch(Exception error)
+            {
+                logger.LogError($"Error Unmarking Notes: {error.Message}");
             }
         }
     }

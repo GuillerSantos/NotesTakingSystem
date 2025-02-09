@@ -1,16 +1,17 @@
 ﻿using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
-using System.Runtime.InteropServices;
 
 namespace NTS.Client.Services
 {
     public class ImportantNotesService : IImportantNotesService
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<ImportantNotesService> logger;
 
-        public ImportantNotesService(HttpClient httpClient)
+        public ImportantNotesService(HttpClient httpClient, ILogger<ImportantNotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger;
         }
 
         public async Task MarkNoteAsImportantAsync(ImportantNotes request, Guid noteId)
@@ -22,7 +23,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking As Important :{error.Message}");
+                logger.LogError($"Error Marking As Important :{error.Message}");
             }
         }
 
@@ -35,8 +36,22 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Fetching All Important Notes: {error.Message}");
+                logger.LogError($"Error Fetching All Important Notes: {error.Message}");
                 return new List<ImportantNotes>();
+            }
+        }
+
+
+        public async Task UnamrkNoteAsImportantAsync(Guid noteId)
+        {
+            try
+            {
+                var response = await httpClient.DeleteAsync($"/api/ImportantNotes/unmark-as-importantnote/{noteId}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception error)
+            {
+                logger.LogError($"Error Unmaking Note :{error.Message}");
             }
         }
     }

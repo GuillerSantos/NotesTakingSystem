@@ -7,10 +7,12 @@ namespace NTS.Client.Services
     public class SharedNotesService : ISharedNotesService
     {
         private readonly HttpClient httpClient;
+        private readonly ILogger<SharedNotesService> logger;
 
-        public SharedNotesService(HttpClient httpClient)
+        public SharedNotesService(HttpClient httpClient, ILogger<SharedNotesService> logger)
         {
             this.httpClient = httpClient;
+            this.logger = logger;
         }
 
         public async Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId)
@@ -23,7 +25,7 @@ namespace NTS.Client.Services
             }
             catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+                logger.LogError($"HTTP Request Error: {httpEx.Message}");
             }
         }
 
@@ -37,16 +39,16 @@ namespace NTS.Client.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorMessage = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error unsharing note: {errorMessage}");
+                    logger.LogError($"Error unsharing note: {errorMessage}");
                 }
             }
             catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+                logger.LogError($"HTTP Request Error: {httpEx.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected Error: {ex.Message}");
+                logger.LogError($"Unexpected Error: {ex.Message}");
             }
         }
 
@@ -59,7 +61,7 @@ namespace NTS.Client.Services
 
                 if (response == null)
                 {
-                    Console.WriteLine("No shared notes found.");
+                    logger.LogError("No shared notes found.");
                     return new List<SharedNotes>();
                 }
 
@@ -67,12 +69,12 @@ namespace NTS.Client.Services
             }
             catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"HTTP Request Error: {httpEx.Message}");
+                logger.LogError($"HTTP Request Error: {httpEx.Message}");
                 return new List<SharedNotes>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected Error: {ex.Message}");
+                logger.LogError($"Unexpected Error: {ex.Message}");
                 return new List<SharedNotes>();
             }
         }

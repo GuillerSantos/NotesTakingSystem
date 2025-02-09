@@ -33,7 +33,7 @@ namespace NTS.Client.Services
         {
             try
             {
-                var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-favoritenote/{noteId}");
+                var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-as-favoritenote/{noteId}");
                 response.EnsureSuccessStatusCode();
             }
             catch (Exception error)
