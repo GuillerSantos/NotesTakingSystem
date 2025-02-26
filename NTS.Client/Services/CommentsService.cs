@@ -1,7 +1,5 @@
 ﻿using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
-using System.Net.Http;
-using System.Net.Http.Json;
 
 namespace NTS.Client.Services
 {
@@ -15,6 +13,7 @@ namespace NTS.Client.Services
             this.httpClient = httpClient;
             this.logger = logger;
         }
+
 
         public event Action<Guid, Guid, Guid, string, string, DateTime>? OnCommentReceived;
 
@@ -58,13 +57,13 @@ namespace NTS.Client.Services
                 var comments = await response.Content.ReadFromJsonAsync<List<Comment>>();
                 return comments ?? new List<Comment>();
             }
-            catch (HttpRequestException httpEx)
+            catch (HttpRequestException httpError)
             {
-                logger.LogError($"HTTP Request Error: {httpEx.Message}");
+                logger.LogError($"HTTP Request Error: {httpError.Message}");
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                logger.LogError($"Unexpected Error: {ex.Message}");
+                logger.LogError($"Unexpected Error: {error.Message}");
             }
 
             return new List<Comment>();
