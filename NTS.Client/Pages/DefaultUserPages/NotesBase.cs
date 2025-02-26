@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using NTS.Client.Components;
 using NTS.Client.DTOs;
@@ -78,6 +79,23 @@ namespace NTS.Client.Pages.DefaultUserPages
             {
                 Console.WriteLine($"Error Searching Notes: {error.Message}");
                 isFetched = true;
+            }
+        }
+
+
+        public async Task HandleKeyEnterAsync(KeyboardEventArgs args)
+        {
+            try
+            {
+                if (args.Key == "Enter")
+                {
+                    await Task.Delay(50);
+                    await SearchNotesAsync(searchQuery);
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error Searching Using Key Enter: {error.Message}");
             }
         }
 
