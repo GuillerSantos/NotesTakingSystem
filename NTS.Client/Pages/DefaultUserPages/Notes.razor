@@ -6,8 +6,8 @@
     <div class="flex items-center mb-5">
         <h3 class="font-bold text-2xl"> Add Note </h3>
         <MudIconButton OnClick="() => OpenCreateOrUpdateNoteDialogAsync()" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.NoteAdd"> </MudIconButton>
-        <MudTextField Class="px-4" @bind-Value="searchQuery" T="string" Variant="Variant.Outlined" Label="Search Notes" />
-        <MudIconButton Class="py-4 px-10" Icon="@Icons.Material.Filled.Search" OnClick="() => SearchNotesAsync(searchQuery)" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
+        <MudTextField Class="px-4" @bind-Value="searchQuery" OnKeyUp="HandleKeyEnterAsync" T="string" Variant="Variant.Outlined" Label="Search Notes" />
+        <MudIconButton Class="py-4 px-10" OnClick="() => SearchNotesAsync(searchQuery)" Icon="@Icons.Material.Filled.Search" Variant="Variant.Filled" Color="Color.Primary"></MudIconButton>
     </div>
 
     <div class="grid gap-4 p-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full">
@@ -18,7 +18,7 @@
                 <MudCard Style="@GetNoteStyle(note)" Class="note-card" Outlined="true" Elevation="5">
                     <MudCardContent Class="note-card-details">
                         <h6 class="font-bold text-gray-950 text-lg mb-2 break-words">@note.Title</h6>
-                        <h6 class="text-sm text-gray-600 break-words">@note.Content</h6>
+                        <h6 class="text-sm text-white break-words">@note.Content</h6>
                     </MudCardContent>
 
                     <MudCardActions Class="flex justify-between items-center px-4 py-3">
