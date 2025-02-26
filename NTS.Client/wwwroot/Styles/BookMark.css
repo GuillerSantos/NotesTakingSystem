@@ -14,13 +14,13 @@
     --breakpoint-xs: 480px;
 }
 
+
 /*---------------------------------------------------------------------------------------------------*/
 
 
 .note-bookmark-card {
     display: flex;
     flex-direction: column;
-    cursor: pointer;
     padding: 1rem;
     overflow: hidden;
     word-wrap: break-word;
@@ -46,8 +46,9 @@
     display: grid;
     gap: 1rem;
     padding: 2rem;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 }
+
 
 /*---------------------------------------------------------------------------------------------------*/
 
@@ -73,7 +74,7 @@
 
 @media (max-width: var(--breakpoint-xs)) {
     .bookmark-container {
-        grid-template-columns: 2fr;
+        grid-template-columns: repeat(2, 1fr);
         font-size: 1rem;
     }
 }
