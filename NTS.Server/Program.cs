@@ -8,6 +8,7 @@ using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using NTS.Server.Middleware.Hubs;
 using NTS.Server.DTOs;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +79,7 @@ builder.Services.AddCors(policy =>
     });
 });
 
+
 // JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -96,13 +98,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+builder.Services.AddOpenApi();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline in development
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "NTS.Server V1"));
+   app.MapOpenApi();
+   app.MapScalarApiReference();
 }
 
 app.UseResponseCompression();
