@@ -87,7 +87,7 @@ namespace NTS.Client.Services
             hubConnection.Closed += async (error) =>
             {
                 logger.LogWarning($"SignalR connection closed. Reason: {error?.Message}");
-                await Task.Delay(5000); // Wait before reconnecting
+                await Task.Delay(5000);
                 await StartAsync();
             };
 
