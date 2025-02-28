@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using NTS.Server.Data;
 using NTS.Server.Entities;
-using NTS.Server.DTOs;
-using Microsoft.EntityFrameworkCore;
+using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Middleware.Hubs
 {
     public class CommentHub : Hub
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ICommentsService _commentsService;
 
-        public CommentHub(ApplicationDbContext dbContext)
+        public CommentHub(ICommentsService commentsService)
         {
-            this.dbContext = dbContext;
+            _commentsService = commentsService ?? throw new ArgumentNullException(nameof(commentsService));
         }
-
 
         public async Task SendCommentAsync(Guid noteId, Guid sharedNoteId, Guid userId, string fullName, DateTime createdAt, string commentContent)
         {
@@ -28,23 +25,17 @@ namespace NTS.Server.Middleware.Hubs
                 CreatedAt = createdAt
             };
 
-            await dbContext.Comments.AddAsync(comment);
-            await dbContext.SaveChangesAsync();
+            await _commentsService.SaveCommentAsync(comment);
 
             // Broadcast comment to all clients
             await Clients.All.SendAsync("ReceiveMessage", comment);
         }
 
-
         public async Task GetCommentsAsync(Guid noteId)
         {
             try
             {
-                var comments = await dbContext.Comments
-                    .Where(c => c.NoteId == noteId)
-                    .OrderBy(c => c.CreatedAt)
-                    .ToListAsync();
-
+                var comments = await _commentsService.GetCommentsForNoteAsync(noteId);
                 await Clients.Caller.SendAsync("ReceiveComments", comments);
             }
             catch (Exception ex)
