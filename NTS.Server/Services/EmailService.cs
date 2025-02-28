@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NTS.Server.Data;
 using NTS.Server.DTOs;
@@ -18,54 +17,58 @@ namespace NTS.Server.Services
         public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettingsDto> emailSettings, ILogger<EmailService> logger)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            this.emailSettings = emailSettings.Value ?? throw new ArgumentNullException(nameof(emailSettings));
+            this.emailSettings = emailSettings?.Value ?? throw new ArgumentNullException(nameof(emailSettings));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
         public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userRecoveryEmail, string resetToken)
         {
-            var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.RecoveryEmail == userRecoveryEmail);
+            var user = await dbContext.ApplicationUsers
+                .FirstOrDefaultAsync(u => u.RecoveryEmail == userRecoveryEmail);
 
             if (user == null)
             {
-                logger.LogWarning($"No User Found With This Recovery Email {userRecoveryEmail}");
+                logger.LogWarning($"No user found with recovery email: {userRecoveryEmail}");
                 return false;
             }
 
-            var fromEmail = emailSettings.FromEmail;
-            var senderPassword = emailSettings.AppPassword;
+            var mailMessage = CreateMailMessage(userRecoveryEmail, resetToken);
+            return await SendEmailAsync(mailMessage);
+        }
 
-            var toEmail = userRecoveryEmail;
-            var subject = "Password Reset Request";
-            var body = $"Please Click On The Following Link To Reset Your Password: https://notestakingsystem.com/reset-password?token={resetToken}";
+        private MailMessage CreateMailMessage(string toEmail, string resetToken)
+        {
+            var resetLink = $"https://notestakingsystem.com/reset-password?token={resetToken}";
+            var body = $"Please click on the following link to reset your password: <a href='{resetLink}'>Reset Password</a>";
 
-            var smtpClient = new SmtpClient(emailSettings.SMTPServer)
+            return new MailMessage
+            {
+                From = new MailAddress(emailSettings.FromEmail, emailSettings.FromName),
+                Subject = "Password Reset Request",
+                Body = body,
+                IsBodyHtml = true,
+                To = { toEmail }
+            };
+        }
+
+        private async Task<bool> SendEmailAsync(MailMessage mailMessage)
+        {
+            using var smtpClient = new SmtpClient(emailSettings.SMTPServer)
             {
                 Port = emailSettings.SMTPPort,
-                Credentials = new NetworkCredential(fromEmail, senderPassword),
+                Credentials = new NetworkCredential(emailSettings.FromEmail, emailSettings.AppPassword),
                 EnableSsl = true
             };
-
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress(fromEmail, emailSettings.FromName),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
-
-            mailMessage.To.Add(toEmail);
 
             try
             {
                 await smtpClient.SendMailAsync(mailMessage);
-                logger.LogInformation($"Password Reset Email Sent Successfully To: {toEmail}");
+                logger.LogInformation($"Password reset email sent successfully to: {mailMessage.To}");
                 return true;
             }
-            catch (Exception error)
+            catch (Exception ex)
             {
-                logger.LogError($"Error Sending Password Reset Email To: {toEmail}: {error.Message}");
+                logger.LogError($"Error sending password reset email to: {mailMessage.To} - {ex.Message}");
                 return false;
             }
         }
