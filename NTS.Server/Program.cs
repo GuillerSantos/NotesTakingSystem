@@ -27,6 +27,7 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 
 builder.Services.AddSignalR();
+builder.Services.AddLogging();
 
 // DB Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -91,8 +92,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = builder.Configuration["AppSettings:Audience"],
             ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:Token"]!)),
             ValidateIssuerSigningKey = true
         };
     });
