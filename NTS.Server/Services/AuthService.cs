@@ -182,11 +182,18 @@ namespace NTS.Server.Services
 
         private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
         {
-            return new TokenResponseDto()
+            try
             {
-                AccessToken = CreateToken(user!),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
-            };
+                return new TokenResponseDto()
+                {
+                    AccessToken = CreateToken(user!),
+                    RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
+                };
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Creating Token: {error.Message}");
+            }
         }
 
 
