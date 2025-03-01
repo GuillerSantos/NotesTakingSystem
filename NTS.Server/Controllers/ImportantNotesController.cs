@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NTS.Server.Entities;
-using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using System.Security.Claims;
 
@@ -63,7 +61,7 @@ namespace NTS.Server.Controllers
         }
 
 
-        [HttpDelete("unmark-as-importantnote/{noteId}"), Authorize (Roles = "DefaultUser")]
+        [HttpDelete("unmark-as-importantnote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsImportantAsync(Guid noteId)
         {
             try

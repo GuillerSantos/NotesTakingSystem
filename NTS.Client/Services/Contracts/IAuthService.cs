@@ -1,6 +1,4 @@
 ﻿using NTS.Client.DTOs;
-using NTS.Client.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NTS.Client.Services.Contracts
 {

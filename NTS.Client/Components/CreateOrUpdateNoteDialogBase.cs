@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Identity;
 using MudBlazor;
 using MudBlazor.Utilities;
 using NTS.Client.DTOs;
 using NTS.Client.Models;
 using NTS.Client.Pages.DefaultUserPages;
 using NTS.Client.Services.Contracts;
-using System.Security.Claims;
 
 namespace NTS.Client.Components
 {

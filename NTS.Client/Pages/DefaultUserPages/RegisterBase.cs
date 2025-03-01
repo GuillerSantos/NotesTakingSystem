@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using NTS.Client.DTOs;
-using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
 
 namespace NTS.Client.Pages.DefaultUserPages

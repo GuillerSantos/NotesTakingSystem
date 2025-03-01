@@ -1,6 +1,5 @@
 ﻿using Microsoft.JSInterop;
 using MudBlazor;
-using MudBlazor.Interfaces;
 
 namespace NTS.Client.Services
 {

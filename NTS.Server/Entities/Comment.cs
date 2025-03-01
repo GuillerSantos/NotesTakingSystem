@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace NTS.Server.Entities
 {
@@ -11,7 +10,7 @@ namespace NTS.Server.Entities
         public Guid SharedNoteId { get; set; }
 
         public Guid NoteId { get; set; }
-        
+
         public Guid UserId { get; set; }
 
         [StringLength(100), Required]

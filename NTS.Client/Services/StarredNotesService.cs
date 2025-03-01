@@ -49,7 +49,7 @@ namespace NTS.Client.Services
                 var response = await httpClient.DeleteAsync($"/api/StarredNotes/unmark-as-starrednote/{noteId}");
                 response.EnsureSuccessStatusCode();
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 logger.LogError($"Error Unmarking Notes: {error.Message}");
             }

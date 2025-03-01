@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
 using NTS.Server.DTOs;
 using NTS.Server.Services.Contracts;
-using System.Data.Common;
 using System.Security.Claims;
 
 namespace NTS.Server.Controllers
@@ -15,7 +13,7 @@ namespace NTS.Server.Controllers
     {
         private readonly INotesService notesService;
 
-    public NotesController(INotesService notesService)
+        public NotesController(INotesService notesService)
         {
             this.notesService = notesService ?? throw new ArgumentNullException(nameof(notesService));
         }
@@ -154,13 +152,13 @@ namespace NTS.Server.Controllers
                 return Ok(editedNote);
             }
             catch (Exception error)
-            { 
+            {
                 return BadRequest(error.Message);
             }
         }
 
 
-        [HttpDelete("remove-note/{noteId}"), Authorize (Roles = "DefaultUser")]
+        [HttpDelete("remove-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> RemoveNoteAsync(Guid noteId, Guid userId)
         {
             try

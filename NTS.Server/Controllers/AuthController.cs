@@ -70,12 +70,12 @@ namespace NTS.Server.Controller
 
                 if (result)
                 {
-                    return Ok(new { message = "Successfully Logged Out"});
+                    return Ok(new { message = "Successfully Logged Out" });
                 }
 
                 return BadRequest("Logout Failed");
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 return StatusCode(500, $"Internal Server Error: {error.Message}");
             }

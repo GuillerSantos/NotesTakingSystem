@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NTS.Client.Services.Contracts
+﻿namespace NTS.Client.Services.Contracts
 {
     public interface ICommentSignalRService
     {

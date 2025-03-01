@@ -1,6 +1,5 @@
 ﻿using Blazored.LocalStorage;
 using NTS.Client.DTOs;
-using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
 using YourApp.Client.Securities;
 
@@ -130,7 +129,7 @@ namespace NTS.Client.Services
             }
             catch (Exception error)
             {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: { error.Message}" };
+                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
             }
         }
 

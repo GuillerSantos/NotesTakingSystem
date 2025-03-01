@@ -19,8 +19,8 @@ namespace NTS.Server.Services
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
-            this.importantNotesService = importantNotesService ?? throw new ArgumentNullException(nameof(importantNotesService)) ;
-            this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService)) ;
+            this.importantNotesService = importantNotesService ?? throw new ArgumentNullException(nameof(importantNotesService));
+            this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService));
             this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
 
@@ -149,10 +149,10 @@ namespace NTS.Server.Services
 
 
         public async Task<bool> RemoveNoteAsync(Guid noteId, Guid userId)
-        {           
+        {
             try
             {
-                var noteToRemove = await dbContext.Notes.FindAsync(noteId);                
+                var noteToRemove = await dbContext.Notes.FindAsync(noteId);
                 if (noteToRemove is null)
                     return false;
 

@@ -1,14 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.OpenApi.Models;
 using NTS.Server.Data;
+using NTS.Server.DTOs;
+using NTS.Server.Middleware.Hubs;
 using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
-using NTS.Server.Middleware.Hubs;
-using NTS.Server.DTOs;
 using Scalar.AspNetCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,8 +106,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline in development
 if (app.Environment.IsDevelopment())
 {
-   app.MapOpenApi();
-   app.MapScalarApiReference();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseResponseCompression();

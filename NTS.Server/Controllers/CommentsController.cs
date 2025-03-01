@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Entities;
-using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 
 namespace NTS.Server.Controllers

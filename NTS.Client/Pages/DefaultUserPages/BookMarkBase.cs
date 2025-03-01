@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using NTS.Client.Components;
 using NTS.Client.DTOs;
 using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
@@ -17,7 +16,7 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Parameter] public List<ImportantNotes> importantNotes { get; set; } = new List<ImportantNotes>();
         [Parameter] public List<FavoriteNotes> favoriteNotes { get; set; } = new List<FavoriteNotes>();
         [Parameter] public List<StarredNotes> starredNotes { get; set; } = new List<StarredNotes>();
-       
+
         public NoteDto note { get; set; } = new NoteDto();
         public bool isFetched = false;
 

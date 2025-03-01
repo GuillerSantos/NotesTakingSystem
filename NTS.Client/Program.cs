@@ -1,11 +1,11 @@
 global using Microsoft.AspNetCore.Components.Authorization;
-using MudBlazor.Services;
 using Blazored.LocalStorage;
-using NTS.Client.Services.Contracts;
-using NTS.Client.Services;
-using YourApp.Client.Securities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.SignalR.Client;
+using MudBlazor.Services;
+using NTS.Client.Services;
+using NTS.Client.Services.Contracts;
+using YourApp.Client.Securities;
 
 var builder = WebApplication.CreateBuilder(args);
 

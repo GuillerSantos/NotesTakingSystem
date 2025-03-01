@@ -1,6 +1,5 @@
 ﻿using NTS.Client.Models;
 using NTS.Client.Services.Contracts;
-using System.Net.Http;
 
 namespace NTS.Client.Services
 {

@@ -109,7 +109,7 @@ namespace NTS.Server.Services
                 registerUser.FullName = request.FullName;
                 registerUser.Email = request.Email;
                 registerUser.PasswordHash = hashPassword;
-                registerUser.Role =  isAdmin ? "Admin" : "DefaultUser";
+                registerUser.Role = isAdmin ? "Admin" : "DefaultUser";
                 registerUser.PhoneNumber = request.PhoneNumber;
                 registerUser.RecoveryEmail = request.RecoveryEmail;
                 registerUser.DateJoined = DateTime.UtcNow;
@@ -136,7 +136,7 @@ namespace NTS.Server.Services
 
                 if (accountToRemove is null) return false;
 
-                await noteService.RemoveNoteAsync(userId ,noteId);
+                await noteService.RemoveNoteAsync(userId, noteId);
                 await favoriteNoteService.UnmarkNoteAsFavoriteAsync(userId);
                 await impotantNotesService.UnmarkNoteAsImportantAsync(userId);
                 await sharedNotesService.UnmarkNoteAsSharedAsync(userId);

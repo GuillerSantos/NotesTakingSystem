@@ -21,7 +21,7 @@ namespace NTS.Client.Services
                 var response = await httpClient.PostAsJsonAsync("/api/Notes/create-note", request);
                 response.EnsureSuccessStatusCode();
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 logger.LogError($"Error Create Note: {error.Message}");
             }

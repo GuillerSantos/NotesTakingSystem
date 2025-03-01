@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NTS.Server.Services;
 using NTS.Server.Services.Contracts;
 using System.Security.Claims;
 
@@ -54,7 +53,7 @@ namespace NTS.Server.Controllers
             }
             catch (Exception error)
             {
-                return BadRequest($"Error Fetching All Starred Notes: {error.Message}"); 
+                return BadRequest($"Error Fetching All Starred Notes: {error.Message}");
             }
         }
 

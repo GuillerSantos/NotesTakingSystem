@@ -1,6 +1,5 @@
 ﻿using NTS.Server.DTOs;
 using NTS.Server.Entities;
-using System.Threading.Tasks;
 
 namespace NTS.Server.Services.Contracts
 {

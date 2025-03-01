@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using NTS.Server.Entities;
+﻿using NTS.Server.Entities;
 
 namespace NTS.Server.Services.Contracts
 {
