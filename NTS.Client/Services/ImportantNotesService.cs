@@ -11,7 +11,7 @@ namespace NTS.Client.Services
         public ImportantNotesService(HttpClient httpClient, ILogger<ImportantNotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task MarkNoteAsImportantAsync(ImportantNotes request, Guid noteId)

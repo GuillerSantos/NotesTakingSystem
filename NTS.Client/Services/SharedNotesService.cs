@@ -10,8 +10,8 @@ namespace NTS.Client.Services
 
         public SharedNotesService(HttpClient httpClient, ILogger<SharedNotesService> logger)
         {
-            this.httpClient = httpClient;
-            this.logger = logger;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task MarkNoteAsSharedAsync(SharedNotes request, Guid noteId)

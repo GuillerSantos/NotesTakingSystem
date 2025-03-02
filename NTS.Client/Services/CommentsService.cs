@@ -10,8 +10,8 @@ namespace NTS.Client.Services
 
         public CommentsService(HttpClient httpClient, ILogger<CommentsService> logger)
         {
-            this.httpClient = httpClient;
-            this.logger = logger;
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public event Action<Guid, Guid, Guid, string, string, DateTime>? OnCommentReceived;

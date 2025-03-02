@@ -66,42 +66,21 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public async Task UnmarkNoteAsFavoriteAsync(Guid NoteId)
         {
-            try
-            {
-                await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(NoteId);
-                await LoadAllMarkedNotesAsync();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Unmarking Note: {error.Message}");
-            }
+            await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(NoteId);
+            await LoadAllMarkedNotesAsync();
         }
 
 
         public async Task UnmarkNoteAsImportantAsync(Guid noteId)
         {
-            try
-            {
-                await importantNotesService.UnamrkNoteAsImportantAsync(noteId);
-                await LoadAllMarkedNotesAsync();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Unmarking Note: {error.Message}");
-            }
+            await importantNotesService.UnamrkNoteAsImportantAsync(noteId);
+            await LoadAllMarkedNotesAsync();
         }
 
         public async Task UnmarkNoteAsStarredAsync(Guid noteId)
         {
-            try
-            {
-                await starredNotesService.UnmarkNoteAsImportantNoteAsync(noteId);
-                await LoadAllMarkedNotesAsync();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Unmarking Note: {error.Message}");
-            }
+            await starredNotesService.UnmarkNoteAsImportantNoteAsync(noteId);
+            await LoadAllMarkedNotesAsync();
         }
     }
 }

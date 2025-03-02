@@ -14,7 +14,7 @@ namespace NTS.Client.Services
 
         public AuthService(ILogger<AuthService> logger, HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.localStorageService = localStorageService ?? throw new ArgumentNullException(nameof(localStorageService));
             this.authenticationState = authenticationState ?? throw new ArgumentNullException(nameof(authenticationState));

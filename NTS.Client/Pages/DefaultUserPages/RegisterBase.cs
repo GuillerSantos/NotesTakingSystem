@@ -13,21 +13,14 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public async Task HandleRegisterAsync()
         {
-            try
+            var response = await authService.RegisterDefaultUserAsync(register);
+            if (response.IsSuccess)
             {
-                var response = await authService.RegisterDefaultUserAsync(register);
-                if (response.IsSuccess)
-                {
-                    Console.WriteLine("Account Registered Successfully");
-                }
-                else
-                {
-                    responseDto.ErrorMessage = response.ErrorMessage;
-                }
+                Console.WriteLine("Account Registered Successfully");
             }
-            catch (Exception error)
+            else
             {
-                Console.WriteLine($"Error Registering Account: {error.Message}");
+                responseDto.ErrorMessage = response.ErrorMessage;
             }
         }
     }

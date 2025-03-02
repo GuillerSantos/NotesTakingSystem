@@ -41,16 +41,8 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public async Task LoadSharedNotesAsync()
         {
-            try
-            {
-                sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync() ?? new List<SharedNotes>();
-                filteredNotes = sharedNotesList.ToList();
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Fetching All Notes: {error.Message}");
-            }
-
+            sharedNotesList = await sharedNotesService.GetAllSharedNotesAsync() ?? new List<SharedNotes>();
+            filteredNotes = sharedNotesList.ToList();
             isFetched = true;
             StateHasChanged();
         }
@@ -82,18 +74,11 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public async Task LoadComments(Guid noteId)
         {
-            try
-            {
-                var comments = await commentsService.GetCommentsForNoteAsync(noteId);
+            var comments = await commentsService.GetCommentsForNoteAsync(noteId);
 
-                if (comments != null)
-                {
-                    noteComments[noteId] = comments.ToList();
-                }
-            }
-            catch (Exception ex)
+            if (comments != null)
             {
-                Console.WriteLine($"Error Loading Comments: {ex.Message}");
+                noteComments[noteId] = comments.ToList();
             }
         }
 

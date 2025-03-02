@@ -34,31 +34,24 @@ namespace NTS.Client.Pages.DefaultUserPages
         {
             responseDto.ErrorMessage = null;
 
-            try
+            var response = await authService.LoginAsync(loginDto);
+
+            if (response.IsSuccess)
             {
-                var response = await authService.LoginAsync(loginDto);
+                var token = await localStorageService.GetItemAsStringAsync("Token");
+                var resfreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
 
-                if (response.IsSuccess)
-                {
-                    var token = await localStorageService.GetItemAsStringAsync("Token");
-                    var resfreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
-
-                    if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(resfreshToken))
-                    {
-                        responseDto.ErrorMessage = response.ErrorMessage;
-                        return;
-                    }
-
-                    navigationManager.NavigateTo("/home");
-                }
-                else
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(resfreshToken))
                 {
                     responseDto.ErrorMessage = response.ErrorMessage;
+                    return;
                 }
+
+                navigationManager.NavigateTo("/home");
             }
-            catch (Exception error)
+            else
             {
-                throw new Exception($"An Error Occurred While Logging In: {error.Message}");
+                responseDto.ErrorMessage = response.ErrorMessage;
             }
         }
 

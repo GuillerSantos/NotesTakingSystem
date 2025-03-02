@@ -10,8 +10,8 @@ namespace NTS.Client.Services
 
         public CommentSignalRService(HubConnection hubConnection, ILogger<CommentSignalRService> logger)
         {
-            this.hubConnection = hubConnection;
-            this.logger = logger;
+            this.hubConnection = hubConnection ?? throw new ArgumentNullException(nameof(hubConnection));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             // Set Default Event Handler To Prevent Null Reference
             OnCommentReceived = delegate { };

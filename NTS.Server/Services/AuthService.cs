@@ -23,7 +23,6 @@ namespace NTS.Server.Services
         private readonly ISharedNotesService sharedNotesService;
         private readonly IStarredNotesService starredNotesService;
         private readonly IConfiguration configuration;
-        private Notes notes = new Notes();
 
         public AuthService(ApplicationDbContext dbContext, IConfiguration configuration,
             INotesService notesService, IFavoriteNoteService favoriteNoteService,

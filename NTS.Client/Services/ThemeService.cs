@@ -13,22 +13,15 @@ namespace NTS.Client.Services
 
         public ThemeService(IJSRuntime jSRuntime, ILogger<ThemeService> logger)
         {
-            this.jSRuntime = jSRuntime;
-            this.logger = logger;
+            this.jSRuntime = jSRuntime ?? throw new ArgumentNullException(nameof(jSRuntime));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
         public async Task OnInitializedAsync()
         {
-            try
-            {
-                var storedTheme = await jSRuntime.InvokeAsync<string>("localThemeFunction.getTheme");
-                isDarkMode = storedTheme == "true";
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Error: {ex.Message}");
-            }
+            var storedTheme = await jSRuntime.InvokeAsync<string>("localThemeFunction.getTheme");
+            isDarkMode = storedTheme == "true";
         }
 
 
