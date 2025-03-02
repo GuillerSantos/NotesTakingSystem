@@ -30,7 +30,7 @@ new HubConnectionBuilder()
     .WithAutomaticReconnect()
     .Build());
 
-// Add services to the container.
+// DI Services.
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INotesService, NotesService>();
 builder.Services.AddScoped<IFavoriteNotesService, FavoriteNotesService>();
