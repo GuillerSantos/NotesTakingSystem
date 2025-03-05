@@ -14,10 +14,9 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public ISnackbar snackbar { get; set; } = default!;
         [Inject] public IDialogService dialogService { get; set; } = default!;
 
-
-        public List<NoteDto> allNotes { get; set; } = new List<NoteDto>();
+        public List<NoteDto> filteredNotes = new List<NoteDto>();
+        public List<NoteDto> allNotes = new List<NoteDto>();
         public string searchQuery { get; set; } = default!;
-        public List<NoteDto> filteredNotes { get; set; } = new List<NoteDto>();
         public bool isLoggedIn = false;
         public bool isFetched = false;
 
