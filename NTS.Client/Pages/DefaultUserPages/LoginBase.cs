@@ -20,7 +20,7 @@ namespace NTS.Client.Pages.DefaultUserPages
 
         public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
         public ResponseDto responseDto = new ResponseDto();
-        public LoginDto loginDto { get; set; } = new LoginDto();
+        public LoginDto loginDto = new LoginDto();
 
         public readonly DialogOptions dialogOptions = new DialogOptions()
         {
@@ -39,14 +39,15 @@ namespace NTS.Client.Pages.DefaultUserPages
             if (response.IsSuccess)
             {
                 var token = await localStorageService.GetItemAsStringAsync("Token");
-                var resfreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
+                var refreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
 
-                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(resfreshToken))
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(refreshToken))
                 {
                     responseDto.ErrorMessage = response.ErrorMessage;
                     return;
                 }
 
+                await authenticationStateProvider.RefreshAuthenticationStateAsync();
                 navigationManager.NavigateTo("/home");
             }
             else
