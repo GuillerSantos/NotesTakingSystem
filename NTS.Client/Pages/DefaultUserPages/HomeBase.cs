@@ -60,7 +60,6 @@ namespace NTS.Client.Pages.DefaultUserPages
                         userId,
                         note.SharedNoteId,
                         note.FullName,
-
                         DateTime.Now,
                         newCommentContent
                     );
