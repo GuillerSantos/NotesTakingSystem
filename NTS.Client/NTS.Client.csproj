@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="postcss.config.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\Styles\styles.css" />
   </ItemGroup>
 

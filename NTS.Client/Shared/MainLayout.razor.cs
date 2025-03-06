@@ -10,12 +10,12 @@ namespace NTS.Client.Shared
     {
         public bool drawerOpen = false;
 
-        [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] ILocalStorageService localStorageService { get; set; }
-        [Inject] CustomAuthenticationStateProvider authenticationState { get; set; }
-        [Inject] ThemeService themeService { get; set; }
+        [Inject] NavigationManager navigationManager { get; set; } = default!;
+        [Inject] ILocalStorageService localStorageService { get; set; } = default!;
+        [Inject] CustomAuthenticationStateProvider authenticationState { get; set; } = default!;
+        [Inject] ThemeService themeService { get; set; } = default!;
 
-        public ResponseTokenDto responseToken { get; set; }
+        public ResponseTokenDto responseToken = new ResponseTokenDto();
         private bool themeLoaded = false;
 
 

@@ -1,8 +1,7 @@
-﻿@using YourApp.Client.Securities
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 @attribute [Authorize(Roles = "DefaultUser")]
 
-<MudThemeProvider @bind-IsDarkMode="@themeService.isDarkMode" Theme="themeService.CustomTheme"/>
+<MudThemeProvider @bind-IsDarkMode="@themeService.isDarkMode" Theme="@themeService.CustomTheme" />
 <MudSnackbarProvider />
 <MudDialogProvider />
 <MudPopoverProvider />
