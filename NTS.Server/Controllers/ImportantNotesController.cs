@@ -5,17 +5,26 @@ using System.Security.Claims;
 
 namespace NTS.Server.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class ImportantNotesController : ControllerBase
     {
+        #region Fields
+
         private readonly IImpotantNotesService impotantNotesService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public ImportantNotesController(IImpotantNotesService impotantNotesService)
         {
             this.impotantNotesService = impotantNotesService ?? throw new ArgumentNullException(nameof(impotantNotesService));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpPost("mark-important/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsImpotantAsync(Guid noteId)
@@ -52,14 +61,12 @@ namespace NTS.Server.Controllers
                 }
 
                 return Ok(importantNotes);
-
             }
             catch (Exception error)
             {
                 return BadRequest($"Error Fetching All Importang Notes: {error.Message}");
             }
         }
-
 
         [HttpDelete("unmark-as-importantnote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsImportantAsync(Guid noteId)
@@ -81,5 +88,7 @@ namespace NTS.Server.Controllers
                 return BadRequest($"Error Unmarking Note As Important {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

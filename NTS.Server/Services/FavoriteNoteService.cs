@@ -7,13 +7,22 @@ namespace NTS.Server.Services
 {
     public class FavoriteNoteService : IFavoriteNoteService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public FavoriteNoteService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<bool> MarkNotesAsFavoriteAsync(Guid noteId, Guid userId)
         {
@@ -54,7 +63,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync(Guid userId)
         {
             try
@@ -68,7 +76,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Fetching All Favorite Notes: {error.Message}");
             }
         }
-
 
         public async Task<bool> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
@@ -88,7 +95,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Removing Note: {error.Message}");
             }
         }
-
 
         public async Task UpdateFavoriteNotesAsync(Notes updatedNote)
         {
@@ -112,5 +118,7 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Updating Favorite Notes: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

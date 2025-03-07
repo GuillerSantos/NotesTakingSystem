@@ -9,13 +9,22 @@ namespace NTS.Server.Controllers
     [Route("api/[controller]")]
     public class SharedNotesController : ControllerBase
     {
+        #region Fields
+
         private readonly ISharedNotesService sharedNotesService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public SharedNotesController(ISharedNotesService sharedNotesService)
         {
             this.sharedNotesService = sharedNotesService ?? throw new ArgumentNullException(nameof(sharedNotesService));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpPost("mark-shared/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsSharedAsync(Guid noteId)
@@ -37,7 +46,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpDelete("unmark-sharednote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsSharedAsync(Guid noteId)
         {
@@ -54,7 +62,6 @@ namespace NTS.Server.Controllers
                 return BadRequest($"Error Unmarking Note As Shared: {error.Message}");
             }
         }
-
 
         [HttpGet("get-all-shared-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllSharedNotesAsync()
@@ -80,5 +87,7 @@ namespace NTS.Server.Controllers
                 return BadRequest(new { Message = $"Error Fetching All Shared Notes: {error.Message}" });
             }
         }
+
+        #endregion Public Methods
     }
 }

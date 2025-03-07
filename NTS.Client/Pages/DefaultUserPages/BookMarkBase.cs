@@ -8,6 +8,14 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class BookMarkBase : ComponentBase
     {
+        #region Fields
+
+        public bool isFetched = false;
+
+        #endregion Fields
+
+        #region Properties
+
         [Inject] public IFavoriteNotesService favoriteNotesService { get; set; } = default!;
         [Inject] public IImportantNotesService importantNotesService { get; set; } = default!;
         [Inject] public IStarredNotesService starredNotesService { get; set; } = default!;
@@ -18,14 +26,10 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Parameter] public List<StarredNotes> starredNotes { get; set; } = new List<StarredNotes>();
 
         public NoteDto note { get; set; } = new NoteDto();
-        public bool isFetched = false;
 
-        protected override async Task OnInitializedAsync()
-        {
-            await LoadAllMarkedNotesAsync();
-            isFetched = true;
-        }
+        #endregion Properties
 
+        #region Public Methods
 
         public async Task LoadAllMarkedNotesAsync()
         {
@@ -63,13 +67,11 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async Task UnmarkNoteAsFavoriteAsync(Guid NoteId)
         {
             await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(NoteId);
             await LoadAllMarkedNotesAsync();
         }
-
 
         public async Task UnmarkNoteAsImportantAsync(Guid noteId)
         {
@@ -82,5 +84,17 @@ namespace NTS.Client.Pages.DefaultUserPages
             await starredNotesService.UnmarkNoteAsImportantNoteAsync(noteId);
             await LoadAllMarkedNotesAsync();
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadAllMarkedNotesAsync();
+            isFetched = true;
+        }
+
+        #endregion Protected Methods
     }
 }

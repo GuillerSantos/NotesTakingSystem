@@ -4,6 +4,8 @@ namespace NTS.Server.DTOs
 {
     public class CreateNotesDto
     {
+        #region Properties
+
         [Required]
         [StringLength(50)]
         public string Title { get; set; } = string.Empty;
@@ -17,5 +19,7 @@ namespace NTS.Server.DTOs
         public string Color { get; set; } = string.Empty;
 
         public DateTime? CreatedAt { get; set; }
+
+        #endregion Properties
     }
 }

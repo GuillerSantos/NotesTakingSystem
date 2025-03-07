@@ -6,10 +6,21 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class RegisterBase : ComponentBase
     {
+        #region Fields
+
+        public ResponseDto responseDto = new ResponseDto();
+
+        #endregion Fields
+
+        #region Properties
+
         [Inject] public IAuthService authService { get; set; }
 
         public RegisterDto register { get; set; } = new RegisterDto();
-        public ResponseDto responseDto = new ResponseDto();
+
+        #endregion Properties
+
+        #region Public Methods
 
         public async Task HandleRegisterAsync()
         {
@@ -23,5 +34,7 @@ namespace NTS.Client.Pages.DefaultUserPages
                 responseDto.ErrorMessage = response.ErrorMessage;
             }
         }
+
+        #endregion Public Methods
     }
 }

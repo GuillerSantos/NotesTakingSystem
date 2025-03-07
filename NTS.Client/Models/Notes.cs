@@ -5,6 +5,8 @@ namespace NTS.Client.Models
 {
     public class Notes
     {
+        #region Properties
+
         [Key]
         public Guid NoteId { get; set; }
 
@@ -22,5 +24,7 @@ namespace NTS.Client.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public bool FavoriteNote { get; set; }
+
+        #endregion Properties
     }
 }

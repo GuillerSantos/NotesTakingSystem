@@ -6,6 +6,8 @@ namespace NTS.Server.Entities
 {
     public class ApplicationUsers
     {
+        #region Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid UserId { get; set; } = Guid.NewGuid();
@@ -44,5 +46,7 @@ namespace NTS.Server.Entities
 
         [JsonIgnore]
         public ICollection<Notes> Notes { get; set; }
+
+        #endregion Properties
     }
 }

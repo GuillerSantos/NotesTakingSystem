@@ -5,14 +5,24 @@ namespace NTS.Client.Services
 {
     public class StarredNotesService : IStarredNotesService
     {
+        #region Fields
+
         private readonly HttpClient httpClient;
         private readonly ILogger<StarredNotesService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public StarredNotesService(HttpClient httpClient, ILogger<StarredNotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task MarkNoteAsStarredAsync(StarredNotes request, Guid noteId)
         {
@@ -27,7 +37,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task<List<StarredNotes>> GetAllStarredNotesAsync()
         {
             try
@@ -41,7 +50,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task UnmarkNoteAsImportantNoteAsync(Guid noteId)
         {
             try
@@ -54,5 +62,7 @@ namespace NTS.Client.Services
                 logger.LogError($"Error Unmarking Notes: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

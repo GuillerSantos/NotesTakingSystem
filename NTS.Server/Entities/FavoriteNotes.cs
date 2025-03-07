@@ -5,6 +5,8 @@ namespace NTS.Server.Entities
 {
     public class FavoriteNotes
     {
+        #region Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid FavoriteNoteId { get; set; }
@@ -32,8 +34,9 @@ namespace NTS.Server.Entities
         [Required]
         public string Color { get; set; } = "#ffffff";
 
-
         public Notes? Note { get; set; }
         public ApplicationUsers? ApplicationUser { get; set; }
+
+        #endregion Properties
     }
 }

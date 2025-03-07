@@ -66,7 +66,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
 // Configuration CORS For Blazor Server App
 builder.Services.AddCors(policy =>
 {
@@ -79,7 +78,6 @@ builder.Services.AddCors(policy =>
         .AllowCredentials();
     });
 });
-
 
 // JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,9 +95,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
 builder.Services.AddOpenApi();
-
 
 var app = builder.Build();
 

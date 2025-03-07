@@ -7,13 +7,22 @@ namespace NTS.Server.Services
 {
     public class ImportantNotesService : IImpotantNotesService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public ImportantNotesService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<bool> MarkNoteAsImportantAsync(Guid noteId, Guid userId)
         {
@@ -54,7 +63,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<List<ImportantNotes>> GetAllImportantNotesAsync(Guid userId)
         {
             try
@@ -69,7 +77,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<bool> UnmarkNoteAsImportantAsync(Guid noteId)
         {
             try
@@ -82,14 +89,12 @@ namespace NTS.Server.Services
                 dbContext.ImportantNotes.Remove(importantNote);
                 await dbContext.SaveChangesAsync();
                 return true;
-
             }
             catch (Exception error)
             {
                 throw new Exception($"Error Removing Note: {error.Message}");
             }
         }
-
 
         public async Task UpdateImportantNotesAsync(Notes updatedNote)
         {
@@ -113,5 +118,7 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Updating Important Notes: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -5,8 +5,14 @@ namespace NTS.Client.Services
 {
     public class FavoriteNotesService : IFavoriteNotesService
     {
+        #region Fields
+
         private readonly HttpClient httpClient;
         private readonly ILogger<FavoriteNotesService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public FavoriteNotesService(HttpClient httpClient, ILogger<FavoriteNotesService> logger)
         {
@@ -14,6 +20,9 @@ namespace NTS.Client.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task MarkAsFavoriteNoteAsync(FavoriteNotes request, Guid noteId)
         {
@@ -28,7 +37,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task UnmarkNoteAsFavoriteNoteAsync(Guid noteId)
         {
             try
@@ -42,7 +50,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync()
         {
             try
@@ -55,5 +62,7 @@ namespace NTS.Client.Services
                 return new List<FavoriteNotes>();
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -1,8 +1,9 @@
-﻿
-namespace NTS.Client.Utilities
+﻿namespace NTS.Client.Utilities
 {
     public class NotesCardColorUtil
     {
+        #region Public Methods
+
         public static string GetLighterOrDarkerColor(string hexColor, float factor = 1.2f)
         {
             try
@@ -27,5 +28,7 @@ namespace NTS.Client.Utilities
                 return hexColor;
             }
         }
+
+        #endregion Public Methods
     }
 }

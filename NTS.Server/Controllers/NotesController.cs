@@ -6,18 +6,26 @@ using System.Security.Claims;
 
 namespace NTS.Server.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class NotesController : ControllerBase
     {
+        #region Fields
+
         private readonly INotesService notesService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public NotesController(INotesService notesService)
         {
             this.notesService = notesService ?? throw new ArgumentNullException(nameof(notesService));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpGet("get-all-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllNotesAsync()
@@ -48,7 +56,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpGet("get-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         [ActionName("GetNoteById")]
         public async Task<IActionResult> GetNoteByIdAsync(Guid noteId)
@@ -69,7 +76,6 @@ namespace NTS.Server.Controllers
                 return BadRequest(error.Message);
             }
         }
-
 
         [HttpGet("search-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchQuery)
@@ -96,7 +102,6 @@ namespace NTS.Server.Controllers
                 return BadRequest(error.Message);
             }
         }
-
 
         [HttpPost("create-note"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> CreateNoteAsync([FromBody] CreateNotesDto request)
@@ -129,7 +134,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpPost("update-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UpdateNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
         {
@@ -157,7 +161,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpDelete("remove-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> RemoveNoteAsync(Guid noteId, Guid userId)
         {
@@ -179,5 +182,7 @@ namespace NTS.Server.Controllers
                 return BadRequest(error.Message);
             }
         }
+
+        #endregion Public Methods
     }
 }

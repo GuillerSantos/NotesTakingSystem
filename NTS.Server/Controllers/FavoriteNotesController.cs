@@ -9,13 +9,22 @@ namespace NTS.Server.Controllers
     [Route("api/[controller]")]
     public class FavoriteNotesController : ControllerBase
     {
+        #region Fields
+
         private readonly IFavoriteNoteService favoriteNoteService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public FavoriteNotesController(IFavoriteNoteService favoriteNoteService)
         {
             this.favoriteNoteService = favoriteNoteService ?? throw new ArgumentNullException(nameof(favoriteNoteService));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpPost("mark-favorite/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsFavoriteAsync(Guid noteId)
@@ -38,7 +47,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpGet("get-all-favoritenotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllFavoriteNotesAsync()
         {
@@ -60,7 +68,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpDelete("unmark-as-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
@@ -81,5 +88,7 @@ namespace NTS.Server.Controllers
                 return BadRequest($"Error Unmarking Note As Favorite {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

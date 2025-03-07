@@ -5,8 +5,14 @@ namespace NTS.Client.Services
 {
     public class CommentSignalRService : ICommentSignalRService
     {
+        #region Fields
+
         private readonly HubConnection hubConnection;
         private readonly ILogger<CommentSignalRService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public CommentSignalRService(HubConnection hubConnection, ILogger<CommentSignalRService> logger)
         {
@@ -20,7 +26,15 @@ namespace NTS.Client.Services
             ConfigureReconnection();
         }
 
+        #endregion Public Constructors
+
+        #region Events
+
         public event Action<Guid, Guid, Guid, string, string, DateTime> OnCommentReceived;
+
+        #endregion Events
+
+        #region Public Methods
 
         /// <summary>
         /// Starts the SignalR connection and sets up event listeners.
@@ -79,6 +93,10 @@ namespace NTS.Client.Services
             }
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         /// <summary>
         /// Configures automatic reconnection logic.
         /// </summary>
@@ -103,5 +121,7 @@ namespace NTS.Client.Services
                 return Task.CompletedTask;
             };
         }
+
+        #endregion Private Methods
     }
 }

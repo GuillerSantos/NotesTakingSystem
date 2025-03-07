@@ -7,15 +7,24 @@ namespace NTS.Client.Components
 {
     public class ForgotPasswordDialogBase : ComponentBase
     {
+        #region Fields
+
         public readonly DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true, NoHeader = true };
 
-        [CascadingParameter] MudDialogInstance mudDialog { get; set; } = default!;
-        [Parameter] public ForgotPasswordDto forgotPasswordDto { get; set; } = new ForgotPasswordDto();
-        [Inject] IAuthService authService { get; set; } = default!;
-        [Inject] ISnackbar snackbar { get; set; } = default!;
+        #endregion Fields
 
+        #region Properties
+
+        [Parameter] public ForgotPasswordDto forgotPasswordDto { get; set; } = new ForgotPasswordDto();
         public ResponseDto response { get; set; } = new ResponseDto();
         public ResponseTokenDto responseToken { get; set; } = new ResponseTokenDto();
+        [CascadingParameter] private MudDialogInstance mudDialog { get; set; } = default!;
+        [Inject] private IAuthService authService { get; set; } = default!;
+        [Inject] private ISnackbar snackbar { get; set; } = default!;
+
+        #endregion Properties
+
+        #region Public Methods
 
         public async Task Submit()
         {
@@ -44,10 +53,11 @@ namespace NTS.Client.Components
             }
         }
 
-
         public void Cancel()
         {
             mudDialog.Cancel();
         }
+
+        #endregion Public Methods
     }
 }

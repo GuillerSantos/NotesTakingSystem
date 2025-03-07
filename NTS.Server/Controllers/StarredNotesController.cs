@@ -9,12 +9,22 @@ namespace NTS.Server.Controllers
     [Route("api/[controller]")]
     public class StarredNotesController : ControllerBase
     {
+        #region Fields
+
         private readonly IStarredNotesService starredNotesService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public StarredNotesController(IStarredNotesService starredNotesService)
         {
             this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpPost("mark-starred/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsStarredAsync(Guid noteId)
@@ -34,7 +44,6 @@ namespace NTS.Server.Controllers
                 return BadRequest(error.Message);
             }
         }
-
 
         [HttpGet("get-all-starrednotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllStarredNotesAsync()
@@ -57,7 +66,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpDelete("unmark-as-starrednote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNotesAsStarredAsync(Guid noteId)
         {
@@ -78,5 +86,7 @@ namespace NTS.Server.Controllers
                 return BadRequest($"Error Unmarking As Starred Note :{error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

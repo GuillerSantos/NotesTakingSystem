@@ -4,6 +4,8 @@ namespace NTS.Server.DTOs
 {
     public class RegisterDto
     {
+        #region Properties
+
         [Required]
         public string FullName { get; set; } = string.Empty;
 
@@ -28,5 +30,7 @@ namespace NTS.Server.DTOs
         public string RecoveryEmail { get; set; } = string.Empty;
 
         public DateTime? DateJoined { get; set; } = DateTime.UtcNow;
+
+        #endregion Properties
     }
 }

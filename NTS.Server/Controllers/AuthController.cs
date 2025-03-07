@@ -11,9 +11,15 @@ namespace NTS.Server.Controller
     [ApiController]
     public class AuthController : ControllerBase
     {
+        #region Fields
+
         private readonly IAuthService authService;
         private readonly IEmailService emailService;
         private readonly ILogger<AuthController> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public AuthController(IAuthService authService, IEmailService emailService, ILogger<AuthController> logger)
         {
@@ -22,6 +28,9 @@ namespace NTS.Server.Controller
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [Authorize(Roles = "Admin")]
         [HttpGet("get-all-users")]
@@ -37,7 +46,6 @@ namespace NTS.Server.Controller
                 return StatusCode(500, $"Internal Server Error: {error.Message}");
             }
         }
-
 
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDto>> LoginUsersAsync(LoginDto request)
@@ -58,7 +66,6 @@ namespace NTS.Server.Controller
                 return BadRequest(new { message = "An Error Occurred During Login", details = error.Message });
             }
         }
-
 
         [HttpPost("logout"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> LogoutAsync()
@@ -81,7 +88,6 @@ namespace NTS.Server.Controller
             }
         }
 
-
         [HttpPost("register-defaultuser")]
         public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(RegisterDto request)
         {
@@ -101,7 +107,6 @@ namespace NTS.Server.Controller
                 return BadRequest(new { message = "An Error Occurred During Registration", details = error.Message });
             }
         }
-
 
         [HttpPost("register-admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(RegisterDto request)
@@ -131,7 +136,6 @@ namespace NTS.Server.Controller
             }
         }
 
-
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
         {
@@ -155,7 +159,6 @@ namespace NTS.Server.Controller
             }
         }
 
-
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
@@ -174,7 +177,6 @@ namespace NTS.Server.Controller
                 return BadRequest($"Error Refreshing The Token: {error.Message}");
             }
         }
-
 
         [HttpDelete("remove-account/{userId}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveAccountAsync(Guid userId, Guid noteId)
@@ -197,5 +199,7 @@ namespace NTS.Server.Controller
                 return BadRequest($"Error Removing Account: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -7,10 +7,16 @@ namespace NTS.Client.Services
 {
     public class AuthService : IAuthService
     {
+        #region Fields
+
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly CustomAuthenticationStateProvider authenticationState;
         private readonly ILogger<AuthService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public AuthService(ILogger<AuthService> logger, HttpClient httpClient, ILocalStorageService localStorageService, CustomAuthenticationStateProvider authenticationState)
         {
@@ -20,6 +26,9 @@ namespace NTS.Client.Services
             this.authenticationState = authenticationState ?? throw new ArgumentNullException(nameof(authenticationState));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<ResponseDto> LoginAsync(LoginDto request)
         {
@@ -67,7 +76,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task<ResponseDto> RegisterDefaultUserAsync(RegisterDto request)
         {
             try
@@ -108,7 +116,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
         {
             try
@@ -132,7 +139,6 @@ namespace NTS.Client.Services
                 return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
             }
         }
-
 
         public async Task<bool> RefreshTokenAsync()
         {
@@ -174,5 +180,7 @@ namespace NTS.Client.Services
 
             return false;
         }
+
+        #endregion Public Methods
     }
 }

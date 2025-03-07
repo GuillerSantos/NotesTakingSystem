@@ -4,6 +4,8 @@ namespace NTS.Client.DTOs
 {
     public class NoteDto
     {
+        #region Properties
+
         public Guid NoteId { get; set; }
 
         public Guid UserId { get; set; }
@@ -21,5 +23,7 @@ namespace NTS.Client.DTOs
         public string Color { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
+
+        #endregion Properties
     }
 }

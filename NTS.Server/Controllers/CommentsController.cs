@@ -8,13 +8,22 @@ namespace NTS.Server.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
+        #region Fields
+
         private readonly ICommentsService commentsService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public CommentsController(ICommentsService commentsService)
         {
             this.commentsService = commentsService;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         [HttpPost("send-comment")]
         public async Task<ActionResult> SendCommentAsync([FromBody] Comment comment)
@@ -35,7 +44,6 @@ namespace NTS.Server.Controllers
             }
         }
 
-
         [HttpGet("get-comments/{noteId}")]
         public async Task<ActionResult<List<Comment>>> GetCommentsForNoteAsync(Guid noteId)
         {
@@ -46,5 +54,7 @@ namespace NTS.Server.Controllers
             }
             return Ok(comments);
         }
+
+        #endregion Public Methods
     }
 }

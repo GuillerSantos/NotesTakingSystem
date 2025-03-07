@@ -10,28 +10,30 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class NotesBase : ComponentBase
     {
-        [Inject] public INotesService notesService { get; set; } = default!;
-        [Inject] public ISnackbar snackbar { get; set; } = default!;
-        [Inject] public IDialogService dialogService { get; set; } = default!;
+        #region Fields
 
         public List<NoteDto> filteredNotes = new List<NoteDto>();
         public List<NoteDto> allNotes = new List<NoteDto>();
-        public string searchQuery { get; set; } = default!;
         public bool isLoggedIn = false;
         public bool isFetched = false;
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            await LoadNotesAsync();
-        }
+        #endregion Fields
 
+        #region Properties
+
+        [Inject] public INotesService notesService { get; set; } = default!;
+        [Inject] public ISnackbar snackbar { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
+        public string searchQuery { get; set; } = default!;
+
+        #endregion Properties
+
+        #region Public Methods
 
         public async Task LoadNotesAsync()
         {
             try
             {
-
                 allNotes = (await notesService.GetAllNotesAsync())?.ToList() ?? new List<NoteDto>();
 
                 if (allNotes is null)
@@ -56,7 +58,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async Task SearchNotesAsync(string searchQuery)
         {
             try
@@ -70,7 +71,6 @@ namespace NTS.Client.Pages.DefaultUserPages
                 else
                 {
                     filteredNotes = allNotes.ToList();
-
                 }
                 isFetched = true;
             }
@@ -81,7 +81,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async Task HandleKeyEnterAsync(KeyboardEventArgs args)
         {
             if (args.Key == "Enter")
@@ -90,7 +89,6 @@ namespace NTS.Client.Pages.DefaultUserPages
                 await SearchNotesAsync(searchQuery);
             }
         }
-
 
         public async Task OpenCreateOrUpdateNoteDialogAsync(NoteDto note = null)
         {
@@ -127,11 +125,22 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public string GetNoteStyle(NoteDto note)
         {
             string lighterColor = NotesCardColorUtil.GetLighterOrDarkerColor(note.Color);
             return $"background-image: linear-gradient(135deg, {note.Color}, {lighterColor});";
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            await LoadNotesAsync();
+        }
+
+        #endregion Protected Methods
     }
 }

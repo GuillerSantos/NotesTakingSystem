@@ -4,6 +4,8 @@ namespace NTS.Server.Entities
 {
     public class Comment
     {
+        #region Properties
+
         [Key]
         public Guid CommentId { get; set; }
 
@@ -19,5 +21,7 @@ namespace NTS.Server.Entities
         public string CommentContent { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        #endregion Properties
     }
 }

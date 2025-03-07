@@ -5,11 +5,15 @@ namespace NTS.Client.Services
 {
     public class ThemeService
     {
+        #region Fields
+
+        public bool isDarkMode;
         private readonly IJSRuntime jSRuntime;
         private readonly ILogger<ThemeService> logger;
 
-        public bool isDarkMode;
-        public string GetModeText() => isDarkMode ? "Light Mode" : "Dark Mode";
+        #endregion Fields
+
+        #region Public Constructors
 
         public ThemeService(IJSRuntime jSRuntime, ILogger<ThemeService> logger)
         {
@@ -17,20 +21,9 @@ namespace NTS.Client.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        #endregion Public Constructors
 
-        public async Task OnInitializedAsync()
-        {
-            var storedTheme = await jSRuntime.InvokeAsync<string>("localThemeFunction.getTheme");
-            isDarkMode = storedTheme == "true";
-        }
-
-
-        public async Task ToggleDarkModeAsync()
-        {
-            isDarkMode = !isDarkMode;
-            await jSRuntime.InvokeVoidAsync("localThemeFunction.setTheme", isDarkMode.ToString().ToLower());
-        }
-
+        #region Properties
 
         public MudTheme CustomTheme { get; } = new MudTheme()
         {
@@ -46,5 +39,25 @@ namespace NTS.Client.Services
                 Secondary = Colors.DeepPurple.Darken1
             }
         };
+
+        #endregion Properties
+
+        #region Public Methods
+
+        public string GetModeText() => isDarkMode ? "Light Mode" : "Dark Mode";
+
+        public async Task OnInitializedAsync()
+        {
+            var storedTheme = await jSRuntime.InvokeAsync<string>("localThemeFunction.getTheme");
+            isDarkMode = storedTheme == "true";
+        }
+
+        public async Task ToggleDarkModeAsync()
+        {
+            isDarkMode = !isDarkMode;
+            await jSRuntime.InvokeVoidAsync("localThemeFunction.setTheme", isDarkMode.ToString().ToLower());
+        }
+
+        #endregion Public Methods
     }
 }

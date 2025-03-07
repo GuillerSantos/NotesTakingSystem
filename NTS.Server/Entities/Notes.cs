@@ -6,6 +6,8 @@ namespace NTS.Server.Entities
 {
     public class Notes
     {
+        #region Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid NoteId { get; set; }
@@ -33,5 +35,7 @@ namespace NTS.Server.Entities
 
         [JsonIgnore]
         public ApplicationUsers? User { get; set; }
+
+        #endregion Properties
     }
 }

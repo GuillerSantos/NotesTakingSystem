@@ -10,9 +10,15 @@ namespace NTS.Server.Services
 {
     public class EmailService : IEmailService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
         private readonly EmailSettingsDto emailSettings;
         private readonly ILogger<EmailService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public EmailService(ApplicationDbContext dbContext, IOptions<EmailSettingsDto> emailSettings, ILogger<EmailService> logger)
         {
@@ -20,6 +26,10 @@ namespace NTS.Server.Services
             this.emailSettings = emailSettings?.Value ?? throw new ArgumentNullException(nameof(emailSettings));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<bool> SendPasswordResetToRecoveryEmailAsync(string userRecoveryEmail, string resetToken)
         {
@@ -35,6 +45,10 @@ namespace NTS.Server.Services
             var mailMessage = CreateMailMessage(userRecoveryEmail, resetToken);
             return await SendEmailAsync(mailMessage);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private MailMessage CreateMailMessage(string toEmail, string resetToken)
         {
@@ -72,5 +86,7 @@ namespace NTS.Server.Services
                 return false;
             }
         }
+
+        #endregion Private Methods
     }
 }

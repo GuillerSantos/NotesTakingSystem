@@ -9,7 +9,6 @@ using YourApp.Client.Securities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddSignalR();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -22,7 +21,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddMudServices();
 
 builder.Services.AddHttpClient();
-
 
 builder.Services.AddSingleton<HubConnection>(sp =>
 new HubConnectionBuilder()

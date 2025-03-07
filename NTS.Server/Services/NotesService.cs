@@ -9,11 +9,17 @@ namespace NTS.Server.Services
 {
     public class NotesService : INotesService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
         private readonly IFavoriteNoteService favoriteNoteService;
         private readonly IImpotantNotesService importantNotesService;
         private readonly ISharedNotesService sharedNotesService;
         private readonly IStarredNotesService starredNotesService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public NotesService(ApplicationDbContext dbContext, IFavoriteNoteService favoriteNoteService, IImpotantNotesService importantNotesService, ISharedNotesService sharedNotesService, IStarredNotesService starredNotesService)
         {
@@ -24,6 +30,9 @@ namespace NTS.Server.Services
             this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<List<Notes>> GetAllNotesAsync(Guid userId)
         {
@@ -39,7 +48,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<Notes> GetNoteByIdAsync(Guid noteId)
         {
             try
@@ -52,7 +60,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Fetching Note By ID: {error.Message}");
             }
         }
-
 
         public async Task<List<Notes>> SearchNotesAsync(string? searchQuery, Guid userId)
         {
@@ -76,7 +83,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Searching Notes: {error.Message}");
             }
         }
-
 
         public async Task<Notes?> CreateNoteAsync([FromBody] CreateNotesDto noteDetails, Guid userId)
         {
@@ -108,7 +114,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<Notes> UpdateNotesAsync(UpdateNotesDto updatedNoteDetails, Guid noteId, Guid userId)
         {
             try
@@ -138,16 +143,6 @@ namespace NTS.Server.Services
             }
         }
 
-
-        private async Task UpdateRelatedNotesTablesAsync(Notes updatedNote)
-        {
-            await favoriteNoteService.UpdateFavoriteNotesAsync(updatedNote);
-            await sharedNotesService.UpdateSharedNotesAsync(updatedNote);
-            await importantNotesService.UpdateImportantNotesAsync(updatedNote);
-            await starredNotesService.UpdateStarredNotesAsync(updatedNote);
-        }
-
-
         public async Task<bool> RemoveNoteAsync(Guid noteId, Guid userId)
         {
             try
@@ -172,5 +167,19 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Removing Note: {error.Message}");
             }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private async Task UpdateRelatedNotesTablesAsync(Notes updatedNote)
+        {
+            await favoriteNoteService.UpdateFavoriteNotesAsync(updatedNote);
+            await sharedNotesService.UpdateSharedNotesAsync(updatedNote);
+            await importantNotesService.UpdateImportantNotesAsync(updatedNote);
+            await starredNotesService.UpdateStarredNotesAsync(updatedNote);
+        }
+
+        #endregion Private Methods
     }
 }

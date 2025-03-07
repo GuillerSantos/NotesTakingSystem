@@ -5,6 +5,8 @@ namespace NTS.Server.Entities
 {
     public class StarredNotes
     {
+        #region Properties
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid StarredNoteId { get; set; }
@@ -34,5 +36,7 @@ namespace NTS.Server.Entities
 
         public Notes? Note { get; set; }
         public ApplicationUsers? User { get; set; }
+
+        #endregion Properties
     }
 }

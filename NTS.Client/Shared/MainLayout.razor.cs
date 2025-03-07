@@ -8,26 +8,26 @@ namespace NTS.Client.Shared
 {
     public partial class MainLayout
     {
-        public bool drawerOpen = false;
+        #region Fields
 
-        [Inject] NavigationManager navigationManager { get; set; } = default!;
-        [Inject] ILocalStorageService localStorageService { get; set; } = default!;
-        [Inject] CustomAuthenticationStateProvider authenticationState { get; set; } = default!;
-        [Inject] ThemeService themeService { get; set; } = default!;
+        public bool drawerOpen = false;
 
         public ResponseTokenDto responseToken = new ResponseTokenDto();
         private bool themeLoaded = false;
 
+        #endregion Fields
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender && !themeLoaded)
-            {
-                await themeService.OnInitializedAsync();
-                themeLoaded = true;
-                StateHasChanged();
-            }
-        }
+        #region Properties
+
+        [Inject] private NavigationManager navigationManager { get; set; } = default!;
+        [Inject] private ILocalStorageService localStorageService { get; set; } = default!;
+        [Inject] private CustomAuthenticationStateProvider authenticationState { get; set; } = default!;
+        [Inject] private ThemeService themeService { get; set; } = default!;
+
+        #endregion Properties
+
+        #region Public Methods
+
         public void ToggleDrawer()
         {
             this.drawerOpen = !drawerOpen;
@@ -57,5 +57,21 @@ namespace NTS.Client.Shared
                 Console.WriteLine($"Error During Logout: {error.Message}");
             }
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && !themeLoaded)
+            {
+                await themeService.OnInitializedAsync();
+                themeLoaded = true;
+                StateHasChanged();
+            }
+        }
+
+        #endregion Protected Methods
     }
 }

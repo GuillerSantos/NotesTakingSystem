@@ -7,14 +7,24 @@ namespace NTS.Server.Services
 {
     public class CommentsService : ICommentsService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
         private readonly ILogger<CommentsService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public CommentsService(ApplicationDbContext dbContext, ILogger<CommentsService> logger)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task SaveCommentAsync(Comment comment)
         {
@@ -45,5 +55,7 @@ namespace NTS.Server.Services
                 throw;
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -5,14 +5,24 @@ namespace NTS.Client.Services
 {
     public class NotesService : INotesService
     {
+        #region Fields
+
         private readonly HttpClient httpClient;
         private readonly ILogger<NotesService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public NotesService(HttpClient httpClient, ILogger<NotesService> logger)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task CreateNoteAsync(NoteDto request)
         {
@@ -27,7 +37,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task<List<NoteDto>> GetAllNotesAsync()
         {
             try
@@ -40,7 +49,6 @@ namespace NTS.Client.Services
                 return new List<NoteDto>();
             }
         }
-
 
         public async Task<List<NoteDto>> SearchNotesAsync(string searchQuery)
         {
@@ -56,7 +64,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task UpdateNoteAsync(NoteDto request, Guid noteId)
         {
             try
@@ -70,7 +77,6 @@ namespace NTS.Client.Services
             }
         }
 
-
         public async Task RemoveNoteAsync(Guid noteId)
         {
             try
@@ -83,5 +89,7 @@ namespace NTS.Client.Services
                 logger.LogError($"Error Removing Note With This ID {noteId}: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

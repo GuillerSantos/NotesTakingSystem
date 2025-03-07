@@ -6,12 +6,22 @@ namespace NTS.Server.Middleware.Hubs
 {
     public class CommentHub : Hub
     {
+        #region Fields
+
         private readonly ICommentsService _commentsService;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public CommentHub(ICommentsService commentsService)
         {
             _commentsService = commentsService ?? throw new ArgumentNullException(nameof(commentsService));
         }
+
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task SendCommentAsync(Guid noteId, Guid sharedNoteId, Guid userId, string fullName, DateTime createdAt, string commentContent)
         {
@@ -43,5 +53,7 @@ namespace NTS.Server.Middleware.Hubs
                 await Clients.Caller.SendAsync("Error", $"Error fetching comments: {ex.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -7,37 +7,29 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class HomeBase : ComponentBase, IAsyncDisposable
     {
-        [Inject] private ISharedNotesService sharedNotesService { get; set; } = default!;
-        [Inject] private ICommentSignalRService commentSignalRService { get; set; } = default!;
-        [Inject] private ICommentsService commentsService { get; set; } = default!;
-        [Inject] private CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+        #region Fields
 
         public List<SharedNotes> filteredNotes = new List<SharedNotes>();
         public List<SharedNotes> sharedNotesList = new();
         public Dictionary<Guid, List<Comment>> noteComments = new();
         public SharedNotes sharedNotes = new SharedNotes();
-        public string newCommentContent { get; set; } = string.Empty;
         public HashSet<Guid> visibleComments = new HashSet<Guid>();
-        public Guid userId { get; set; }
         public bool isFetched = false;
 
-        protected override async Task OnInitializedAsync()
-        {
-            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
+        #endregion Fields
 
-            if (user.Identity!.IsAuthenticated)
-            {
-                var userIdClaim = user.FindFirst(c => c.Type == "sub")?.Value;
-                userId = Guid.TryParse(userIdClaim, out Guid parsedUserId) ? parsedUserId : Guid.Empty;
-            }
+        #region Properties
 
-            await base.OnInitializedAsync();
-            await LoadSharedNotesAsync();
-            await commentSignalRService.StartAsync();
-            commentSignalRService.OnCommentReceived += OnCommentReceived;
-        }
+        public string newCommentContent { get; set; } = string.Empty;
+        public Guid userId { get; set; }
+        [Inject] private ISharedNotesService sharedNotesService { get; set; } = default!;
+        [Inject] private ICommentSignalRService commentSignalRService { get; set; } = default!;
+        [Inject] private ICommentsService commentsService { get; set; } = default!;
+        [Inject] private CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
+        #endregion Properties
+
+        #region Public Methods
 
         public async Task LoadSharedNotesAsync()
         {
@@ -46,7 +38,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             isFetched = true;
             StateHasChanged();
         }
-
 
         public async Task SendComment(Guid noteId)
         {
@@ -70,7 +61,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async Task LoadComments(Guid noteId)
         {
             var comments = await commentsService.GetCommentsForNoteAsync(noteId);
@@ -80,7 +70,6 @@ namespace NTS.Client.Pages.DefaultUserPages
                 noteComments[noteId] = comments.ToList();
             }
         }
-
 
         public void OnCommentReceived(Guid noteId, Guid userId, Guid sharedNoteId, string fullName, string commentContent, DateTime createdAt)
         {
@@ -102,7 +91,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             StateHasChanged();
         }
 
-
         public void ToggleCommentsVisibility(Guid noteId)
         {
             if (visibleComments.Contains(noteId))
@@ -116,11 +104,33 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async ValueTask DisposeAsync()
         {
             commentSignalRService.OnCommentReceived -= OnCommentReceived;
             await commentSignalRService.StopAsync();
         }
+
+        #endregion Public Methods
+
+        #region Protected Methods
+
+        protected override async Task OnInitializedAsync()
+        {
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity!.IsAuthenticated)
+            {
+                var userIdClaim = user.FindFirst(c => c.Type == "sub")?.Value;
+                userId = Guid.TryParse(userIdClaim, out Guid parsedUserId) ? parsedUserId : Guid.Empty;
+            }
+
+            await base.OnInitializedAsync();
+            await LoadSharedNotesAsync();
+            await commentSignalRService.StartAsync();
+            commentSignalRService.OnCommentReceived += OnCommentReceived;
+        }
+
+        #endregion Protected Methods
     }
 }

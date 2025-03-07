@@ -7,13 +7,22 @@ namespace NTS.Server.Services
 {
     public class StarredNotesService : IStarredNotesService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public StarredNotesService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<bool> MarkNoteAsStarredAsync(Guid noteId, Guid userId)
         {
@@ -45,7 +54,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<List<StarredNotes>> GetAllStarredNotesAsync(Guid userId)
         {
             try
@@ -59,7 +67,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Fetching All Starred Notes: {error.Message}");
             }
         }
-
 
         public async Task<bool> UnmarkNoteAsStarredAsync(Guid noteId)
         {
@@ -79,7 +86,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Removing Note: {error.Message}");
             }
         }
-
 
         public async Task UpdateStarredNotesAsync(Notes updatedNote)
         {
@@ -103,5 +109,7 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Updating Starred Notes: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }

@@ -5,7 +5,15 @@ namespace NTS.Server.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        #region Public Constructors
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Properties
 
         public DbSet<ApplicationUsers> ApplicationUsers { get; set; }
         public DbSet<Notes> Notes { get; set; }
@@ -15,6 +23,10 @@ namespace NTS.Server.Data
         public DbSet<StarredNotes> StarredNotes { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
+        #endregion Properties
+
+        #region Protected Methods
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,10 +35,8 @@ namespace NTS.Server.Data
             modelBuilder.Entity<ApplicationUsers>()
                 .HasKey(a => a.UserId);
 
-
             modelBuilder.Entity<Comment>()
                 .HasKey(c => c.CommentId);
-
 
             // Comments
             modelBuilder.Entity<Comment>(entity =>
@@ -47,7 +57,6 @@ namespace NTS.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             // NotesBase
             modelBuilder.Entity<Notes>(entity =>
             {
@@ -59,7 +68,6 @@ namespace NTS.Server.Data
                 entity.HasIndex(e => e.UserId)
                        .HasDatabaseName("IX_Notes_UserId");
             });
-
 
             // FavoriteNotes
             modelBuilder.Entity<FavoriteNotes>(entity =>
@@ -75,7 +83,6 @@ namespace NTS.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             // ImportantNotes
             modelBuilder.Entity<ImportantNotes>(entity =>
             {
@@ -89,7 +96,6 @@ namespace NTS.Server.Data
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
-
 
             // SharedNotes
             modelBuilder.Entity<SharedNotes>(entity =>
@@ -105,7 +111,6 @@ namespace NTS.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-
             // StarredNotes
             modelBuilder.Entity<StarredNotes>(entity =>
             {
@@ -120,5 +125,7 @@ namespace NTS.Server.Data
                       .OnDelete(DeleteBehavior.Cascade);
             });
         }
+
+        #endregion Protected Methods
     }
 }

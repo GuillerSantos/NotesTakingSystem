@@ -16,6 +16,8 @@ namespace NTS.Server.Services
 {
     public class AuthService : IAuthService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
         private readonly INotesService noteService;
         private readonly IFavoriteNoteService favoriteNoteService;
@@ -23,6 +25,10 @@ namespace NTS.Server.Services
         private readonly ISharedNotesService sharedNotesService;
         private readonly IStarredNotesService starredNotesService;
         private readonly IConfiguration configuration;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public AuthService(ApplicationDbContext dbContext, IConfiguration configuration,
             INotesService notesService, IFavoriteNoteService favoriteNoteService,
@@ -38,6 +44,9 @@ namespace NTS.Server.Services
             this.starredNotesService = starredNotesService ?? throw new ArgumentNullException(nameof(starredNotesService));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
         {
@@ -71,7 +80,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<bool> LogoutAsync(Guid userId)
         {
             try
@@ -91,7 +99,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Logging Out User: {error.Message}");
             }
         }
-
 
         public async Task<ApplicationUsers?> RegisterUsersAsync(RegisterDto request, bool isAdmin)
         {
@@ -113,7 +120,6 @@ namespace NTS.Server.Services
                 registerUser.RecoveryEmail = request.RecoveryEmail;
                 registerUser.DateJoined = DateTime.UtcNow;
 
-
                 dbContext.ApplicationUsers.Add(registerUser);
                 await dbContext.SaveChangesAsync();
                 return registerUser;
@@ -123,7 +129,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Registering User: {error.Message}");
             }
         }
-
 
         public async Task<bool> RemoveAccountAsync(Guid userId, Guid noteId)
         {
@@ -154,7 +159,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
         {
             try
@@ -178,6 +182,24 @@ namespace NTS.Server.Services
             }
         }
 
+        public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
+        {
+            try
+            {
+                var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+                if (user is null) return null;
+
+                return await CreateTokenResponse(user);
+            }
+            catch (Exception error)
+            {
+                throw new Exception($"Error Refreshing Token: {error.Message}");
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
         {
@@ -194,23 +216,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Creating Token: {error.Message}");
             }
         }
-
-
-        public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
-        {
-            try
-            {
-                var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
-                if (user is null) return null;
-
-                return await CreateTokenResponse(user);
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Refreshing Token: {error.Message}");
-            }
-        }
-
 
         private async Task<ApplicationUsers?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
         {
@@ -230,7 +235,6 @@ namespace NTS.Server.Services
             }
         }
 
-
         private string GenerateRefreshToken()
         {
             try
@@ -245,7 +249,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Generating Refresh Token: {error.Message}");
             }
         }
-
 
         private async Task<string> GenerateAndSaveRefreshTokenAsync(ApplicationUsers user)
         {
@@ -263,7 +266,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Generating And Saving Refresh Token: {error.Message}");
             }
         }
-
 
         private string CreateToken(ApplicationUsers user)
         {
@@ -298,5 +300,7 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Creating Token: {error.Message}");
             }
         }
+
+        #endregion Private Methods
     }
 }

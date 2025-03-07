@@ -5,6 +5,8 @@ namespace NTS.Server.Services.Contracts
 {
     public interface IAuthService
     {
+        #region Public Methods
+
         Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize);
 
         Task<ApplicationUsers?> RegisterUsersAsync(RegisterDto request, bool isAdmin);
@@ -16,5 +18,7 @@ namespace NTS.Server.Services.Contracts
         Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
 
         Task<bool> RemoveAccountAsync(Guid userId, Guid noteId);
+
+        #endregion Public Methods
     }
 }

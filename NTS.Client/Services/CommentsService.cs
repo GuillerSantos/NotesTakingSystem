@@ -5,8 +5,14 @@ namespace NTS.Client.Services
 {
     public class CommentsService : ICommentsService
     {
+        #region Fields
+
         private readonly HttpClient httpClient;
         private readonly ILogger<CommentsService> logger;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public CommentsService(HttpClient httpClient, ILogger<CommentsService> logger)
         {
@@ -14,7 +20,15 @@ namespace NTS.Client.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        #endregion Public Constructors
+
+        #region Events
+
         public event Action<Guid, Guid, Guid, string, string, DateTime>? OnCommentReceived;
+
+        #endregion Events
+
+        #region Public Methods
 
         /// <summary>
         /// Sends a comment to the backend and invokes event handlers on success.
@@ -76,5 +90,7 @@ namespace NTS.Client.Services
         {
             throw new NotImplementedException("StartAsync logic is not yet implemented.");
         }
+
+        #endregion Public Methods
     }
 }

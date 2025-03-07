@@ -11,16 +11,7 @@ namespace NTS.Client.Pages.DefaultUserPages
 {
     public class LoginBase : ComponentBase
     {
-        [Inject] public IAuthService authService { get; set; } = default!;
-        [Inject] public NavigationManager navigationManager { get; set; } = default!;
-        [Inject] public IDialogService dialogService { get; set; } = default!;
-        [Inject] public ISnackbar snackbar { get; set; } = default!;
-        [Inject] public ILocalStorageService localStorageService { get; set; } = default!;
-        [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
-
-        public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
-        public ResponseDto responseDto = new ResponseDto();
-        public LoginDto loginDto = new LoginDto();
+        #region Fields
 
         public readonly DialogOptions dialogOptions = new DialogOptions()
         {
@@ -29,6 +20,24 @@ namespace NTS.Client.Pages.DefaultUserPages
             NoHeader = true
         };
 
+        public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
+        public ResponseDto responseDto = new ResponseDto();
+        public LoginDto loginDto = new LoginDto();
+
+        #endregion Fields
+
+        #region Properties
+
+        [Inject] public IAuthService authService { get; set; } = default!;
+        [Inject] public NavigationManager navigationManager { get; set; } = default!;
+        [Inject] public IDialogService dialogService { get; set; } = default!;
+        [Inject] public ISnackbar snackbar { get; set; } = default!;
+        [Inject] public ILocalStorageService localStorageService { get; set; } = default!;
+        [Inject] public CustomAuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+
+        #endregion Properties
+
+        #region Public Methods
 
         public async Task HandleLoginClick()
         {
@@ -56,7 +65,6 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public async Task OpenForgotPasswordDialog()
         {
             var parameters = new DialogParameters<ForgotPasswordDialog>();
@@ -71,10 +79,11 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-
         public void ShowPasswordClick()
         {
             showPasswordUtil.Toggle();
         }
+
+        #endregion Public Methods
     }
 }

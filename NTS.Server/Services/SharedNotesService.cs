@@ -7,13 +7,22 @@ namespace NTS.Server.Services
 {
     public class SharedNotesService : ISharedNotesService
     {
+        #region Fields
+
         private readonly ApplicationDbContext dbContext;
+
+        #endregion Fields
+
+        #region Public Constructors
 
         public SharedNotesService(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
 
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId)
         {
@@ -43,8 +52,6 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Marking Note {noteId} As Shared: {error.Message}", error);
             }
         }
-
-
 
         public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
@@ -96,5 +103,7 @@ namespace NTS.Server.Services
                 throw new Exception($"Error Updating Shared Notes: {error.Message}");
             }
         }
+
+        #endregion Public Methods
     }
 }
