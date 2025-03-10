@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Services.Contracts;
-using System.Security.Claims;
+using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
@@ -29,62 +29,50 @@ namespace NTS.Server.Controllers
         [HttpPost("mark-starred/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsStarredAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userid = Guid.Parse(userIdClaim!.Value);
-                var markedNote = await starredNotesService.MarkNoteAsStarredAsync(noteId, userid);
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Starred");
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok($"Note Marked Successfully: {markedNote}");
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
+            var markedNote = await starredNotesService.MarkNoteAsStarredAsync(noteId, userId);
+            if (!markedNote)
+                return NotFound("Note Not Found Or You Are Not Authorized To Mark This Note As Starred");
+
+            return Ok($"Note Marked Successfully: {markedNote}");
         }
 
         [HttpGet("get-all-starrednotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllStarredNotesAsync()
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var starredNotes = await starredNotesService.GetAllStarredNotesAsync(userId);
-                if (starredNotes is null)
-                {
-                    return NotFound("No Starred Notes Found");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok(starredNotes);
-            }
-            catch (Exception error)
+            var starredNotes = await starredNotesService.GetAllStarredNotesAsync(userId);
+            if (starredNotes is null)
             {
-                return BadRequest($"Error Fetching All Starred Notes: {error.Message}");
+                return NotFound("No Starred Notes Found");
             }
+
+            return Ok(starredNotes);
         }
 
         [HttpDelete("unmark-as-starrednote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNotesAsStarredAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var unmarkAsStarredNote = await starredNotesService.UnmarkNoteAsStarredAsync(noteId);
-                if (!unmarkAsStarredNote)
-                {
-                    return NotFound("Notes Is Not Mark As Favorite");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok($"Note Unmarked As Starred: {unmarkAsStarredNote}");
-            }
-            catch (Exception error)
+            var unmarkAsStarredNote = await starredNotesService.UnmarkNoteAsStarredAsync(noteId);
+            if (!unmarkAsStarredNote)
             {
-                return BadRequest($"Error Unmarking As Starred Note :{error.Message}");
+                return NotFound("Notes Is Not Mark As Favorite");
             }
+
+            return Ok($"Note Unmarked As Starred: {unmarkAsStarredNote}");
         }
 
         #endregion Public Methods
