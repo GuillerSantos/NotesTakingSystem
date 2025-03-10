@@ -26,41 +26,20 @@ namespace NTS.Client.Services
 
         public async Task MarkNoteAsImportantAsync(ImportantNotes request, Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync($"/api/ImportantNotes/mark-important/{noteId}", request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Marking As Important :{error.Message}");
-            }
+            var response = await httpClient.PostAsJsonAsync($"/api/ImportantNotes/mark-important/{noteId}", request);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<List<ImportantNotes>> GetAllImportantNotesAsync()
         {
-            try
-            {
-                return await httpClient.GetFromJsonAsync<List<ImportantNotes>>("api/ImportantNotes/get-all-importantnotes") ?? new List<ImportantNotes>();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Fetching All Important Notes: {error.Message}");
-                return new List<ImportantNotes>();
-            }
+            return await httpClient.GetFromJsonAsync<List<ImportantNotes>>("api/ImportantNotes/get-all-importantnotes")
+                ?? throw new InvalidOperationException("Unexpected null response from API.");
         }
 
-        public async Task UnamrkNoteAsImportantAsync(Guid noteId)
+        public async Task UnmarkNoteAsImportantAsync(Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.DeleteAsync($"/api/ImportantNotes/unmark-as-importantnote/{noteId}");
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Unmaking Note :{error.Message}");
-            }
+            var response = await httpClient.DeleteAsync($"/api/ImportantNotes/unmark-as-importantnote/{noteId}");
+            response.EnsureSuccessStatusCode();
         }
 
         #endregion Public Methods
