@@ -28,32 +28,16 @@ namespace NTS.Server.Services
 
         public async Task SaveCommentAsync(Comment comment)
         {
-            try
-            {
-                dbContext.Comments.Add(comment);
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error saving comment: {ErrorMessage}", ex.Message);
-                throw;
-            }
+            dbContext.Comments.Add(comment);
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Comment>> GetCommentsForNoteAsync(Guid noteId)
         {
-            try
-            {
-                return await dbContext.Comments
-                   .Where(c => c.NoteId == noteId)
-                   .OrderBy(c => c.CreatedAt)
-                   .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error getting comments for note {NoteId}: {ErrorMessage}", noteId, ex.Message);
-                throw;
-            }
+            return await dbContext.Comments
+               .Where(c => c.NoteId == noteId)
+               .OrderBy(c => c.CreatedAt)
+               .ToListAsync();
         }
 
         #endregion Public Methods

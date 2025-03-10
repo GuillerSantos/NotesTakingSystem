@@ -80,11 +80,20 @@ namespace NTS.Server.Services
                 logger.LogInformation($"Password reset email sent successfully to: {mailMessage.To}");
                 return true;
             }
+            catch (SmtpException smtpEx)
+            {
+                logger.LogError($"SMTP error sending password reset email to: {mailMessage.To} - {smtpEx.Message}");
+            }
+            catch (InvalidOperationException invEx)
+            {
+                logger.LogError($"Invalid operation while sending email to: {mailMessage.To} - {invEx.Message}");
+            }
             catch (Exception ex)
             {
-                logger.LogError($"Error sending password reset email to: {mailMessage.To} - {ex.Message}");
-                return false;
+                logger.LogError($"Unexpected error sending email to: {mailMessage.To} - {ex.Message}");
             }
+
+            return false;
         }
 
         #endregion Private Methods
