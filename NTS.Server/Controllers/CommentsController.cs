@@ -18,7 +18,7 @@ namespace NTS.Server.Controllers
 
         public CommentsController(ICommentsService commentsService)
         {
-            this.commentsService = commentsService;
+            this.commentsService = commentsService ?? throw new ArgumentNullException(nameof(commentsService));
         }
 
         #endregion Public Constructors
@@ -33,26 +33,15 @@ namespace NTS.Server.Controllers
                 return BadRequest("Invalid comment data.");
             }
 
-            try
-            {
-                await commentsService.SaveCommentAsync(comment);
-                return Ok("Comment sent successfully.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error saving comment: {ex.Message}");
-            }
+            await commentsService.SaveCommentAsync(comment);
+            return Ok("Comment sent successfully.");
         }
 
         [HttpGet("get-comments/{noteId}")]
         public async Task<ActionResult<List<Comment>>> GetCommentsForNoteAsync(Guid noteId)
         {
             var comments = await commentsService.GetCommentsForNoteAsync(noteId);
-            if (comments == null || comments.Count == 0)
-            {
-                return NotFound("No comments found for this note.");
-            }
-            return Ok(comments);
+            return comments is { Count: > 0 } ? Ok(comments) : NotFound("No comments found for this note.");
         }
 
         #endregion Public Methods
