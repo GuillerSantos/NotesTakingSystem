@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Services.Contracts;
-using System.Security.Claims;
+using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
@@ -29,64 +29,52 @@ namespace NTS.Server.Controllers
         [HttpPost("mark-favorite/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsFavoriteAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var markedNote = await favoriteNoteService.MarkNotesAsFavoriteAsync(noteId, userId);
-                if (!markedNote)
-                {
-                    return NotFound("Note Not Found Or Your Are Not Authorized To Mark This Note As Favorite");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok(markedNote);
-            }
-            catch (Exception error)
+            var markedNote = await favoriteNoteService.MarkNotesAsFavoriteAsync(noteId, userId);
+            if (!markedNote)
             {
-                return BadRequest(error.Message);
+                return NotFound("Note Not Found Or Your Are Not Authorized To Mark This Note As Favorite");
             }
+
+            return Ok(markedNote);
         }
 
         [HttpGet("get-all-favoritenotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllFavoriteNotesAsync()
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var favoriteNotes = await favoriteNoteService.GetAllFavoriteNotesAsync(userId);
-                if (favoriteNotes == null)
-                {
-                    return NotFound("No Favorite Notes Found");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok(favoriteNotes);
-            }
-            catch (Exception error)
+            var favoriteNotes = await favoriteNoteService.GetAllFavoriteNotesAsync(userId);
+            if (favoriteNotes == null)
             {
-                return BadRequest($"Error Fetching All Favorite Notes: {error.Message}");
+                return NotFound("No Favorite Notes Found");
             }
+
+            return Ok(favoriteNotes);
         }
 
         [HttpDelete("unmark-as-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var unmarkAsFavoriteNote = await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
-                if (!unmarkAsFavoriteNote)
-                {
-                    return NotFound("Note Is Not Mark As Favorite");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok($"Note Unmarked As Favorite: {unmarkAsFavoriteNote}");
-            }
-            catch (Exception error)
+            var unmarkAsFavoriteNote = await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
+            if (!unmarkAsFavoriteNote)
             {
-                return BadRequest($"Error Unmarking Note As Favorite {error.Message}");
+                return NotFound("Note Is Not Mark As Favorite");
             }
+
+            return Ok($"Note Unmarked As Favorite: {unmarkAsFavoriteNote}");
         }
 
         #endregion Public Methods
