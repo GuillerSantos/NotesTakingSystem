@@ -26,41 +26,20 @@ namespace NTS.Client.Services
 
         public async Task MarkAsFavoriteNoteAsync(FavoriteNotes request, Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync($"/api/FavoriteNotes/mark-favorite/{noteId}", request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Marking Note As Favorite: {error.Message}");
-            }
+            var response = await httpClient.PostAsJsonAsync($"/api/FavoriteNotes/mark-favorite/{noteId}", request);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task UnmarkNoteAsFavoriteNoteAsync(Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-as-favoritenote/{noteId}");
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Unmarking Note As Favorite: {error.Message}");
-            }
+            var response = await httpClient.DeleteAsync($"/api/FavoriteNotes/unmark-as-favoritenote/{noteId}");
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<List<FavoriteNotes>> GetAllFavoriteNotesAsync()
         {
-            try
-            {
-                return await httpClient.GetFromJsonAsync<List<FavoriteNotes>>("/api/FavoriteNotes/get-all-favoritenotes") ?? new List<FavoriteNotes>();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Fetching All Favorite Notes: {error.Message}");
-                return new List<FavoriteNotes>();
-            }
+            return await httpClient.GetFromJsonAsync<List<FavoriteNotes>>("/api/FavoriteNotes/get-all-favoritenotes")
+                ?? throw new InvalidOperationException("Unexpected null response from API.");
         }
 
         #endregion Public Methods
