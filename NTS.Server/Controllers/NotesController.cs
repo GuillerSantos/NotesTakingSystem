@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NTS.Server.DTOs;
 using NTS.Server.Services.Contracts;
-using System.Security.Claims;
+using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
@@ -30,157 +30,99 @@ namespace NTS.Server.Controllers
         [HttpGet("get-all-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllNotesAsync()
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var fetchedNotes = await notesService.GetAllNotesAsync(userId);
-
-                if (fetchedNotes == null)
-                {
-                    return NotFound("No Notes Found");
-                }
-
-                return Ok(fetchedNotes);
+                return Unauthorized("User ID not found.");
             }
-            catch (Exception error)
+
+            var fetchedNotes = await notesService.GetAllNotesAsync(userId);
+
+            if (fetchedNotes == null)
             {
-                return BadRequest(error.Message);
+                return NotFound("No Notes Found");
             }
+
+            return Ok(fetchedNotes);
         }
 
         [HttpGet("get-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         [ActionName("GetNoteById")]
         public async Task<IActionResult> GetNoteByIdAsync(Guid noteId)
         {
-            try
-            {
-                var fetchedNote = await notesService.GetNoteByIdAsync(noteId);
+            var fetchedNote = await notesService.GetNoteByIdAsync(noteId);
 
-                if (fetchedNote == null)
-                {
-                    return NotFound("No Note Found With the Note Id");
-                }
-
-                return Ok(fetchedNote);
-            }
-            catch (Exception error)
+            if (fetchedNote == null)
             {
-                return BadRequest(error.Message);
+                return NotFound("No Note Found With the Note Id");
             }
+
+            return Ok(fetchedNote);
         }
 
         [HttpGet("search-notes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchQuery)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                return Unauthorized("User ID not found.");
+            }
 
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var notes = string.IsNullOrWhiteSpace(searchQuery)
+            var notes = string.IsNullOrWhiteSpace(searchQuery)
                     ? await notesService.GetAllNotesAsync(userId)
                     : await notesService.SearchNotesAsync(searchQuery, userId);
 
-                return Ok(notes);
-            }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
+            return Ok(notes);
         }
 
         [HttpPost("create-note"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> CreateNoteAsync([FromBody] CreateNotesDto request)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                // Retrieves UserId From The Claims(Authenticated User)
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                // Convert UserId Claim Value To A Guid
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var newNote = await notesService.CreateNoteAsync(request, userId);
-
-                if (newNote == null)
-                {
-                    return BadRequest("Failed To Create The Note");
-                }
-
-                return CreatedAtAction("GetNoteById", new { noteId = newNote.NoteId }, newNote);
+                return Unauthorized("User ID not found.");
             }
-            catch (Exception error)
+
+            var newNote = await notesService.CreateNoteAsync(request, userId);
+
+            if (newNote == null)
             {
-                return BadRequest(error.Message);
+                return BadRequest("Failed To Create The Note");
             }
+
+            return CreatedAtAction("GetNoteById", new { noteId = newNote.NoteId }, newNote);
         }
 
-        [HttpPost("update-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPut("update-note/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UpdateNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    return Unauthorized("User Id Not Found In Token");
-                }
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var editedNote = await notesService.UpdateNotesAsync(request, noteId, userId);
-
-                if (editedNote == null)
-                    return NotFound("Note Not Found Or You Are Not Authorized To Edit this Note");
-
-                return Ok(editedNote);
+                return Unauthorized("User ID not found.");
             }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
+
+            var editedNote = await notesService.UpdateNotesAsync(request, noteId, userId);
+
+            if (editedNote == null)
+                return NotFound("Note Not Found Or You Are Not Authorized To Edit this Note");
+
+            return Ok(editedNote);
         }
 
         [HttpDelete("remove-note/{noteId}"), Authorize(Roles = "DefaultUser")]
-        public async Task<IActionResult> RemoveNoteAsync(Guid noteId, Guid userId)
+        public async Task<IActionResult> RemoveNoteAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var removedNote = await notesService.RemoveNoteAsync(noteId, userId);
+                return Unauthorized("User ID not found.");
+            }
 
-                if (!removedNote)
-                {
-                    return NotFound("Note Not Found");
-                }
-                else
-                {
-                    return Ok("Successfully Removed Notes");
-                }
-            }
-            catch (Exception error)
+            var removedNote = await notesService.RemoveNoteAsync(noteId, userId);
+
+            if (!removedNote)
             {
-                return BadRequest(error.Message);
+                return NotFound("Note Not Found");
             }
+            return Ok("Successfully Removed Note");
         }
 
         #endregion Public Methods
