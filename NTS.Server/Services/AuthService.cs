@@ -50,151 +50,109 @@ namespace NTS.Server.Services
 
         public async Task<TokenResponseDto?> LoginUsersAsync(LoginDto request)
         {
-            try
+            var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user is null)
             {
-                var user = await dbContext.ApplicationUsers.FirstOrDefaultAsync(u => u.Email == request.Email);
-                if (user is null)
-                {
-                    Console.WriteLine("User Not Found");
-                    return null;
-                }
-
-                var passwordVerifivationResult = new PasswordHasher<ApplicationUsers>().VerifyHashedPassword(user, user.PasswordHash, request.Password);
-                if (passwordVerifivationResult == PasswordVerificationResult.Failed)
-                {
-                    Console.WriteLine("Password Verification Failed");
-                    return null;
-                }
-
-                if (string.IsNullOrEmpty(user.RefreshToken))
-                {
-                    user.RefreshToken = await GenerateAndSaveRefreshTokenAsync(user);
-                    await dbContext.SaveChangesAsync();
-                }
-
-                return await CreateTokenResponse(user);
+                Console.WriteLine("User Not Found");
+                return null;
             }
-            catch (Exception error)
+
+            var passwordVerifivationResult = new PasswordHasher<ApplicationUsers>().VerifyHashedPassword(user, user.PasswordHash, request.Password);
+            if (passwordVerifivationResult == PasswordVerificationResult.Failed)
             {
-                throw new Exception($"Error Logging In User: {error.Message}");
+                Console.WriteLine("Password Verification Failed");
+                return null;
             }
+
+            if (string.IsNullOrEmpty(user.RefreshToken))
+            {
+                user.RefreshToken = await GenerateAndSaveRefreshTokenAsync(user);
+                await dbContext.SaveChangesAsync();
+            }
+
+            return await CreateTokenResponse(user);
         }
 
         public async Task<bool> LogoutAsync(Guid userId)
         {
-            try
-            {
-                var currentUser = await dbContext.ApplicationUsers.FindAsync(userId);
+            var currentUser = await dbContext.ApplicationUsers.FindAsync(userId);
 
-                if (currentUser is null) return false;
+            if (currentUser is null) return false;
 
-                currentUser.RefreshToken = null!;
-                currentUser.RefreshTokenExpiryTime = null;
-                await dbContext.SaveChangesAsync();
+            currentUser.RefreshToken = null!;
+            currentUser.RefreshTokenExpiryTime = null;
+            await dbContext.SaveChangesAsync();
 
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Logging Out User: {error.Message}");
-            }
+            return true;
         }
 
         public async Task<ApplicationUsers?> RegisterUsersAsync(RegisterDto request, bool isAdmin)
         {
-            try
-            {
-                if (await dbContext.ApplicationUsers.AnyAsync(u => u.Email == request.Email))
-                    return null;
+            if (await dbContext.ApplicationUsers.AnyAsync(u => u.Email == request.Email))
+                return null;
 
-                var registerUser = new ApplicationUsers();
+            var registerUser = new ApplicationUsers();
 
-                var hashPassword = new PasswordHasher<ApplicationUsers>()
-                    .HashPassword(registerUser, request.Password);
+            var hashPassword = new PasswordHasher<ApplicationUsers>()
+                .HashPassword(registerUser, request.Password);
 
-                registerUser.FullName = request.FullName;
-                registerUser.Email = request.Email;
-                registerUser.PasswordHash = hashPassword;
-                registerUser.Role = isAdmin ? "Admin" : "DefaultUser";
-                registerUser.PhoneNumber = request.PhoneNumber;
-                registerUser.RecoveryEmail = request.RecoveryEmail;
-                registerUser.DateJoined = DateTime.UtcNow;
+            registerUser.FullName = request.FullName;
+            registerUser.Email = request.Email;
+            registerUser.PasswordHash = hashPassword;
+            registerUser.Role = isAdmin ? "Admin" : "DefaultUser";
+            registerUser.PhoneNumber = request.PhoneNumber;
+            registerUser.RecoveryEmail = request.RecoveryEmail;
+            registerUser.DateJoined = DateTime.UtcNow;
 
-                dbContext.ApplicationUsers.Add(registerUser);
-                await dbContext.SaveChangesAsync();
-                return registerUser;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Registering User: {error.Message}");
-            }
+            dbContext.ApplicationUsers.Add(registerUser);
+            await dbContext.SaveChangesAsync();
+            return registerUser;
         }
 
         public async Task<bool> RemoveAccountAsync(Guid userId, Guid noteId)
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-            try
-            {
-                var accountToRemove = await dbContext.ApplicationUsers.FindAsync(userId);
+            var accountToRemove = await dbContext.ApplicationUsers.FindAsync(userId);
 
-                if (accountToRemove is null) return false;
+            if (accountToRemove is null) return false;
 
-                await noteService.RemoveNoteAsync(userId, noteId);
-                await favoriteNoteService.UnmarkNoteAsFavoriteAsync(userId);
-                await impotantNotesService.UnmarkNoteAsImportantAsync(userId);
-                await sharedNotesService.UnmarkNoteAsSharedAsync(userId);
-                await starredNotesService.UnmarkNoteAsStarredAsync(userId);
+            await noteService.RemoveNoteAsync(userId, noteId);
+            await favoriteNoteService.UnmarkNoteAsFavoriteAsync(userId);
+            await impotantNotesService.UnmarkNoteAsImportantAsync(userId);
+            await sharedNotesService.UnmarkNoteAsSharedAsync(userId);
+            await starredNotesService.UnmarkNoteAsStarredAsync(userId);
 
-                dbContext.ApplicationUsers.Remove(accountToRemove);
+            dbContext.ApplicationUsers.Remove(accountToRemove);
 
-                await dbContext.SaveChangesAsync();
-                transactionScope.Complete();
+            await dbContext.SaveChangesAsync();
+            transactionScope.Complete();
 
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception(error.Message);
-            }
+            return true;
         }
 
         public async Task<IEnumerable<UsersDto>> GetAllUsersAccounts(int page, int pageSize)
         {
-            try
-            {
-                return await dbContext.ApplicationUsers
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(u => new UsersDto
-                    {
-                        UserId = u.UserId,
-                        FullName = u.FullName,
-                        Email = u.Email,
-                        Role = u.Role,
-                        DateJoined = u.DateJoined,
-                    })
-                    .ToListAsync();
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Retrieving All Users: {error.Message}");
-            }
+            return await dbContext.ApplicationUsers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(u => new UsersDto
+                {
+                    UserId = u.UserId,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Role = u.Role,
+                    DateJoined = u.DateJoined,
+                })
+                .ToListAsync();
         }
 
         public async Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
-            try
-            {
-                var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
-                if (user is null) return null;
+            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            if (user is null) return null;
 
-                return await CreateTokenResponse(user);
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Refreshing Token: {error.Message}");
-            }
+            return await CreateTokenResponse(user);
         }
 
         #endregion Public Methods
@@ -203,75 +161,44 @@ namespace NTS.Server.Services
 
         private async Task<TokenResponseDto> CreateTokenResponse(ApplicationUsers? user)
         {
-            try
+            return new TokenResponseDto()
             {
-                return new TokenResponseDto()
-                {
-                    AccessToken = CreateToken(user!),
-                    RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
-                };
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Creating Token: {error.Message}");
-            }
+                AccessToken = CreateToken(user!),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user!)
+            };
         }
 
         private async Task<ApplicationUsers?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
         {
-            try
+            var user = await dbContext.ApplicationUsers.FindAsync(userId);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
-                var user = await dbContext.ApplicationUsers.FindAsync(userId);
-                if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                return user;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Validating Refresh Token: {error.Message}");
-            }
+            return user;
         }
 
         private string GenerateRefreshToken()
         {
-            try
-            {
-                var randomNumber = new byte[32];
-                using var rng = RandomNumberGenerator.Create();
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Generating Refresh Token: {error.Message}");
-            }
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         private async Task<string> GenerateAndSaveRefreshTokenAsync(ApplicationUsers user)
         {
-            try
-            {
-                var refreshToken = GenerateRefreshToken();
-                user.RefreshToken = refreshToken;
-                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-                Console.WriteLine($"Generated RefreshToken: {refreshToken}");
-                return refreshToken;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine($"Error Generating And Saving Refresh Token: {error.Message}");
-                throw new Exception($"Error Generating And Saving Refresh Token: {error.Message}");
-            }
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            Console.WriteLine($"Generated RefreshToken: {refreshToken}");
+            return refreshToken;
         }
 
         private string CreateToken(ApplicationUsers user)
         {
-            try
-            {
-                var claims = new List<Claim>
+            var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.FullName),
@@ -279,26 +206,21 @@ namespace NTS.Server.Services
                     new Claim(ClaimTypes.Role, user.Role)
                  };
 
-                var securityKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration.GetValue<string>("AppSettings:Token")!));
 
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
-                var tokenDescriptor = new JwtSecurityToken
-                (
-                    issuer: configuration.GetValue<string>("AppSettings:Issuer"),
-                    audience: configuration.GetValue<string>("AppSettings:Audience"),
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddDays(1),
-                    signingCredentials: credentials
-                );
+            var tokenDescriptor = new JwtSecurityToken
+            (
+                issuer: configuration.GetValue<string>("AppSettings:Issuer"),
+                audience: configuration.GetValue<string>("AppSettings:Audience"),
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(1),
+                signingCredentials: credentials
+            );
 
-                return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Creating Token: {error.Message}");
-            }
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
         #endregion Private Methods
