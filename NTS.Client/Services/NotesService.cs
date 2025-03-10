@@ -26,68 +26,32 @@ namespace NTS.Client.Services
 
         public async Task CreateNoteAsync(NoteDto request)
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync("/api/Notes/create-note", request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Create Note: {error.Message}");
-            }
+            var response = await httpClient.PostAsJsonAsync("/api/Notes/create-note", request);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<List<NoteDto>> GetAllNotesAsync()
         {
-            try
-            {
-                return await httpClient.GetFromJsonAsync<List<NoteDto>>("/api/Notes/get-all-notes") ?? new List<NoteDto>();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Fetching All Notes: {error.Message}");
-                return new List<NoteDto>();
-            }
+            return await httpClient.GetFromJsonAsync<List<NoteDto>>("/api/Notes/get-all-notes")
+                ?? throw new InvalidOperationException("Unexpected null response from API.");
         }
 
         public async Task<List<NoteDto>> SearchNotesAsync(string searchQuery)
         {
-            try
-            {
-                var response = await httpClient.GetFromJsonAsync<List<NoteDto>>($"/api/Notes/search-notes?searchQuery={searchQuery}");
-                return response ?? new List<NoteDto>();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Searching Notes: {error.Message}");
-                return new List<NoteDto>();
-            }
+            return await httpClient.GetFromJsonAsync<List<NoteDto>>($"/api/Notes/search-notes?searchQuery={searchQuery}")
+                ?? throw new InvalidOperationException("Unexpected null response from API.");
         }
 
         public async Task UpdateNoteAsync(NoteDto request, Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync($"/api/Notes/update-note/{noteId}", request);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Updating Note With ID {noteId}: {error.Message}");
-            }
+            var response = await httpClient.PutAsJsonAsync($"/api/Notes/update-note/{noteId}", request);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task RemoveNoteAsync(Guid noteId)
         {
-            try
-            {
-                var response = await httpClient.DeleteAsync($"/api/Notes/remove-note/{noteId}");
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"Error Removing Note With This ID {noteId}: {error.Message}");
-            }
+            var response = await httpClient.DeleteAsync($"/api/Notes/remove-note/{noteId}");
+            response.EnsureSuccessStatusCode();
         }
 
         #endregion Public Methods
