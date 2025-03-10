@@ -106,6 +106,18 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseExceptionHandler(appBuilder =>
+{
+    appBuilder.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        var errorResponse = new { message = "An unexpected error occurred. Please try again later" };
+        await context.Response.WriteAsJsonAsync(errorResponse);
+    });
+});
+
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseCors("AllowBlazorApp");
