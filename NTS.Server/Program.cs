@@ -66,18 +66,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Configuration CORS For Blazor Server App
-builder.Services.AddCors(policy =>
-{
-    policy.AddPolicy("AllowBlazorApp", policy =>
-    {
-        policy
-        .WithOrigins("https://localhost:5001", "http://localhost:5002")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-    });
-});
 
 // JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -120,12 +108,9 @@ app.UseExceptionHandler(appBuilder =>
 
 app.UseResponseCompression();
 app.UseHttpsRedirection();
-app.UseCors("AllowBlazorApp");
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.MapHub<CommentHub>("/commenthub");
 
