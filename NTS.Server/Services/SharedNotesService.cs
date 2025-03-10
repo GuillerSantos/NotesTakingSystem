@@ -26,82 +26,54 @@ namespace NTS.Server.Services
 
         public async Task<bool> MarkNoteAsSharedAsync(Guid noteId, Guid userId)
         {
-            try
+            var note = await dbContext.Notes.FindAsync(noteId);
+            if (note == null || note.UserId != userId) return false;
+
+            var sharedNote = new SharedNotes
             {
-                var note = await dbContext.Notes.FindAsync(noteId);
-                if (note == null || note.UserId != userId) return false;
+                FullName = note.FullName,
+                NoteId = noteId,
+                UserId = userId,
+                Title = note.Title,
+                Content = note.Content,
+                CreatedAt = DateTime.UtcNow,
+                Color = note.Color
+            };
 
-                var sharedNote = new SharedNotes
-                {
-                    FullName = note.FullName,
-                    NoteId = noteId,
-                    UserId = userId,
-                    Title = note.Title,
-                    Content = note.Content,
-                    CreatedAt = DateTime.UtcNow,
-                    Color = note.Color
-                };
+            dbContext.SharedNotes.Add(sharedNote);
+            await dbContext.SaveChangesAsync();
 
-                dbContext.SharedNotes.Add(sharedNote);
-                await dbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Marking Note {noteId} As Shared: {error.Message}", error);
-            }
+            return true;
         }
 
         public async Task UnmarkNoteAsSharedAsync(Guid noteId)
         {
-            try
-            {
-                var sharedNotes = await dbContext.SharedNotes
-                    .Where(s => s.NoteId == noteId)
-                    .ExecuteDeleteAsync();
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Removing Note {noteId} from Shared: {error.Message}", error);
-            }
+            var sharedNotes = await dbContext.SharedNotes
+                .Where(s => s.NoteId == noteId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<List<SharedNotes>> GetAllSharedNotesAsync()
         {
-            try
-            {
-                return await dbContext.SharedNotes
-                    .ToListAsync();
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Fetching All Shared Notes for User: {error.Message}", error);
-            }
+            return await dbContext.SharedNotes
+                .ToListAsync();
         }
 
         public async Task UpdateSharedNotesAsync(Notes updatedNote)
         {
-            try
-            {
-                var sharedNotes = await dbContext.SharedNotes
-                    .Where(s => s.NoteId == updatedNote.NoteId)
-                    .ToListAsync();
+            var sharedNotes = await dbContext.SharedNotes
+                .Where(s => s.NoteId == updatedNote.NoteId)
+                .ToListAsync();
 
-                foreach (var sharedNote in sharedNotes)
-                {
-                    sharedNote.Title = updatedNote.Title;
-                    sharedNote.Content = updatedNote.Content;
-                    sharedNote.Color = updatedNote.Color;
-                }
-
-                dbContext.SharedNotes.UpdateRange(sharedNotes);
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception error)
+            foreach (var sharedNote in sharedNotes)
             {
-                throw new Exception($"Error Updating Shared Notes: {error.Message}");
+                sharedNote.Title = updatedNote.Title;
+                sharedNote.Content = updatedNote.Content;
+                sharedNote.Color = updatedNote.Color;
             }
+
+            dbContext.SharedNotes.UpdateRange(sharedNotes);
+            await dbContext.SaveChangesAsync();
         }
 
         #endregion Public Methods
