@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NTS.Server.Services.Contracts;
-using System.Security.Claims;
+using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
@@ -29,64 +29,51 @@ namespace NTS.Server.Controllers
         [HttpPost("mark-important/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> MarkNoteAsImpotantAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var markedNote = await impotantNotesService.MarkNoteAsImportantAsync(noteId, userId);
-
-                if (!markedNote)
-                    return NotFound("Note Not Found Or You Are Not Auhtorized To Mark This Note As Important");
-
-                return Ok($"Note Marked As Favorite: {markedNote}");
+                return Unauthorized("User ID not found.");
             }
-            catch (Exception error)
-            {
-                return BadRequest(error.Message);
-            }
+
+            var markedNote = await impotantNotesService.MarkNoteAsImportantAsync(noteId, userId);
+
+            if (!markedNote)
+                return NotFound("Note Not Found Or You Are Not Auhtorized To Mark This Note As Important");
+
+            return Ok($"Note Marked As Favorite: {markedNote}");
         }
 
         [HttpGet("get-all-importantnotes"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> GetAllImportantNotesAsync()
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var importantNotes = await impotantNotesService.GetAllImportantNotesAsync(userId);
-
-                if (importantNotes == null)
-                {
-                    return NotFound("No Important Notes Found");
-                }
-
-                return Ok(importantNotes);
+                return Unauthorized("User ID not found.");
             }
-            catch (Exception error)
+            var importantNotes = await impotantNotesService.GetAllImportantNotesAsync(userId);
+
+            if (importantNotes == null)
             {
-                return BadRequest($"Error Fetching All Importang Notes: {error.Message}");
+                return NotFound("No Important Notes Found");
             }
+
+            return Ok(importantNotes);
         }
 
         [HttpDelete("unmark-as-importantnote/{noteId}"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> UnmarkNoteAsImportantAsync(Guid noteId)
         {
-            try
+            if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-                var userId = Guid.Parse(userIdClaim!.Value);
-                var unmarkAsImportantNote = await impotantNotesService.UnmarkNoteAsImportantAsync(noteId);
-                if (!unmarkAsImportantNote)
-                {
-                    return NotFound("Note Is Not Mark As Important");
-                }
+                return Unauthorized("User ID not found.");
+            }
 
-                return Ok($"Note Unmarked As Important: {unmarkAsImportantNote}");
-            }
-            catch (Exception error)
+            var unmarkAsImportantNote = await impotantNotesService.UnmarkNoteAsImportantAsync(noteId);
+            if (!unmarkAsImportantNote)
             {
-                return BadRequest($"Error Unmarking Note As Important {error.Message}");
+                return NotFound("Note Is Not Mark As Important");
             }
+
+            return Ok($"Note Unmarked As Important: {unmarkAsImportantNote}");
         }
 
         #endregion Public Methods
