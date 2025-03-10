@@ -13,16 +13,16 @@ namespace NTS.Client.Pages.DefaultUserPages
     {
         #region Fields
 
-        public readonly DialogOptions dialogOptions = new DialogOptions()
+        public readonly DialogOptions dialogOptions = new()
         {
             MaxWidth = MaxWidth.Medium,
             FullWidth = true,
             NoHeader = true
         };
 
-        public ShowPasswordUtil showPasswordUtil = new ShowPasswordUtil();
-        public ResponseDto responseDto = new ResponseDto();
-        public LoginDto loginDto = new LoginDto();
+        public ShowPasswordUtil showPasswordUtil = new();
+        public ResponseDto responseDto = new();
+        public LoginDto loginDto = new();
 
         #endregion Fields
 
@@ -44,25 +44,14 @@ namespace NTS.Client.Pages.DefaultUserPages
             responseDto.ErrorMessage = null;
 
             var response = await authService.LoginAsync(loginDto);
-
-            if (response.IsSuccess)
-            {
-                var token = await localStorageService.GetItemAsStringAsync("Token");
-                var refreshToken = await localStorageService.GetItemAsStringAsync("RefreshToken");
-
-                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(refreshToken))
-                {
-                    responseDto.ErrorMessage = response.ErrorMessage;
-                    return;
-                }
-
-                await authenticationStateProvider.RefreshAuthenticationStateAsync();
-                navigationManager.NavigateTo("/home");
-            }
-            else
+            if (!response.IsSuccess)
             {
                 responseDto.ErrorMessage = response.ErrorMessage;
+                return;
             }
+
+            await authenticationStateProvider.RefreshAuthenticationStateAsync();
+            navigationManager.NavigateTo("/home");
         }
 
         public async Task OpenForgotPasswordDialog()
