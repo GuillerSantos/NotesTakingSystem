@@ -21,11 +21,11 @@ namespace NTS.Client.Pages.DefaultUserPages
         [Inject] public IStarredNotesService starredNotesService { get; set; } = default!;
         [Inject] public IDialogService dialogService { get; set; } = default!;
 
-        [Parameter] public List<ImportantNotes> importantNotes { get; set; } = new List<ImportantNotes>();
-        [Parameter] public List<FavoriteNotes> favoriteNotes { get; set; } = new List<FavoriteNotes>();
-        [Parameter] public List<StarredNotes> starredNotes { get; set; } = new List<StarredNotes>();
+        [Parameter] public List<ImportantNotes> importantNotes { get; set; } = new();
+        [Parameter] public List<FavoriteNotes> favoriteNotes { get; set; } = new();
+        [Parameter] public List<StarredNotes> starredNotes { get; set; } = new();
 
-        public NoteDto note { get; set; } = new NoteDto();
+        public NoteDto note { get; set; } = new();
 
         #endregion Properties
 
@@ -39,24 +39,13 @@ namespace NTS.Client.Pages.DefaultUserPages
                 var importantNotesTask = importantNotesService.GetAllImportantNotesAsync();
                 var starredNotesTask = starredNotesService.GetAllStarredNotesAsync();
 
-                await Task.WhenAll(favoriteNotesTask, importantNotesTask, starredNotesTask);
+                var favoriteNotesResult = await favoriteNotesTask;
+                var importantNotesResult = await importantNotesTask;
+                var starredNotesResult = await starredNotesTask;
 
-                favoriteNotes = favoriteNotesTask.Result?.ToList() ?? new List<FavoriteNotes>();
-                importantNotes = importantNotesTask.Result?.ToList() ?? new List<ImportantNotes>();
-                starredNotes = starredNotesTask.Result?.ToList() ?? new List<StarredNotes>();
-
-                if (favoriteNotes is null && importantNotes is null && starredNotes is null)
-                {
-                    favoriteNotes = new List<FavoriteNotes>();
-                    importantNotes = new List<ImportantNotes>();
-                    starredNotes = new List<StarredNotes>();
-                }
-                else
-                {
-                    favoriteNotes = favoriteNotes.ToList();
-                    importantNotes = importantNotes.ToList();
-                    starredNotes = starredNotes.ToList();
-                }
+                favoriteNotes = favoriteNotesResult?.ToList() ?? new();
+                importantNotes = importantNotesResult?.ToList() ?? new();
+                starredNotes = starredNotesResult?.ToList() ?? new();
 
                 isFetched = true;
             }
@@ -67,22 +56,43 @@ namespace NTS.Client.Pages.DefaultUserPages
             }
         }
 
-        public async Task UnmarkNoteAsFavoriteAsync(Guid NoteId)
+        public async Task UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
-            await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(NoteId);
-            await LoadAllMarkedNotesAsync();
+            try
+            {
+                await favoriteNotesService.UnmarkNoteAsFavoriteNoteAsync(noteId);
+                favoriteNotes.RemoveAll(n => n.NoteId == noteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error unmarking favorite: {error.Message}");
+            }
         }
 
         public async Task UnmarkNoteAsImportantAsync(Guid noteId)
         {
-            await importantNotesService.UnamrkNoteAsImportantAsync(noteId);
-            await LoadAllMarkedNotesAsync();
+            try
+            {
+                await importantNotesService.UnmarkNoteAsImportantAsync(noteId);
+                importantNotes.RemoveAll(n => n.NoteId == noteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error unmarking important: {error.Message}");
+            }
         }
 
         public async Task UnmarkNoteAsStarredAsync(Guid noteId)
         {
-            await starredNotesService.UnmarkNoteAsImportantNoteAsync(noteId);
-            await LoadAllMarkedNotesAsync();
+            try
+            {
+                await starredNotesService.UnmarkNoteAsImportantNoteAsync(noteId);
+                starredNotes.RemoveAll(n => n.NoteId == noteId);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine($"Error unmarking starred: {error.Message}");
+            }
         }
 
         #endregion Public Methods
