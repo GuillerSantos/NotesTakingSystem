@@ -10,7 +10,7 @@ namespace NTS.Client.Services.Contracts
 
         Task<List<ImportantNotes>> GetAllImportantNotesAsync();
 
-        Task UnamrkNoteAsImportantAsync(Guid noteId);
+        Task UnmarkNoteAsImportantAsync(Guid noteId);
 
         #endregion Public Methods
     }
