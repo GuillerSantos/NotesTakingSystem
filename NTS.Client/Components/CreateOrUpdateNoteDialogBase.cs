@@ -50,71 +50,57 @@ namespace NTS.Client.Components
                 return;
             }
 
-            try
+            currentNote.Color = currentColor.ToString();
+
+            if (note != null && note.NoteId != Guid.Empty)
             {
-                currentNote.Color = currentColor.ToString();
-
-                if (note != null && note.NoteId != Guid.Empty)
-                {
-                    await notesService.UpdateNoteAsync(currentNote, note.NoteId);
-                    snackbar.Add("Note Updated Successfully", Severity.Success);
-                }
-                else
-                {
-                    await notesService.CreateNoteAsync(currentNote);
-                    snackbar.Add("Note Created Successfully", Severity.Success);
-                }
-
-                mudDialog.Close(DialogResult.Ok(true));
-
-                if (notesBase != null)
-                {
-                    await notesBase.LoadNotesAsync();
-                }
-                else
-                {
-                    snackbar.Add("NotesBase is Null", Severity.Error);
-                }
+                await notesService.UpdateNoteAsync(currentNote, note.NoteId);
+                snackbar.Add("Note Updated Successfully", Severity.Success);
             }
-            catch (Exception error)
+            else
             {
-                snackbar.Add($"An Error Occurred: {error.Message}", Severity.Error);
+                await notesService.CreateNoteAsync(currentNote);
+                snackbar.Add("Note Created Successfully", Severity.Success);
+            }
+
+            mudDialog.Close(DialogResult.Ok(true));
+
+            if (notesBase != null)
+            {
+                await notesBase.LoadNotesAsync();
+            }
+            else
+            {
+                snackbar.Add("NotesBase is Null", Severity.Error);
             }
         }
 
         public async Task RemoveNoteAsync()
         {
-            try
+            bool? confirm = await dialogService.ShowMessageBox("Remove Confirmation",
+                "Are You Sure You Want To Remove This Note?", yesText: "Remove", cancelText: "Cancel");
+
+            if (notesService == null)
             {
-                bool? confirm = await dialogService.ShowMessageBox("Remove Confirmation",
-                    "Are You Sure You Want To Remove This Note?", yesText: "Remove", cancelText: "Cancel");
-
-                if (notesService == null)
-                {
-                    snackbar.Add("NotesService Is Null", Severity.Error);
-                    return;
-                }
-
-                if (note != null && note.NoteId != Guid.Empty && confirm == true)
-                {
-                    await notesService.RemoveNoteAsync(note.NoteId);
-                    snackbar.Add("Note Removed Successfully", Severity.Success);
-                }
-
-                mudDialog.Close(DialogResult.Ok(true));
-
-                if (notesBase != null)
-                {
-                    await notesBase.LoadNotesAsync();
-                }
-                else
-                {
-                    snackbar.Add("NotesBase Is Null", Severity.Error);
-                }
+                snackbar.Add("NotesService Is Null", Severity.Error);
+                return;
             }
-            catch (Exception error)
+
+            if (note != null && note.NoteId != Guid.Empty && confirm == true)
             {
-                snackbar.Add($"Error Removing Note: {error.Message}", Severity.Error);
+                await notesService.RemoveNoteAsync(note.NoteId);
+                snackbar.Add("Note Removed Successfully", Severity.Success);
+            }
+
+            mudDialog.Close(DialogResult.Ok(true));
+
+            if (notesBase != null)
+            {
+                await notesBase.LoadNotesAsync();
+            }
+            else
+            {
+                snackbar.Add("NotesBase Is Null", Severity.Error);
             }
         }
 
@@ -122,16 +108,12 @@ namespace NTS.Client.Components
         {
             try
             {
-                if (favoriteNotesService == null)
-                {
-                    Console.WriteLine("FavoriteNotesService Is Null");
-                }
-
                 await favoriteNotesService!.MarkAsFavoriteNoteAsync(favoriteNotes, note.NoteId);
+                snackbar.Add("Note Marked As Favorite", Severity.Success);
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note as Favorite: {error.Message}");
+                snackbar.Add($"Error marking note as Favorite: {error.Message}", Severity.Error);
             }
         }
 
@@ -140,10 +122,11 @@ namespace NTS.Client.Components
             try
             {
                 await importantNotesService.MarkNoteAsImportantAsync(new ImportantNotes(), note.NoteId);
+                snackbar.Add("Note Marked As Important", Severity.Success);
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note As Important: {error.Message}");
+                snackbar.Add($"Error marking note as Important: {error.Message}", Severity.Error);
             }
         }
 
@@ -152,10 +135,11 @@ namespace NTS.Client.Components
             try
             {
                 await starredNotesService.MarkNoteAsStarredAsync(new StarredNotes(), note.NoteId);
+                snackbar.Add("Note Marked As Starred", Severity.Success);
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note As Starred: {error.Message}");
+                snackbar.Add($"Error marking note as Starred: {error.Message}", Severity.Error);
             }
         }
 
@@ -164,10 +148,11 @@ namespace NTS.Client.Components
             try
             {
                 await sharedNotesService.MarkNoteAsSharedAsync(new SharedNotes(), note.NoteId);
+                snackbar.Add("Note marked as Shared", Severity.Success);
             }
             catch (Exception error)
             {
-                Console.WriteLine($"Error Marking Note As Shared: {error.Message}");
+                snackbar.Add($"Error marking note as Shared: {error.Message}", Severity.Error);
             }
         }
 
