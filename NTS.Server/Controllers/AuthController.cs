@@ -36,168 +36,66 @@ namespace NTS.Server.Controller
         [HttpGet("get-all-users")]
         public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            try
-            {
-                var fetchedAccounts = await authService.GetAllUsersAccounts(page, pageSize);
-                return Ok(fetchedAccounts);
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Internal Server Error: {error.Message}");
-            }
+            return Ok(await authService.GetAllUsersAccounts(page, pageSize));
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<TokenResponseDto>> LoginUsersAsync(LoginDto request)
         {
-            try
-            {
-                var loggedIn = await authService.LoginUsersAsync(request);
-
-                if (loggedIn is null)
-                {
-                    return BadRequest("Invalid Credentials");
-                }
-
-                return Ok(loggedIn);
-            }
-            catch (Exception error)
-            {
-                return BadRequest(new { message = "An Error Occurred During Login", details = error.Message });
-            }
+            var loggedIn = await authService.LoginUsersAsync(request);
+            return loggedIn is null ? BadRequest("Invalid Credentials") : Ok(loggedIn);
         }
 
         [HttpPost("logout"), Authorize(Roles = "DefaultUser")]
         public async Task<IActionResult> LogoutAsync()
         {
-            try
-            {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-                var result = await authService.LogoutAsync(userId);
-
-                if (result)
-                {
-                    return Ok(new { message = "Successfully Logged Out" });
-                }
-
-                return BadRequest("Logout Failed");
-            }
-            catch (Exception error)
-            {
-                return StatusCode(500, $"Internal Server Error: {error.Message}");
-            }
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            return await authService.LogoutAsync(userId) ? Ok(new { message = "Successfully Logged Out" }) : BadRequest("Logout Failed");
         }
 
         [HttpPost("register-defaultuser")]
         public async Task<ActionResult<ApplicationUsers>> RegisterUserAsync(RegisterDto request)
         {
-            try
-            {
-                var registeredUser = await authService.RegisterUsersAsync(request, false);
-
-                if (registeredUser is null)
-                {
-                    return BadRequest("Email Already Exists");
-                }
-
-                return Ok(registeredUser);
-            }
-            catch (Exception error)
-            {
-                return BadRequest(new { message = "An Error Occurred During Registration", details = error.Message });
-            }
+            var registeredUser = await authService.RegisterUsersAsync(request, false);
+            return registeredUser is null ? BadRequest("Email Already Exists") : Ok(registeredUser);
         }
 
         [HttpPost("register-admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(RegisterDto request)
         {
-            try
+            if (!(User.Identity?.IsAuthenticated ?? false) || User.FindFirstValue(ClaimTypes.Role) != "Admin")
             {
-                var isAuthenticated = User!.Identity?.IsAuthenticated ?? false;
-                var currentUserRole = User!.FindFirstValue(ClaimTypes.Role);
-
-                if (!isAuthenticated || currentUserRole != "Admin")
-                {
-                    return Unauthorized("Only Authenticated Admins Can Create Admin Accounts");
-                }
-
-                var registeredAdmin = await authService.RegisterUsersAsync(request, true);
-
-                if (registeredAdmin is null)
-                {
-                    return BadRequest("Email Already Exists");
-                }
-
-                return Ok(registeredAdmin);
+                return Unauthorized("Only Authenticated Admins Can Create Admin Accounts");
             }
-            catch (Exception error)
-            {
-                return BadRequest(new { message = "An Error Occurred During Registration", details = error.Message });
-            }
+
+            var registeredAdmin = await authService.RegisterUsersAsync(request, true);
+            return registeredAdmin is null ? BadRequest("Email Already Exists") : Ok(registeredAdmin);
         }
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
         {
-            try
-            {
-                string resetToken = Guid.NewGuid().ToString();
-
-                bool emailSent = await emailService.SendPasswordResetToRecoveryEmailAsync(request.RecoveryEmail, resetToken);
-
-                if (!emailSent)
-                {
-                    return BadRequest(new { message = "This Email Address Is Not Registered Or There Was An Error Sending The Email" });
-                }
-
-                return Ok(new { message = "Password Reset Email Has Been Sent" });
-            }
-            catch (Exception error)
-            {
-                logger.LogError($"An Error Occurred While Handling Forgot Password Request: {error.Message}");
-                return BadRequest(new { message = "An Error Occurred During Forgot Password", details = error.Message });
-            }
+            string resetToken = Guid.NewGuid().ToString();
+            bool emailSent = await emailService.SendPasswordResetToRecoveryEmailAsync(request.RecoveryEmail, resetToken);
+            return emailSent
+                ? Ok(new { message = "Password Reset Email Has Been Sent" })
+                : BadRequest(new { message = "This Email Address Is Not Registered Or There Was An Error Sending The Email" });
         }
 
         [HttpPost("refresh-token")]
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
-            try
-            {
-                var resfreshedToken = await authService.RefreshTokensAsync(request);
-                if (resfreshedToken is null || resfreshedToken.AccessToken is null || resfreshedToken.RefreshToken is null)
-                {
-                    return Unauthorized("Invalid Refresh Token");
-                }
-
-                return Ok(resfreshedToken);
-            }
-            catch (Exception error)
-            {
-                return BadRequest($"Error Refreshing The Token: {error.Message}");
-            }
+            var refreshedToken = await authService.RefreshTokensAsync(request);
+            return refreshedToken?.AccessToken is null || refreshedToken.RefreshToken is null
+                ? Unauthorized("Invalid Refresh Token")
+                : Ok(refreshedToken);
         }
 
         [HttpDelete("remove-account/{userId}"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RemoveAccountAsync(Guid userId, Guid noteId)
+        public async Task<IActionResult> RemoveAccountAsync(Guid userId, [FromQuery] Guid noteId)
         {
-            try
-            {
-                var removedAccount = await authService.RemoveAccountAsync(userId, noteId);
-
-                if (!removedAccount)
-                {
-                    return NotFound("Account Not Found");
-                }
-                else
-                {
-                    return Ok("Successfully Removed Account");
-                }
-            }
-            catch (Exception error)
-            {
-                return BadRequest($"Error Removing Account: {error.Message}");
-            }
+            var removedAccount = await authService.RemoveAccountAsync(userId, noteId);
+            return removedAccount ? Ok("Successfully Removed Account") : NotFound("Account Not Found");
         }
 
         #endregion Public Methods
