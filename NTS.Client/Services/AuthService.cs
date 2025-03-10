@@ -78,66 +78,48 @@ namespace NTS.Client.Services
 
         public async Task<ResponseDto> RegisterDefaultUserAsync(RegisterDto request)
         {
+            var properties = typeof(RegisterDto).GetProperties();
+            foreach (var property in properties)
+            {
+                if (string.IsNullOrWhiteSpace(property.GetValue(request) as string))
+                {
+                    return new ResponseDto { IsSuccess = false, ErrorMessage = "Please Fill All Fields" };
+                }
+            }
+
             try
             {
-                var properties = typeof(RegisterDto).GetProperties();
-                foreach (var property in properties)
-                {
-                    var value = property.GetValue(request) as string;
-                    if (string.IsNullOrWhiteSpace(value))
-                    {
-                        return new ResponseDto { IsSuccess = false, ErrorMessage = "Please Fill All Fields" };
-                    }
-                }
-
                 var response = await httpClient.PostAsJsonAsync("/api/Auth/register-defaultuser", request);
-
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
-                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received" };
+                    return await response.Content.ReadFromJsonAsync<ResponseDto>()
+                        ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received" };
                 }
-
-                return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Register, Please Try Again" };
             }
             catch (HttpRequestException error)
             {
                 return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network Error: {error.Message}" };
             }
-            catch (InvalidOperationException error)
-            {
-                logger.LogError($"Invalid Operation: {error.Message}");
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Invalid Operation: {error.Message}" };
-            }
             catch (Exception error)
             {
-                logger.LogError($"An Error Occured While Handling Registration: {error.Message}");
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
+                logger.LogError($"Error during registration: {error.Message}");
+                return new ResponseDto { IsSuccess = false, ErrorMessage = "An unexpected error occurred." };
             }
+
+            return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Register, Please Try Again" };
         }
 
         public async Task<ResponseDto> ForgotPasswordAsync(ForgotPasswordDto request)
         {
-            try
-            {
-                var response = await httpClient.PostAsJsonAsync("/api/Auth/forgot-password", request);
+            var response = await httpClient.PostAsJsonAsync("/api/Auth/forgot-password", request);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadFromJsonAsync<ResponseDto>();
-                    return result ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received." };
-                }
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<ResponseDto>()
+                    ?? new ResponseDto { IsSuccess = false, ResponseMessage = "Empty Response Received." };
+            }
 
-                return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Send Forgot Password Request" };
-            }
-            catch (HttpRequestException error)
-            {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"Network Error: {error.Message}" };
-            }
-            catch (Exception error)
-            {
-                return new ResponseDto { IsSuccess = false, ErrorMessage = $"An Unexpected Error Occurred: {error.Message}" };
-            }
+            return new ResponseDto { IsSuccess = false, ResponseMessage = "Failed To Send Forgot Password Request" };
         }
 
         public async Task<bool> RefreshTokenAsync()
