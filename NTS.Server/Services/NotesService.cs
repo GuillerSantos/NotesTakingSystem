@@ -36,136 +36,94 @@ namespace NTS.Server.Services
 
         public async Task<List<Notes>> GetAllNotesAsync(Guid userId)
         {
-            try
+            return await dbContext.Notes
+                .Where(n => n.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<Notes> GetNoteByIdAsync(Guid noteId)
+        {
+            var fetchedNote = await dbContext.Notes.FindAsync(noteId);
+            return fetchedNote!;
+        }
+
+        public async Task<List<Notes>> SearchNotesAsync(string? searchQuery, Guid userId)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
             {
                 return await dbContext.Notes
                     .Where(n => n.UserId == userId)
                     .ToListAsync();
             }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Fetching All Notes: {error.Message}");
-            }
-        }
+            var notes = await dbContext.Notes
+                .Where(n => n.UserId == userId)
+                .Where(n => EF.Functions.Like(n.Title, $"%{searchQuery}%"))
+                .ToListAsync();
 
-        public async Task<Notes> GetNoteByIdAsync(Guid noteId)
-        {
-            try
-            {
-                var fetchedNote = await dbContext.Notes.FindAsync(noteId);
-                return fetchedNote!;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Fetching Note By ID: {error.Message}");
-            }
-        }
-
-        public async Task<List<Notes>> SearchNotesAsync(string? searchQuery, Guid userId)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(searchQuery))
-                {
-                    return await dbContext.Notes
-                        .Where(n => n.UserId == userId)
-                        .ToListAsync();
-                }
-                var notes = await dbContext.Notes
-                    .Where(n => n.UserId == userId)
-                    .Where(n => EF.Functions.Like(n.Title, $"%{searchQuery}%"))
-                    .ToListAsync();
-
-                return notes;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Searching Notes: {error.Message}");
-            }
+            return notes;
         }
 
         public async Task<Notes?> CreateNoteAsync([FromBody] CreateNotesDto noteDetails, Guid userId)
         {
-            try
+            var user = await dbContext.ApplicationUsers.FindAsync(userId);
+            if (user == null)
             {
-                var user = await dbContext.ApplicationUsers.FindAsync(userId);
-                if (user == null)
-                {
-                    Console.WriteLine("User Not Found");
-                }
-
-                var newNote = new Notes
-                {
-                    UserId = userId,
-                    FullName = user!.FullName,
-                    Title = noteDetails.Title,
-                    Content = noteDetails.Content,
-                    Color = noteDetails.Color,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                dbContext.Notes.Add(newNote);
-                await dbContext.SaveChangesAsync();
-                return newNote;
+                Console.WriteLine("User Not Found");
             }
-            catch (Exception error)
+
+            var newNote = new Notes
             {
-                throw new Exception($"Error Creating Note: {error.Message}");
-            }
+                UserId = userId,
+                FullName = user!.FullName,
+                Title = noteDetails.Title,
+                Content = noteDetails.Content,
+                Color = noteDetails.Color,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            dbContext.Notes.Add(newNote);
+            await dbContext.SaveChangesAsync();
+            return newNote;
         }
 
         public async Task<Notes> UpdateNotesAsync(UpdateNotesDto updatedNoteDetails, Guid noteId, Guid userId)
         {
-            try
-            {
-                var existingNote = await dbContext.Notes
-                    .Where(n => n.NoteId == noteId && n.UserId == userId)
-                    .FirstOrDefaultAsync();
+            var existingNote = await dbContext.Notes
+                .Where(n => n.NoteId == noteId && n.UserId == userId)
+                .FirstOrDefaultAsync();
 
-                if (existingNote == null)
-                    return null!;
+            if (existingNote == null)
+                return null!;
 
-                existingNote.Title = updatedNoteDetails.Title;
-                existingNote.Content = updatedNoteDetails.Content;
-                existingNote.Color = updatedNoteDetails.Color;
+            existingNote.Title = updatedNoteDetails.Title;
+            existingNote.Content = updatedNoteDetails.Content;
+            existingNote.Color = updatedNoteDetails.Color;
 
-                dbContext.Notes.Update(existingNote);
+            dbContext.Notes.Update(existingNote);
 
-                await UpdateRelatedNotesTablesAsync(existingNote);
+            await UpdateRelatedNotesTablesAsync(existingNote);
 
-                await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
-                return existingNote;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Editing Note: {error.Message}");
-            }
+            return existingNote;
         }
 
         public async Task<bool> RemoveNoteAsync(Guid noteId, Guid userId)
         {
-            try
-            {
-                var noteToRemove = await dbContext.Notes.FindAsync(noteId);
-                if (noteToRemove is null)
-                    return false;
+            var noteToRemove = await dbContext.Notes.FindAsync(noteId);
+            if (noteToRemove is null)
+                return false;
 
-                await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
-                await importantNotesService.UnmarkNoteAsImportantAsync(noteId);
-                await sharedNotesService.UnmarkNoteAsSharedAsync(noteId);
-                await starredNotesService.UnmarkNoteAsStarredAsync(noteId);
+            await favoriteNoteService.UnmarkNoteAsFavoriteAsync(noteId);
+            await importantNotesService.UnmarkNoteAsImportantAsync(noteId);
+            await sharedNotesService.UnmarkNoteAsSharedAsync(noteId);
+            await starredNotesService.UnmarkNoteAsStarredAsync(noteId);
 
-                dbContext.Notes.Remove(noteToRemove);
+            dbContext.Notes.Remove(noteToRemove);
 
-                await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
-                return true;
-            }
-            catch (Exception error)
-            {
-                throw new Exception($"Error Removing Note: {error.Message}");
-            }
+            return true;
         }
 
         #endregion Public Methods
