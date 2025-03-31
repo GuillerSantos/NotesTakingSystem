@@ -6,7 +6,7 @@ using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class NotesController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace NTS.Server.Controllers
 
         #region Public Methods
 
-        [HttpGet("get-all-notes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-all-notes")]
         public async Task<IActionResult> GetAllNotesAsync()
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -45,7 +45,7 @@ namespace NTS.Server.Controllers
             return Ok(fetchedNotes);
         }
 
-        [HttpGet("get-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-note/{noteId}")]
         [ActionName("GetNoteById")]
         public async Task<IActionResult> GetNoteByIdAsync(Guid noteId)
         {
@@ -59,7 +59,7 @@ namespace NTS.Server.Controllers
             return Ok(fetchedNote);
         }
 
-        [HttpGet("search-notes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("search-notes")]
         public async Task<IActionResult> SearchNotesAsync([FromQuery] string searchQuery)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -74,7 +74,7 @@ namespace NTS.Server.Controllers
             return Ok(notes);
         }
 
-        [HttpPost("create-note"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("create-note")]
         public async Task<IActionResult> CreateNoteAsync([FromBody] CreateNotesDto request)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -92,7 +92,7 @@ namespace NTS.Server.Controllers
             return CreatedAtAction("GetNoteById", new { noteId = newNote.NoteId }, newNote);
         }
 
-        [HttpPut("update-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPut("update-note/{noteId}")]
         public async Task<IActionResult> UpdateNoteAsync([FromBody] UpdateNotesDto request, Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -108,7 +108,7 @@ namespace NTS.Server.Controllers
             return Ok(editedNote);
         }
 
-        [HttpDelete("remove-note/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("remove-note/{noteId}")]
         public async Task<IActionResult> RemoveNoteAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))

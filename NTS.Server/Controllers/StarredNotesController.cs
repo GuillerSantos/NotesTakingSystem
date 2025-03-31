@@ -5,7 +5,7 @@ using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class StarredNotesController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace NTS.Server.Controllers
 
         #region Public Methods
 
-        [HttpPost("mark-starred/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("mark-starred/{noteId}")]
         public async Task<IActionResult> MarkNoteAsStarredAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -41,7 +41,7 @@ namespace NTS.Server.Controllers
             return Ok($"Note Marked Successfully: {markedNote}");
         }
 
-        [HttpGet("get-all-starrednotes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-all-starrednotes")]
         public async Task<IActionResult> GetAllStarredNotesAsync()
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -58,7 +58,7 @@ namespace NTS.Server.Controllers
             return Ok(starredNotes);
         }
 
-        [HttpDelete("unmark-as-starrednote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("unmark-as-starrednote/{noteId}")]
         public async Task<IActionResult> UnmarkNotesAsStarredAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))

@@ -37,20 +37,10 @@ namespace NTS.Client.Shared
         {
             try
             {
-                var acccessToken = await localStorageService.GetItemAsync<string>("Token");
-                var refreshToken = await localStorageService.GetItemAsync<string>("RefreshToken");
-
-                Console.WriteLine($"Access Token: {acccessToken}");
-                Console.WriteLine($"Refresh Token: {refreshToken}");
-
-                if (!string.IsNullOrEmpty(acccessToken) || !string.IsNullOrEmpty(refreshToken))
-                {
-                    await localStorageService.RemoveItemAsync("Token");
-                    await localStorageService.RemoveItemAsync("RefreshToken");
-                }
-
+                await localStorageService.RemoveItemAsync("Token");
+                await localStorageService.RemoveItemAsync("RefreshToken");
                 await authenticationState.RefreshAuthenticationStateAsync();
-                navigationManager.NavigateTo("/", true);
+                navigationManager.NavigateTo("/");
             }
             catch (Exception error)
             {

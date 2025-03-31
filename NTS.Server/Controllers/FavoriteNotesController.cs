@@ -5,7 +5,7 @@ using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class FavoriteNotesController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace NTS.Server.Controllers
 
         #region Public Methods
 
-        [HttpPost("mark-favorite/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("mark-favorite/{noteId}")]
         public async Task<IActionResult> MarkNoteAsFavoriteAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -43,7 +43,7 @@ namespace NTS.Server.Controllers
             return Ok(markedNote);
         }
 
-        [HttpGet("get-all-favoritenotes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-all-favoritenotes")]
         public async Task<IActionResult> GetAllFavoriteNotesAsync()
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -60,7 +60,7 @@ namespace NTS.Server.Controllers
             return Ok(favoriteNotes);
         }
 
-        [HttpDelete("unmark-as-favoritenote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("unmark-as-favoritenote/{noteId}")]
         public async Task<IActionResult> UnmarkNoteAsFavoriteAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))

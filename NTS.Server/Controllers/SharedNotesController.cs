@@ -5,7 +5,7 @@ using NTS.Server.Utilities;
 
 namespace NTS.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class SharedNotesController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace NTS.Server.Controllers
 
         #region Public Methods
 
-        [HttpPost("mark-shared/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("mark-shared/{noteId}")]
         public async Task<IActionResult> MarkNoteAsSharedAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -42,7 +42,7 @@ namespace NTS.Server.Controllers
             return Ok($"Note Marked As Favorite {markedNote}");
         }
 
-        [HttpDelete("unmark-sharednote/{noteId}"), Authorize(Roles = "DefaultUser")]
+        [HttpDelete("unmark-sharednote/{noteId}")]
         public async Task<IActionResult> UnmarkNoteAsSharedAsync(Guid noteId)
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))
@@ -54,7 +54,7 @@ namespace NTS.Server.Controllers
             return Ok("Note Unmarked As Shared");
         }
 
-        [HttpGet("get-all-shared-notes"), Authorize(Roles = "DefaultUser")]
+        [HttpGet("get-all-shared-notes")]
         public async Task<IActionResult> GetAllSharedNotesAsync()
         {
             if (!UserClaimUtil.TryGetUserId(User, out Guid userId))

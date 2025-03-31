@@ -32,7 +32,7 @@ namespace NTS.Server.Controller
 
         #region Public Methods
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet("get-all-users")]
         public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsersAccounts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
@@ -46,7 +46,7 @@ namespace NTS.Server.Controller
             return loggedIn is null ? BadRequest("Invalid Credentials") : Ok(loggedIn);
         }
 
-        [HttpPost("logout"), Authorize(Roles = "DefaultUser")]
+        [HttpPost("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -60,7 +60,7 @@ namespace NTS.Server.Controller
             return registeredUser is null ? BadRequest("Email Already Exists") : Ok(registeredUser);
         }
 
-        [HttpPost("register-admin"), Authorize(Roles = "Admin")]
+        [HttpPost("register-admin")]
         public async Task<ActionResult<ApplicationUsers>> RegisterAdminAsync(RegisterDto request)
         {
             if (!(User.Identity?.IsAuthenticated ?? false) || User.FindFirstValue(ClaimTypes.Role) != "Admin")
@@ -91,7 +91,7 @@ namespace NTS.Server.Controller
                 : Ok(refreshedToken);
         }
 
-        [HttpDelete("remove-account/{userId}"), Authorize(Roles = "Admin")]
+        [HttpDelete("remove-account/{userId}")]
         public async Task<IActionResult> RemoveAccountAsync(Guid userId, [FromQuery] Guid noteId)
         {
             var removedAccount = await authService.RemoveAccountAsync(userId, noteId);
