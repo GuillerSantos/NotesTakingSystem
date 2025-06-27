@@ -1,17 +1,18 @@
 # NotesTakingSystem
-This web application is built using Blazor and ASP.NET Core Web API my main goal in this project is to enhanced my skills on using TailwindCSS for responsive and dynamic design, also built with SOLID Principles and Object-Oriented Programming(OOP)
 
-Notes Taking System Features
+This project is developed using ASP.NET Core Web API, Entity Framework Core, Blazor Server, and TailwindCSS, following best practices such as SOLID principles and OOP.
 
-* Auhentication-Authorization
-* Google Email SMTP Forgot Password
-* JWT Authentication
+Building on the experience gained from my Capstone project, Shared Ideas Generator Web App, this system is designed to be highly responsive, dynamic, and secure. It features complete authentication and authorization, along with API and endpoint security to ensure robust protection.
 
-Admin Features
-* Manage Users
-
-User Features
-* Taking Notes
-* Manage Notes
-* Share Notes to Public
-* Comment in the Notes Shared in Public
+Technologies Used:
+Language: C#
+Frontend: Blazor Server, TailwindCSS
+Backend: ASP.NET Core,  ASP.NET Core Web API
+UI Library: MudBlazor
+ORM: Entity Framework Core
+Database: MSSQL Server
+API Documentation: Scalar (OpenAPI)
+API: REST
+Terminal: Bash, PowerShell
+Version Control: Git, Github
+.NET Version: .NET 9
